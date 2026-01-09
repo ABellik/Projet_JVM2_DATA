@@ -15,8 +15,9 @@
     <modules>
         <module>editeur</module>
         <module>common</module>
-        <module>joueur</module>
         <module>plateforme</module>
+        <module>joueur</module>
+        <module>processor-stream</module>
     </modules>
 
     <!-- Propriétés globales -->
