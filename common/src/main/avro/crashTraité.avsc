@@ -1,0 +1,42 @@
+{
+    "type":"record",
+    "name":"traitement_crash",
+    "namespace": "common.src.main.avro",
+    "doc" : "Évènement émis lorsqu'un crash est mis en base de données",
+    "fields":
+    [
+        {
+            "name": "idSession", 
+            "type": "long"
+        },
+
+        {
+            "name": "codeErreur", 
+            "type": "long",
+            "doc" : "Code d'erreur obtenu pour le crash qui s'est produit"
+        },
+
+        {
+            "name": "versionJeu", 
+            "type": "long"
+        },
+
+        {
+            "name": "statut", 
+            "type": {"type": "enum","name": "actionMenee","symbols": ["OUVERT", "EN_RESOLUTION", "RESOLU", "IGNORE"]}
+
+        },
+
+        {
+            "name": "commentaireEditeur", 
+            "type": "string",
+            "default": null
+        },
+
+        {
+            "name": "date", 
+            "type": {"type":"int", "logicalType": "date"}
+        }
+    
+    ]
+}

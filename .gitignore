@@ -14,3 +14,10 @@ out/
 # Classes Java générées par Avro
 **/generated-sources/
 **/generated-test-sources/
+
+#éviter le déposer le dossier target
+target/
+*.class
+.settings/
+.project
+.classpath

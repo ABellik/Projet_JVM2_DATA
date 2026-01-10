@@ -1,0 +1,53 @@
+{
+    "type":"record",
+    "name":"publication_jeu",
+    "namespace": "common.src.main.avro",
+    "doc" : "Évènement émis lorsqu'un jeu est publié par l'éditeur",
+    "fields":
+    [
+        {
+            "name": "id", 
+            "type": "long"
+        },
+
+        {
+            "name": "idEditeur", 
+            "type": "long"
+        },
+
+        {
+            "name": "nom", 
+            "type": "string"
+        },
+
+        {
+            "name": "versionActuelle", 
+            "type": "string"
+        },
+        
+        {
+            "name": "genre", 
+            "type": "string"
+        },
+        
+        {
+            "name": "prixEditeur", 
+            "type": "int"
+        },
+        
+        {
+            "name": "type", 
+            "type": "string"
+        },
+
+        {
+            "name": "idEditeur", 
+            "type": "long"
+        }
+
+        {
+            "name": "date", 
+            "type": {"type":"int", "logicalType": "date"}
+        }
+    ]
+}

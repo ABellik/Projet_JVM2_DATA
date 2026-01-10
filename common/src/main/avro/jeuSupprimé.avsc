@@ -1,0 +1,29 @@
+{
+    "type":"record",
+    "name":"suppression_jeu",
+    "namespace": "common.src.main.avro",
+    "doc" : "Évènement émis lorsqu'un jeu est supprimé par l'éditeur",
+    "fields":
+    [
+        {
+            "name": "id", 
+            "type": "long"
+        },
+
+        {
+            "name": "idEditeur", 
+            "type": "long"
+        },
+
+        {
+            "name": "idPlateforme", 
+            "type": "long"
+        },
+
+        {
+            "name": "date", 
+            "type": {"type":"int", "logicalType": "date"}
+        }
+        
+    ]
+}
