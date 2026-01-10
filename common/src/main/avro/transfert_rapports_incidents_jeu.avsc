@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "namespace": "com.example.events",
+  "name" : "TrRapportIncidentsJeu",
+  "doc" : "Évènement émis lorsque un rapport d'incidents est transféré",
+  "fields" : [
+    {
+      "name" : "idJeu",
+      "type" : "long",
+      "doc": "L'identifiant unique du jeu concerné"
+    },
+    {
+      "name" : "contenu",
+      "type" : "string",
+      "doc": "Descriptif des incidents"
+    }
+  ]
+}
