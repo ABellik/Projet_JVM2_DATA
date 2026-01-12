@@ -1,0 +1,13 @@
+{
+  "type": "record",
+  "name": "EvaluationNotee",
+  "namespace": "com.example.events",
+  "fields": [
+    { "name": "idJoueur", "type": "long" },
+    { "name": "idEvaluation", "type": "long", "doc": "Evaluation d'une évaluation par un autre joueur " },
+    { "name": "utile", "type": "boolean" },
+    { "name": "DateEvalutionDeLEvaluation", 
+      "type": { "type": "long", "logicalType": "timestamp-millis" } 
+    }
+  ]
+}

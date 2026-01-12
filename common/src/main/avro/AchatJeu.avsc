@@ -1,0 +1,16 @@
+{
+  "type": "record",
+  "name": "AchatJeu",
+  "namespace": "com.example.events",
+  "fields": [
+    { "name": "idJoueur", "type": "long" },
+    { "name": "idJeu", "type": "long" },
+    { "name": "support", "type": "string", "doc":"support sur lequel le jeu est installé" },
+    { "name": "prixPaye", "type": "double" },
+    { "name": "versionInstallee", "type": "string" },
+    { "name": "dateAchat", 
+      "type": { "type": "long", "logicalType": "timestamp-millis" } 
+    }
+
+  ]
+}
