@@ -1,7 +1,7 @@
 {
     "type":"record",
-    "name":"creation_patch",
-    "namespace": "common.src.main.avro",
+    "name":"CreationPatch",
+    "namespace": "com.example.events",
     "doc" : "Évènement émis lorsqu'un patch est créé par l'éditeur",
     "fields":
     [

@@ -1,7 +1,7 @@
 {
     "type":"record",
-    "name":"traitement_crash",
-    "namespace": "common.src.main.avro",
+    "name":"TraitementCrash",
+    "namespace": "com.example.events",
     "doc" : "Évènement émis lorsqu'un crash est mis en base de données",
     "fields":
     [

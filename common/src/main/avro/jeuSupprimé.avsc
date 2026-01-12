@@ -1,7 +1,7 @@
 {
     "type":"record",
-    "name":"suppression_jeu",
-    "namespace": "common.src.main.avro",
+    "name":"SuppressionJeu",
+    "namespace":"com.example.events",
     "doc" : "Évènement émis lorsqu'un jeu est supprimé par l'éditeur",
     "fields":
     [

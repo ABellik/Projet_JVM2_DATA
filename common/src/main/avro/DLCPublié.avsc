@@ -1,7 +1,7 @@
 {
     "type":"record",
-    "name":"publication_DLC",
-    "namespace": "common.src.main.avro",
+    "name":"PublicationDLC",
+    "namespace": "com.example.events",
     "doc" : "Évènement émis lorsqu'un DLC est publié par l'éditeur",
     "fields":
     [
@@ -45,8 +45,8 @@
         {
             "name": "idParent", 
             "type": "long",
-            "doc" : "id du jeu auquel l'extension est rajoutée",
-        },
+            "doc" : "id du jeu auquel l'extension est rajoutée"
+        }
 
     ]
 }

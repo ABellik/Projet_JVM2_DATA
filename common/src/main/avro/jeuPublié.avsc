@@ -1,7 +1,7 @@
 {
     "type":"record",
-    "name":"publication_jeu",
-    "namespace": "common.src.main.avro",
+    "name":"PublicationJeu",
+    "namespace": "com.example.events",
     "doc" : "Évènement émis lorsqu'un jeu est publié par l'éditeur",
     "fields":
     [
