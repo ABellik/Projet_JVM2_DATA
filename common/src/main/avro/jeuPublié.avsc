@@ -11,11 +11,6 @@
         },
 
         {
-            "name": "idEditeur", 
-            "type": "long"
-        },
-
-        {
             "name": "nom", 
             "type": "string"
         },
@@ -43,7 +38,7 @@
         {
             "name": "idEditeur", 
             "type": "long"
-        }
+        },
 
         {
             "name": "date", 

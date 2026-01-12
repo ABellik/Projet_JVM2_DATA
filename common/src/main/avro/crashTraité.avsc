@@ -30,7 +30,7 @@
         {
             "name": "commentaireEditeur", 
             "type": "string",
-            "default": null
+            "default": ""
         },
 
         {
