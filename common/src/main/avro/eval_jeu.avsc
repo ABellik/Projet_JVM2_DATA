@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "namespace": "com.example.events",
+  "name" : "EvalJeu",
+  "doc" : "Évènement émis lorsque l'évaluation d'un jeu est effectuée",
+  "fields" : [
+    {
+      "name" : "idJeu",
+      "type" : "long",
+      "doc": "L'identifiant unique du jeu concerné"
+    },
+    {
+      "name" : "moyenneNote",
+      "type" : "float",
+      "doc": "La nouvelle moyenne des notes après l'évaluation"
+    }
+  ]
+}
