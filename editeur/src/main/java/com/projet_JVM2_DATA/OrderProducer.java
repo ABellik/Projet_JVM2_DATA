@@ -14,7 +14,6 @@ import java.util.Random;
 import java.util.UUID;
 
 public class OrderProducer {
-
     public static void main(String[] args) {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");

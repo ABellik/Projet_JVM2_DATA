@@ -1,16 +1,33 @@
 package com.projet_JVM2_DATA
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-fun main() {
-    val name = "Kotlin"
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    println("Hello, " + name + "!")
+import com.projet_JVM2_DATA.data.PlayerCache
+import com.projet_JVM2_DATA.producers.KafkaProducerManager
+import com.projet_JVM2_DATA.producers.productionCompteJoueur
 
-    for (i in 1..5) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        println("i = $i")
-    }
+fun main() {
+    println("Démarrage du simulateur Joueur...")
+
+    println("\n [Test 1] Inscription du joueur 'GamerZ'")
+    productionCompteJoueur(
+        "GamerZ",
+        "Martin",
+        "Paul",
+        "paul.martin@gmail.com",
+        "S3cr3t!",
+        "1998-05-24"
+    )
+
+    Thread.sleep(1000)
+
+    println(PlayerCache.exists("GamerZ"))
+    println(PlayerCache.exists("Gamer"))
+
+    // --- NETTOYAGE ---
+    // Ajout d'un hook pour fermer proprement la connexion Kafka à la fin du programme
+    Runtime.getRuntime().addShutdownHook(Thread {
+        println("\n Arrêt du service, fermeture du Producer...")
+        KafkaProducerManager.close()
+    })
+
+    println("\n Fin du script de test. (Le programme s'arrêtera après l'envoi des logs Kafka)")
 }

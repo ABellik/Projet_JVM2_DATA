@@ -3,7 +3,7 @@
   "name": "CreationCompteJoueur",
   "namespace": "com.example.events",
   "fields": [
-    { "name": "idJoueur", "type": "long" },
+    { "name": "pseudo", "type": "string" },
     { "name": "nom", "type": "string" },
     { "name": "prenom", "type": "string" },
     { "name": "email", "type": "string" },

@@ -34,7 +34,7 @@ public class OrderConsumer {
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         try (KafkaConsumer<String, OrderPlaced> consumer = new KafkaConsumer<>(props)) {
-            consumer.subscribe(Collections.singletonList("high-value-orders"));
+            consumer.subscribe(Collections.singletonList("orders"));
 
             System.out.println("🎧 En attente d'évènements Avro...");
 
