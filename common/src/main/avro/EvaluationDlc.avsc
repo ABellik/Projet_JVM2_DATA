@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "name": "EvaluationDLC",
+  "namespace": "com.example.events",
+  "fields": [
+    { "name": "idJoueur", "type": "long" },
+    { "name": "idDlc", "type": "long" },
+    { "name": "Evaluation", "type": "int" },
+    {"name": "versionDlc","type": "string"},
+    {
+      "name": "Commentaire",
+      "type": ["null", "string"],
+      "default": null
+    },
+    { "name": "DateEvaluationDlc", 
+      "type": { "type": "long", "logicalType": "timestamp-millis" } 
+    }
+  ]
+}
