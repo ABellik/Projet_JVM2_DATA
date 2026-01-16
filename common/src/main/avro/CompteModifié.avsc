@@ -1,0 +1,26 @@
+{
+    "type":"record",
+    "name":"ModificationCompteEditeur",
+    "namespace":"com.example.events",
+    "doc" : "Évènement émis lorsqu'un editeur modifie son compte",
+    "fields":
+    [
+        {
+            "name": "id", 
+            "type": "long"
+        },
+        {
+            "name": "date", 
+            "type": {"type":"int", "logicalType": "date"}
+        },
+        {
+            "name":"modifications",
+            "type":
+                    {
+                        "type":"map",
+                        "values": "string"
+                    }
+        }
+        
+    ]
+}
