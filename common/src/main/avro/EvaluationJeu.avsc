@@ -6,6 +6,7 @@
     { "name": "idJeu", "type": "long" },
     { "name": "Note", "type": "int" },
     { "name": "idJoueur", "type": "long" },
+    {"name": "versionJeu","type": "string"},
     {
       "name": "Commentaire",
       "type": ["null", "string"],
