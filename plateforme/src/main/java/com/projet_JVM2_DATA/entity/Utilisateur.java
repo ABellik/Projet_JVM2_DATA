@@ -3,7 +3,6 @@ package com.projet_JVM2_DATA.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,7 +28,7 @@ public class Utilisateur {
     @Column(name = "date_inscription", nullable = false)
     private LocalDate dateInscription;
 
-    //On utilise cette méthode car aucune autre colonne n'est stockée dans la table Amitié
+    //On utilise cette méthode puisqu'aucune autre colonne n'est stockée dans la table Amitié
     @ManyToMany
     @JoinTable(
             name = "\"Amitié\"", // Nom exact de la table intermédiaire

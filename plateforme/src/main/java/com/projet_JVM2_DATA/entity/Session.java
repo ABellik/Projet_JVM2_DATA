@@ -21,10 +21,10 @@ public class Session {
     @Column(name = "\"idPlateforme\"", nullable = false)
     private Long idPlateforme;
 
-    @Column(name = "\"idJeu (nullable)\"")
+    @Column(name = "\"idJeu\"")
     private Long idJeuNullable;
 
-    @Column(name = "\"idDLC (nullable)\"")
+    @Column(name = "\"idDLC\"")
     private Long idDLCNullable;
 
     @Column(name = "\"durée\"", nullable = false)

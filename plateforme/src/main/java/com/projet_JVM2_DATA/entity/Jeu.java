@@ -32,7 +32,7 @@ public class Jeu {
     private String typeType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "\"idJeuParent (nullable)\"")
+    @JoinColumn(name = "\"idJeuParent\"")
     private Jeu idJeuParentNullable;
 
     public Long getId() {

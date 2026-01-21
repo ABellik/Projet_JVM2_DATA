@@ -22,10 +22,10 @@ public class Bibliothèque {
     @Column(name = "\"idJeu\"", nullable = false)
     private Long idJeu;
 
-    @Column(name = "\"commentaire_joueur (nullable)\"")
+    @Column(name = "\"commentaire_joueur\"")
     private String commentaireJoueurNullable;
 
-    @Column(name = "\"note_joueur (nullable)\"")
+    @Column(name = "\"note_joueur\"")
     private Long noteJoueurNullable;
 
     @Column(name = "temps_jeu", nullable = false)
