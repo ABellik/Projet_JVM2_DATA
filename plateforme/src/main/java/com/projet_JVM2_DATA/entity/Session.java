@@ -9,26 +9,24 @@ public class Session {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id", nullable = false)
-    private Crash crash;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "\"idUtilisateur\"", nullable = false)
-    private Bibliothèque idUtilisateur;
+    private Utilisateur idUtilisateur;
 
     @Column(name = "\"idPlateforme\"", nullable = false)
     private Long idPlateforme;
 
-    @Column(name = "\"idJeu\"")
-    private Long idJeuNullable;
+    @Column(name = "idjeu")
+    private Long idjeu;
 
-    @Column(name = "\"idDLC\"")
-    private Long idDLCNullable;
+    @Column(name = "iddlc")
+    private Long iddlc;
 
     @Column(name = "\"durée\"", nullable = false)
     private Long durée;
+
+    @Column(name = "type", nullable = false)
+    private TypeSession type;
 
     public Long getId() {
         return id;
@@ -38,19 +36,11 @@ public class Session {
         this.id = id;
     }
 
-    public Crash getCrash() {
-        return crash;
-    }
-
-    public void setCrash(Crash crash) {
-        this.crash = crash;
-    }
-
-    public Bibliothèque getIdUtilisateur() {
+    public Utilisateur getIdUtilisateur() {
         return idUtilisateur;
     }
 
-    public void setIdUtilisateur(Bibliothèque idUtilisateur) {
+    public void setIdUtilisateur(Utilisateur idUtilisateur) {
         this.idUtilisateur = idUtilisateur;
     }
 
@@ -62,20 +52,20 @@ public class Session {
         this.idPlateforme = idPlateforme;
     }
 
-    public Long getIdJeuNullable() {
-        return idJeuNullable;
+    public Long getIdjeu() {
+        return idjeu;
     }
 
-    public void setIdJeuNullable(Long idJeuNullable) {
-        this.idJeuNullable = idJeuNullable;
+    public void setIdjeu(Long idjeu) {
+        this.idjeu = idjeu;
     }
 
-    public Long getIdDLCNullable() {
-        return idDLCNullable;
+    public Long getIddlc() {
+        return iddlc;
     }
 
-    public void setIdDLCNullable(Long idDLCNullable) {
-        this.idDLCNullable = idDLCNullable;
+    public void setIddlc(Long iddlc) {
+        this.iddlc = iddlc;
     }
 
     public Long getDurée() {
