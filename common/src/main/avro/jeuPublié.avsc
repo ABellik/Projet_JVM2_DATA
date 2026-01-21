@@ -1,7 +1,7 @@
 {
     "type":"record",
     "name":"PublicationJeu",
-    "namespace": "com.example.events",
+    "namespace": "editeur.src.main.java.com.projet_JVM2_DATA",
     "doc" : "Évènement émis lorsqu'un jeu est publié par l'éditeur",
     "fields":
     [
@@ -21,8 +21,12 @@
         },
         
         {
-            "name": "genre", 
-            "type": "string"
+            "name": "genre",
+            "type":
+            {
+                "type":"array",
+                "items": "string"
+            }
         },
         
         {

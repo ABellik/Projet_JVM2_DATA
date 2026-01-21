@@ -1,0 +1,18 @@
+{
+    "type":"record",
+    "name":"SuppressionCompteEditeur",
+    "namespace":"com.example.events",
+    "doc" : "Évènement émis lorsqu'un editeur supprime son compte",
+    "fields":
+    [
+        {
+            "name": "id", 
+            "type": "long"
+        },
+        {
+            "name": "date", 
+            "type": {"type":"int", "logicalType": "date"}
+        }
+        
+    ]
+}
