@@ -18,6 +18,8 @@ public class Licence {
     @JoinColumn(name = "\"idJeu\"", nullable = false)
     private Jeu idJeu;
 
+    //TODO Constructeur
+
     public LicenceId getId() {
         return id;
     }

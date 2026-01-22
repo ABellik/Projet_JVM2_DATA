@@ -15,6 +15,8 @@ public class Plateforme {
     @Column(name = "nom", nullable = false)
     private String nom;
 
+    //TODO Constructeur
+
     public Long getId() {
         return id;
     }

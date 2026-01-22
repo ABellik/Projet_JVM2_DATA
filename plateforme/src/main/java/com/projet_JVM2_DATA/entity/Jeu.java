@@ -35,6 +35,8 @@ public class Jeu {
     @JoinColumn(name = "\"idJeuParent\"")
     private Jeu idJeuParentNullable;
 
+    //TODO Constructeur
+
     public Long getId() {
         return id;
     }
@@ -106,5 +108,4 @@ public class Jeu {
     public void setIdJeuParentNullable(Jeu idJeuParentNullable) {
         this.idJeuParentNullable = idJeuParentNullable;
     }
-
 }

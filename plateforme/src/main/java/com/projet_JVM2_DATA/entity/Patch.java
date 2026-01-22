@@ -22,6 +22,8 @@ public class Patch {
     @Column(name = "\"modification Modification\"", nullable = false)
     private String modificationModification;
 
+    //TODO Constructeur
+
     public Long getId() {
         return id;
     }

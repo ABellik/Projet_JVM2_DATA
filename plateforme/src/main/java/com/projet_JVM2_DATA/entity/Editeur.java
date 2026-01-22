@@ -18,6 +18,8 @@ public class Editeur {
     @Column(name = "nom", nullable = false)
     private String nom;
 
+    //TODO Constructeur
+
     public Long getId() {
         return id;
     }
@@ -41,5 +43,4 @@ public class Editeur {
     public void setNom(String nom) {
         this.nom = nom;
     }
-
 }

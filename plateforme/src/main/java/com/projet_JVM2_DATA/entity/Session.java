@@ -31,6 +31,8 @@ public class Session {
     @Column(name = "type", nullable = false)
     private TypeSession type;
 
+    //TODO Constructeur
+
     public Long getId() {
         return id;
     }

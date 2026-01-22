@@ -28,6 +28,8 @@ public class Wishlist {
     @Column(name = "date_ajout", nullable = false)
     private LocalDate dateAjout;
 
+    //TODO Constructeur
+
     public WishlistId getId() {
         return id;
     }

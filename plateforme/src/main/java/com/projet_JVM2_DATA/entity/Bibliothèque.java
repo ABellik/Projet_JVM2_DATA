@@ -40,6 +40,8 @@ public class Bibliothèque {
     @Column(name = "prix_achat", nullable = false)
     private Long prixAchat;
 
+    //TODO Constructeur
+
     public BibliothèqueId getId() {
         return id;
     }
@@ -111,5 +113,4 @@ public class Bibliothèque {
     public void setPrixAchat(Long prixAchat) {
         this.prixAchat = prixAchat;
     }
-
 }

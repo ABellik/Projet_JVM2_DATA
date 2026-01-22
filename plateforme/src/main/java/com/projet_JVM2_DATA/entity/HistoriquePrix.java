@@ -22,6 +22,8 @@ public class HistoriquePrix {
     @Column(name = "commentaire", nullable = false)
     private String commentaire;
 
+    //TODO Constructeur
+
     public Long getId() {
         return id;
     }
@@ -61,5 +63,4 @@ public class HistoriquePrix {
     public void setCommentaire(String commentaire) {
         this.commentaire = commentaire;
     }
-
 }
