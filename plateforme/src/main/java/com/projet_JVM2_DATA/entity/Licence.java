@@ -13,6 +13,11 @@ public class Licence {
     @JoinColumn(name = "\"idPlateforme\"", nullable = false)
     private Plateforme idPlateforme;
 
+    @MapsId("idJeu")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "\"idJeu\"", nullable = false)
+    private Jeu idJeu;
+
     public LicenceId getId() {
         return id;
     }
@@ -27,6 +32,14 @@ public class Licence {
 
     public void setIdPlateforme(Plateforme idPlateforme) {
         this.idPlateforme = idPlateforme;
+    }
+
+    public Jeu getIdJeu() {
+        return idJeu;
+    }
+
+    public void setIdJeu(Jeu idJeu) {
+        this.idJeu = idJeu;
     }
 
 }

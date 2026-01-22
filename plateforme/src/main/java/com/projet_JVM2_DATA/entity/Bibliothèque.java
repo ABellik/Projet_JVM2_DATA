@@ -7,26 +7,29 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "\"Bibliothèque\"")
 public class Bibliothèque {
-    @Id
-    @Column(name = "\"idUtilisateur\"", nullable = false)
-    private Long id;
+    @EmbeddedId
+    private BibliothèqueId id;
 
-    @MapsId
+    @MapsId("idUtilisateur")
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "\"idUtilisateur\"", nullable = false)
-    private Utilisateur utilisateur;
+    private Utilisateur idUtilisateur;
 
-    @Column(name = "\"idPlateforme\"", nullable = false)
-    private Long idPlateforme;
+    @MapsId("idPlateforme")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "\"idPlateforme\"", nullable = false)
+    private Plateforme idPlateforme;
 
-    @Column(name = "\"idJeu\"", nullable = false)
-    private Long idJeu;
+    @MapsId("idJeu")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "\"idJeu\"", nullable = false)
+    private Jeu idJeu;
 
-    @Column(name = "\"commentaire_joueur\"")
-    private String commentaireJoueurNullable;
+    @Column(name = "commentaire_joueur")
+    private String commentaireJoueur;
 
-    @Column(name = "\"note_joueur\"")
-    private Long noteJoueurNullable;
+    @Column(name = "note_joueur")
+    private Long noteJoueur;
 
     @Column(name = "temps_jeu", nullable = false)
     private Long tempsJeu;
@@ -37,52 +40,52 @@ public class Bibliothèque {
     @Column(name = "prix_achat", nullable = false)
     private Long prixAchat;
 
-    public Long getId() {
+    public BibliothèqueId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(BibliothèqueId id) {
         this.id = id;
     }
 
-    public Utilisateur getUtilisateur() {
-        return utilisateur;
+    public Utilisateur getIdUtilisateur() {
+        return idUtilisateur;
     }
 
-    public void setUtilisateur(Utilisateur utilisateur) {
-        this.utilisateur = utilisateur;
+    public void setIdUtilisateur(Utilisateur idUtilisateur) {
+        this.idUtilisateur = idUtilisateur;
     }
 
-    public Long getIdPlateforme() {
+    public Plateforme getIdPlateforme() {
         return idPlateforme;
     }
 
-    public void setIdPlateforme(Long idPlateforme) {
+    public void setIdPlateforme(Plateforme idPlateforme) {
         this.idPlateforme = idPlateforme;
     }
 
-    public Long getIdJeu() {
+    public Jeu getIdJeu() {
         return idJeu;
     }
 
-    public void setIdJeu(Long idJeu) {
+    public void setIdJeu(Jeu idJeu) {
         this.idJeu = idJeu;
     }
 
-    public String getCommentaireJoueurNullable() {
-        return commentaireJoueurNullable;
+    public String getCommentaireJoueur() {
+        return commentaireJoueur;
     }
 
-    public void setCommentaireJoueurNullable(String commentaireJoueurNullable) {
-        this.commentaireJoueurNullable = commentaireJoueurNullable;
+    public void setCommentaireJoueur(String commentaireJoueur) {
+        this.commentaireJoueur = commentaireJoueur;
     }
 
-    public Long getNoteJoueurNullable() {
-        return noteJoueurNullable;
+    public Long getNoteJoueur() {
+        return noteJoueur;
     }
 
-    public void setNoteJoueurNullable(Long noteJoueurNullable) {
-        this.noteJoueurNullable = noteJoueurNullable;
+    public void setNoteJoueur(Long noteJoueur) {
+        this.noteJoueur = noteJoueur;
     }
 
     public Long getTempsJeu() {

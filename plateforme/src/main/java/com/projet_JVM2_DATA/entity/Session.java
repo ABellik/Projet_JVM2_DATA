@@ -13,14 +13,17 @@ public class Session {
     @JoinColumn(name = "\"idUtilisateur\"", nullable = false)
     private Utilisateur idUtilisateur;
 
-    @Column(name = "\"idPlateforme\"", nullable = false)
-    private Long idPlateforme;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "\"idPlateforme\"", nullable = false)
+    private Plateforme idPlateforme;
 
-    @Column(name = "idjeu")
-    private Long idjeu;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idjeu")
+    private Jeu idjeu;
 
-    @Column(name = "iddlc")
-    private Long iddlc;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "iddlc")
+    private Jeu iddlc;
 
     @Column(name = "\"durée\"", nullable = false)
     private Long durée;
@@ -44,27 +47,27 @@ public class Session {
         this.idUtilisateur = idUtilisateur;
     }
 
-    public Long getIdPlateforme() {
+    public Plateforme getIdPlateforme() {
         return idPlateforme;
     }
 
-    public void setIdPlateforme(Long idPlateforme) {
+    public void setIdPlateforme(Plateforme idPlateforme) {
         this.idPlateforme = idPlateforme;
     }
 
-    public Long getIdjeu() {
+    public Jeu getIdjeu() {
         return idjeu;
     }
 
-    public void setIdjeu(Long idjeu) {
+    public void setIdjeu(Jeu idjeu) {
         this.idjeu = idjeu;
     }
 
-    public Long getIddlc() {
+    public Jeu getIddlc() {
         return iddlc;
     }
 
-    public void setIddlc(Long iddlc) {
+    public void setIddlc(Jeu iddlc) {
         this.iddlc = iddlc;
     }
 
@@ -76,4 +79,17 @@ public class Session {
         this.durée = durée;
     }
 
+    public TypeSession getType() {
+        return type;
+    }
+    public void setType(TypeSession type) {
+        this.type = type;
+    }
+
+/*
+ TODO [Reverse Engineering] create field to map the 'type' column
+ Available actions: Define target Java type | Uncomment as is | Remove column mapping
+    @Column(name = "type", columnDefinition = "type_session not null")
+    private Object type;
+*/
 }

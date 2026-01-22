@@ -15,6 +15,16 @@ public class Wishlist {
     @JoinColumn(name = "\"idUtilisateur\"", nullable = false)
     private Utilisateur idUtilisateur;
 
+    @MapsId("idPlateforme")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "\"idPlateforme\"", nullable = false)
+    private Plateforme idPlateforme;
+
+    @MapsId("idJeu")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "\"idJeu\"", nullable = false)
+    private Jeu idJeu;
+
     @Column(name = "date_ajout", nullable = false)
     private LocalDate dateAjout;
 
@@ -32,6 +42,22 @@ public class Wishlist {
 
     public void setIdUtilisateur(Utilisateur idUtilisateur) {
         this.idUtilisateur = idUtilisateur;
+    }
+
+    public Plateforme getIdPlateforme() {
+        return idPlateforme;
+    }
+
+    public void setIdPlateforme(Plateforme idPlateforme) {
+        this.idPlateforme = idPlateforme;
+    }
+
+    public Jeu getIdJeu() {
+        return idJeu;
+    }
+
+    public void setIdJeu(Jeu idJeu) {
+        this.idJeu = idJeu;
     }
 
     public LocalDate getDateAjout() {
