@@ -40,7 +40,23 @@ public class Bibliothèque {
     @Column(name = "prix_achat", nullable = false)
     private Long prixAchat;
 
-    //TODO Constructeur
+    public Bibliothèque(){}
+    public Bibliothèque(Utilisateur utilisateur, Plateforme plateforme, Jeu jeu, long prixAchat) {
+        this.idUtilisateur = utilisateur;
+        this.idPlateforme = plateforme;
+        this.idJeu = jeu;
+        this.commentaireJoueur = "";
+        this.noteJoueur = 0L;
+        this.tempsJeu = 0L;
+        this.dateAchat = LocalDate.now();
+        this.prixAchat = prixAchat;
+
+        this.id = new BibliothèqueId();
+        this.id.setIdJeu(jeu.getId());
+        this.id.setIdUtilisateur(utilisateur.getId());
+        this.id.setIdPlateforme(plateforme.getId());
+
+    }
 
     public BibliothèqueId getId() {
         return id;

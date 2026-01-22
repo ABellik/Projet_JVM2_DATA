@@ -28,7 +28,18 @@ public class Wishlist {
     @Column(name = "date_ajout", nullable = false)
     private LocalDate dateAjout;
 
-    //TODO Constructeur
+    public Wishlist(){}
+    public Wishlist(Utilisateur utilisateur,  Plateforme plateforme, Jeu jeu) {
+        this.idUtilisateur = utilisateur;
+        this.idPlateforme = plateforme;
+        this.idJeu = jeu;
+        this.dateAjout = LocalDate.now();
+
+        this.id = new WishlistId();
+        this.id.setIdUtilisateur(utilisateur.getId());
+        this.id.setIdPlateforme(plateforme.getId());
+        this.id.setIdJeu(jeu.getId());
+    }
 
     public WishlistId getId() {
         return id;

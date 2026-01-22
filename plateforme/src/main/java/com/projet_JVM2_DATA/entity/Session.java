@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "\"Session\"")
 public class Session {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -31,7 +32,14 @@ public class Session {
     @Column(name = "type", nullable = false)
     private TypeSession type;
 
-    //TODO Constructeur
+    public Session(){}
+    public Session(Utilisateur utilisateur, Plateforme plateforme, Jeu jeu, Jeu dlc, TypeSession type) {
+        this.idUtilisateur = utilisateur;
+        this.idPlateforme = plateforme;
+        this.idjeu = jeu;
+        this.iddlc = dlc;
+        this.type=type;
+    }
 
     public Long getId() {
         return id;
