@@ -7,10 +7,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class UtilisateurService {
 
-    public void inscription(String prenom, String nom, String pseudo, LocalDate date_naissance) {
+    public void inscription(String prenom, String nom, String pseudo, LocalDate date_naissance, String mdp) {
         // 1. On ouvre l'EntityManager
         EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
@@ -22,7 +23,7 @@ public class UtilisateurService {
             UtilisateurRepository repository = new UtilisateurRepository(em);
 
             // 3. Logique Métier
-            Utilisateur utilisateur = new Utilisateur(pseudo, prenom, nom, date_naissance, LocalDate.now());
+            Utilisateur utilisateur = new Utilisateur(prenom, nom, pseudo, mdp, LocalDate.now(),date_naissance);
 
             // Appel propre au repository
             repository.save(utilisateur);
@@ -38,6 +39,20 @@ public class UtilisateurService {
             e.printStackTrace();
         } finally {
             em.close();
+        }
+    }
+
+    public void afficherListeUtilisateurs(){
+        try{
+            UtilisateurRepository repository = new UtilisateurRepository(JpaUtil.getEntityManagerFactory().createEntityManager());
+            List<Utilisateur> utilisateurs = repository.findAll();
+            for (Utilisateur utilisateur : utilisateurs) {
+                System.out.println("prénom : " + utilisateur.getPrenom() + "; nom : "+ utilisateur.getNom() + "; pseudo : "+ utilisateur.getPseudo());
+
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
         }
     }
 }
