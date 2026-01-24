@@ -37,12 +37,13 @@ public class ModificationId implements Serializable {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         ModificationId entity = (ModificationId) o;
-        return Objects.equals(this.idpatch, entity.idpatch);
+        return Objects.equals(this.idpatch, entity.idpatch) &&
+                Objects.equals(this.modif, entity.modif);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idpatch);
+        return Objects.hash(idpatch, modif);
     }
 
 }

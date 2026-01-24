@@ -13,7 +13,7 @@ public class Genrejeu {
     @JoinColumn(name = "idjeu", nullable = false)
     private Jeu idjeu;
 
-    @Column(name="genre", nullable = false)
+    @Column(name="genre", nullable = false, insertable = false, updatable = false)
     private TypeGenre genre;
 
     //TODO : constructeur

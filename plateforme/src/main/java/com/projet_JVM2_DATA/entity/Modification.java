@@ -13,7 +13,7 @@ public class Modification {
     @JoinColumn(name = "idpatch", nullable = false)
     private Patch idpatch;
 
-    @Column(name = "modif", nullable = false)
+    @Column(name = "modif", nullable = false, insertable = false, updatable = false)
     private TypeModif modif;
 
     //TODO : constructeur

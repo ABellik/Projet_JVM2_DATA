@@ -37,12 +37,13 @@ public class GenrejeuId implements Serializable {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         GenrejeuId entity = (GenrejeuId) o;
-        return Objects.equals(this.idjeu, entity.idjeu);
+        return Objects.equals(this.idjeu, entity.idjeu) &&
+                Objects.equals(this.genre, entity.genre);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idjeu);
+        return Objects.hash(idjeu, genre);
     }
 
 }
