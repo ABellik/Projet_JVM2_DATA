@@ -13,17 +13,17 @@ public class Bibliothèque {
     @MapsId("idUtilisateur")
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "\"idUtilisateur\"", nullable = false)
-    private Utilisateur idUtilisateur;
+    private Utilisateur utilisateur;
 
     @MapsId("idPlateforme")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "\"idPlateforme\"", nullable = false)
-    private Plateforme idPlateforme;
+    private Plateforme plateforme;
 
     @MapsId("idJeu")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "\"idJeu\"", nullable = false)
-    private Jeu idJeu;
+    private Jeu jeu;
 
     @Column(name = "commentaire_joueur")
     private String commentaireJoueur;
@@ -42,20 +42,17 @@ public class Bibliothèque {
 
     public Bibliothèque(){}
     public Bibliothèque(Utilisateur utilisateur, Plateforme plateforme, Jeu jeu, long prixAchat) {
-        this.idUtilisateur = utilisateur;
-        this.idPlateforme = plateforme;
-        this.idJeu = jeu;
-        this.commentaireJoueur = "";
-        this.noteJoueur = 0L;
-        this.tempsJeu = 0L;
-        this.dateAchat = LocalDate.now();
+        this.id = new BibliothèqueId(utilisateur.getId(), plateforme.getId(), jeu.getId());
+
+        this.utilisateur = utilisateur;
+        this.plateforme = plateforme;
+        this.jeu = jeu;
+
         this.prixAchat = prixAchat;
-
-        this.id = new BibliothèqueId();
-        this.id.setIdJeu(jeu.getId());
-        this.id.setIdUtilisateur(utilisateur.getId());
-        this.id.setIdPlateforme(plateforme.getId());
-
+        this.noteJoueur = null;
+        this.tempsJeu = null;
+        this.dateAchat = LocalDate.now();
+        this.commentaireJoueur = null;
     }
 
     public BibliothèqueId getId() {
@@ -67,27 +64,27 @@ public class Bibliothèque {
     }
 
     public Utilisateur getIdUtilisateur() {
-        return idUtilisateur;
+        return utilisateur;
     }
 
-    public void setIdUtilisateur(Utilisateur idUtilisateur) {
-        this.idUtilisateur = idUtilisateur;
+    public void setIdUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
     }
 
     public Plateforme getIdPlateforme() {
-        return idPlateforme;
+        return plateforme;
     }
 
-    public void setIdPlateforme(Plateforme idPlateforme) {
-        this.idPlateforme = idPlateforme;
+    public void setIdPlateforme(Plateforme plateforme) {
+        this.plateforme = plateforme;
     }
 
     public Jeu getIdJeu() {
-        return idJeu;
+        return jeu;
     }
 
-    public void setIdJeu(Jeu idJeu) {
-        this.idJeu = idJeu;
+    public void setIdJeu(Jeu jeu) {
+        this.jeu = jeu;
     }
 
     public String getCommentaireJoueur() {

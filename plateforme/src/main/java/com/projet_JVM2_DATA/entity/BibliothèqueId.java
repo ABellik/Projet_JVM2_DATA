@@ -19,6 +19,14 @@ public class BibliothèqueId implements Serializable {
     @Column(name = "\"idJeu\"", nullable = false)
     private Long idJeu;
 
+    public BibliothèqueId(Long idUtilisateur, Long idPlateforme, Long idJeu) {
+        this.idUtilisateur = idUtilisateur;
+        this.idPlateforme = idPlateforme;
+        this.idJeu = idJeu;
+    }
+
+    public BibliothèqueId() {} // Constructeur vide JPA
+
     public Long getIdUtilisateur() {
         return idUtilisateur;
     }
