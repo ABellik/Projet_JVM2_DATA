@@ -27,9 +27,9 @@ object KafkaProducerManager {
         val record = ProducerRecord(topic, key, event)
         producer.send(record) { metadata, exception ->
             if (exception != null) {
-                println("❌ Erreur : ${exception.message}")
+                println("Erreur : ${exception.message}")
             } else {
-                println("✅ Envoyé dans ${metadata.topic()} à l'offset ${metadata.offset()}")
+                println("Envoyé dans ${metadata.topic()} à l'offset ${metadata.offset()}")
             }
         }
     }
