@@ -1,0 +1,29 @@
+{
+    "type":"record",
+    "name":"SuppressionJeu",
+    "namespace":"com.example.events",
+    "doc" : "Évènement émis lorsqu'un jeu est supprimé par l'éditeur",
+    "fields":
+    [
+        {
+            "name": "id", 
+            "type": "long"
+        },
+
+        {
+            "name": "idEditeur", 
+            "type": "long"
+        },
+
+        {
+            "name": "idPlateforme", 
+            "type": "long"
+        },
+
+        {
+            "name": "date", 
+            "type": {"type":"int", "logicalType": "date"}
+        }
+        
+    ]
+}
