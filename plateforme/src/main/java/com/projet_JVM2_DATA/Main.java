@@ -1,11 +1,9 @@
 package com.projet_JVM2_DATA;
 
 import com.projet_JVM2_DATA.config.JpaUtil;
-import com.projet_JVM2_DATA.entity.Utilisateur; // Importez votre entité
+import com.projet_JVM2_DATA.service.UtilisateurService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-
-import java.time.LocalDate;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -15,7 +13,7 @@ public class Main {
         EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
 
-        try {
+        /*try {
             tx.begin();
 
             // 2. Créer un objet (Entité)
@@ -35,6 +33,8 @@ public class Main {
             e.printStackTrace();
         } finally {
             em.close();
-        }
+        }*/
+        UtilisateurService utilisateurService = new UtilisateurService();
+        utilisateurService.afficherListeUtilisateurs();
     }
 }
