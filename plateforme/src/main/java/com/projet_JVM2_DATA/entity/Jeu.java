@@ -19,23 +19,21 @@ public class Jeu {
     @Column(name = "version_actuelle", nullable = false)
     private String versionActuelle;
 
-    @Column(name = "\"genre Genre\"", nullable = false)
-    private String genreGenre;
-
     @Column(name = "prix_editeur", nullable = false)
     private Long prixEditeur;
 
     @Column(name = "prix_actuel", nullable = false)
     private Long prixActuel;
 
-    @Column(name = "\"type Type\"", nullable = false)
-    private String typeType;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "\"idJeuParent\"")
-    private Jeu idJeuParentNullable;
+    @JoinColumn(name = "idjeuparent")
+    private Jeu idjeuparent;
 
-    //TODO Constructeur
+    /*Colonne disant si c'est un jeu de base (BASE) ou un DLC (DLC)*/
+    @Column(name = "type",  nullable = false)
+    private TypeJeu type;
+
+    //TODO : constructeur
 
     public Long getId() {
         return id;
@@ -69,14 +67,6 @@ public class Jeu {
         this.versionActuelle = versionActuelle;
     }
 
-    public String getGenreGenre() {
-        return genreGenre;
-    }
-
-    public void setGenreGenre(String genreGenre) {
-        this.genreGenre = genreGenre;
-    }
-
     public Long getPrixEditeur() {
         return prixEditeur;
     }
@@ -93,19 +83,12 @@ public class Jeu {
         this.prixActuel = prixActuel;
     }
 
-    public String getTypeType() {
-        return typeType;
+    public Jeu getIdjeuparent() {
+        return idjeuparent;
     }
 
-    public void setTypeType(String typeType) {
-        this.typeType = typeType;
+    public void setIdjeuparent(Jeu idjeuparent) {
+        this.idjeuparent = idjeuparent;
     }
 
-    public Jeu getIdJeuParentNullable() {
-        return idJeuParentNullable;
-    }
-
-    public void setIdJeuParentNullable(Jeu idJeuParentNullable) {
-        this.idJeuParentNullable = idJeuParentNullable;
-    }
 }

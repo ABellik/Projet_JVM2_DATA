@@ -19,10 +19,7 @@ public class Patch {
     @Column(name = "commentaire_editeur", nullable = false)
     private String commentaireEditeur;
 
-    @Column(name = "\"modification Modification\"", nullable = false)
-    private String modificationModification;
-
-    //TODO Constructeur
+    //TODO : constructeur
 
     public Long getId() {
         return id;
@@ -54,14 +51,6 @@ public class Patch {
 
     public void setCommentaireEditeur(String commentaireEditeur) {
         this.commentaireEditeur = commentaireEditeur;
-    }
-
-    public String getModificationModification() {
-        return modificationModification;
-    }
-
-    public void setModificationModification(String modificationModification) {
-        this.modificationModification = modificationModification;
     }
 
 }
