@@ -3,7 +3,6 @@
   "name": "Session",
   "namespace": "com.example.events",
   "fields": [
-    {"name": "idSession","type": "long"},
     {"name": "idJoueur","type": "long"},
     {"name": "idJeu","type": "long"},
     {"name": "versionJeu","type": "string"},
