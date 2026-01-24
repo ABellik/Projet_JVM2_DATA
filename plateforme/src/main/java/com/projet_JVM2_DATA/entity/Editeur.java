@@ -1,14 +1,12 @@
 package com.projet_JVM2_DATA.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "\"Editeur\"")
 public class Editeur {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -18,7 +16,11 @@ public class Editeur {
     @Column(name = "nom", nullable = false)
     private String nom;
 
-    //TODO Constructeur
+    public Editeur() {}
+    public Editeur(String type, String nom) {
+        this.type = type;
+        this.nom = nom;
+    }
 
     public Long getId() {
         return id;
