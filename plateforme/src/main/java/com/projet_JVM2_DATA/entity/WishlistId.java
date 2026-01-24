@@ -19,6 +19,14 @@ public class WishlistId implements Serializable {
     @Column(name = "\"idJeu\"", nullable = false)
     private Long idJeu;
 
+    public WishlistId() {}
+
+    public WishlistId(Long idUtilisateur, Long idPlateforme, Long idJeu) {
+        this.idUtilisateur = idUtilisateur;
+        this.idPlateforme = idPlateforme;
+        this.idJeu = idJeu;
+    }
+
     public Long getIdUtilisateur() {
         return idUtilisateur;
     }

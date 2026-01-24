@@ -30,15 +30,13 @@ public class Wishlist {
 
     public Wishlist(){}
     public Wishlist(Utilisateur utilisateur,  Plateforme plateforme, Jeu jeu) {
+        this.id = new WishlistId(utilisateur.getId(), plateforme.getId(), jeu.getId());
+
         this.idUtilisateur = utilisateur;
         this.idPlateforme = plateforme;
         this.idJeu = jeu;
-        this.dateAjout = LocalDate.now();
 
-        this.id = new WishlistId();
-        this.id.setIdUtilisateur(utilisateur.getId());
-        this.id.setIdPlateforme(plateforme.getId());
-        this.id.setIdJeu(jeu.getId());
+        this.dateAjout = LocalDate.now();
     }
 
     public WishlistId getId() {
