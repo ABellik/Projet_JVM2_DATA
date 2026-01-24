@@ -1,7 +1,6 @@
 package com.projet_JVM2_DATA.repository;
 
 import com.projet_JVM2_DATA.entity.BibliothèqueId;
-import com.projet_JVM2_DATA.entity.Utilisateur;
 import jakarta.persistence.EntityManager;
 import com.projet_JVM2_DATA.entity.Bibliothèque;
 import java.util.List;
