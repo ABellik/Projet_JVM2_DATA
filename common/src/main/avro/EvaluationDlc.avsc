@@ -6,6 +6,7 @@
     { "name": "idJoueur", "type": "long" },
     { "name": "idDlc", "type": "long" },
     { "name": "Evaluation", "type": "int" },
+    {"name": "versionDlc","type": "string"},
     {
       "name": "Commentaire",
       "type": ["null", "string"],

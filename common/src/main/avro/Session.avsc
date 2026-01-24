@@ -1,0 +1,28 @@
+{
+  "type": "record",
+  "name": "Session",
+  "namespace": "com.example.events",
+  "fields": [
+    {"name": "idJoueur","type": "long"},
+    {"name": "idJeu","type": "long"},
+    {"name": "versionJeu","type": "string"},
+    {"name": "HeureDeDebut",
+        "type": { "type": "long", "logicalType": "timestamp-millis" }
+    },
+    {"name": "HeureDeFin",
+        "type": { "type": "long", "logicalType": "timestamp-millis" }
+    },
+
+    {"name": "causeFermeture","type":
+        {  "type": "enum",  "name": "CauseFermetureSession",  "symbols": ["NORMAL", "CRASH", "FORCED_EXIT"]}
+    },
+
+    {
+      "name": "codeErreur",
+      "type": ["null", "string"],
+      "default": null,
+      "doc" : "Le code d'erreur associé à la fermeture de la session comme exemple un segfault"
+    },
+    {"name": "support","type": "string","doc" : "Support de jeu sur lequel le crash ou autre s'est produit"}
+  ]
+}
