@@ -14,6 +14,35 @@ object PlayerCache {
     private var dateDeCreationDuCompte = ""
     private val games = Collections.synchronizedSet(mutableSetOf<Long>())
 
+    fun getPseudo(): String{
+        return pseudo
+    }
+
+    fun getId(): Long{
+        return idJoueur
+    }
+    fun getNom(): String{
+        return nom
+    }
+    fun getPrenom(): String{
+        return prenom
+    }
+    fun getEmail(): String{
+        return email
+    }
+    fun getMotDePasse(): String{
+        return motDePasse
+    }
+    fun getDateDeCreationDuCompte(): String{
+        return dateDeCreationDuCompte
+    }
+    fun getDateDeNaissance(): String{
+        return dateDeNaissance
+    }
+    fun getGames(): MutableSet<Long>{
+        return games
+    }
+
 
     fun addGame(idJeu: Long) {
         games.add(idJeu)
