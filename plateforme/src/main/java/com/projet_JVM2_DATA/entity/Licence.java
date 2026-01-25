@@ -18,7 +18,12 @@ public class Licence {
     @JoinColumn(name = "\"idJeu\"", nullable = false)
     private Jeu idJeu;
 
-    //TODO Constructeur
+    public Licence() {}
+    public Licence(Plateforme plateforme, Jeu jeu) {
+        this.id = new LicenceId(plateforme.getId(), jeu.getId());
+        this.idPlateforme = plateforme;
+        this.idJeu = jeu;
+    }
 
     public LicenceId getId() {
         return id;

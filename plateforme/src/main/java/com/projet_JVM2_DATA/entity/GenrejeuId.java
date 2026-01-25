@@ -19,6 +19,12 @@ public class GenrejeuId implements Serializable {
     @Column(name = "genre", nullable = false)
     private TypeGenre genre;
 
+    public GenrejeuId() {}
+    public GenrejeuId(Long idjeu, TypeGenre genre) {
+        this.idjeu = idjeu;
+        this.genre = genre;
+    }
+
     public Long getIdjeu() {
         return idjeu;
     }

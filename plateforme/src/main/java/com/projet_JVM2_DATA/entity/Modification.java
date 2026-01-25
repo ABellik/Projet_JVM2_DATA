@@ -17,7 +17,12 @@ public class Modification {
     @Column(name = "modif", nullable = false, insertable = false, updatable = false)
     private TypeModif modif;
 
-    //TODO : constructeur
+    public Modification() {}
+    public Modification(Patch patch, TypeModif modif) {
+        this.id = new ModificationId(patch.getId(),modif);
+        this.idpatch = patch;
+        this.modif = modif;
+    }
 
     public ModificationId getId() {
         return id;

@@ -19,6 +19,12 @@ public class ModificationId implements Serializable {
     @Column(name = "modif", nullable = false)
     private TypeModif modif;
 
+    public ModificationId(){}
+    public ModificationId(Long idpatch, TypeModif modif) {
+        this.idpatch = idpatch;
+        this.modif = modif;
+    }
+
     public Long getIdpatch() {
         return idpatch;
     }
