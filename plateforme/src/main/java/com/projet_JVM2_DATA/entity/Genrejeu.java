@@ -13,6 +13,7 @@ public class Genrejeu {
     @JoinColumn(name = "idjeu", nullable = false)
     private Jeu idjeu;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="genre", nullable = false, insertable = false, updatable = false)
     private TypeGenre genre;
 

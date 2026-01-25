@@ -29,16 +29,18 @@ public class Session {
     @Column(name = "\"durée\"", nullable = false)
     private Long durée;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private TypeSession type;
 
     public Session(){}
-    public Session(Utilisateur utilisateur, Plateforme plateforme, Jeu jeu, Jeu dlc, TypeSession type) {
+    public Session(Utilisateur utilisateur, Plateforme plateforme, Jeu jeu, Jeu dlc, long duree, TypeSession type) {
         this.idUtilisateur = utilisateur;
         this.idPlateforme = plateforme;
         this.idjeu = jeu;
         this.iddlc = dlc;
         this.type=type;
+        this.durée=duree;
     }
 
     public Long getId() {
@@ -96,10 +98,4 @@ public class Session {
         this.type = type;
     }
 
-/*
- TODO [Reverse Engineering] create field to map the 'type' column
- Available actions: Define target Java type | Uncomment as is | Remove column mapping
-    @Column(name = "type", columnDefinition = "type_session not null")
-    private Object type;
-*/
 }

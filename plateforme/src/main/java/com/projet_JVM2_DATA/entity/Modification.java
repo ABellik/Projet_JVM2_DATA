@@ -13,6 +13,7 @@ public class Modification {
     @JoinColumn(name = "idpatch", nullable = false)
     private Patch idpatch;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "modif", nullable = false, insertable = false, updatable = false)
     private TypeModif modif;
 

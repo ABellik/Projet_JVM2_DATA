@@ -2,6 +2,8 @@ package com.projet_JVM2_DATA.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
@@ -13,6 +15,7 @@ public class ModificationId implements Serializable {
     @Column(name = "idpatch", nullable = false)
     private Long idpatch;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "modif", nullable = false)
     private TypeModif modif;
 

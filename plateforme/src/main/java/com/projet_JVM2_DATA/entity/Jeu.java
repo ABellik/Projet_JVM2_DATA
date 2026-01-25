@@ -29,6 +29,7 @@ public class Jeu {
     @JoinColumn(name = "idjeuparent")
     private Jeu idjeuparent;
 
+    @Enumerated(EnumType.STRING)
     /*Colonne disant si c'est un jeu de base (BASE) ou un DLC (DLC)*/
     @Column(name = "type",  nullable = false)
     private TypeJeu type;
