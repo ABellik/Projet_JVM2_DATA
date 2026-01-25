@@ -6,7 +6,6 @@ import com.projet_JVM2_DATA.repository.UtilisateurRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
