@@ -16,10 +16,14 @@ public class Editeur {
     @Column(name = "nom", nullable = false)
     private String nom;
 
+    @Column(name = "mdp", nullable = false)
+    private String mdp;
+
     public Editeur() {}
-    public Editeur(String type, String nom) {
+    public Editeur(String type, String nom, String mdp) {
         this.type = type;
         this.nom = nom;
+        this.mdp = mdp;
     }
 
     public Long getId() {
