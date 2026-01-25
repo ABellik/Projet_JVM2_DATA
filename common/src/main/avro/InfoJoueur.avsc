@@ -1,0 +1,20 @@
+{
+  "type": "record",
+  "name": "InfoJoueur",
+  "namespace": "com.example.events",
+  "fields": [
+    { "name": "idJoueur", "type": "long" },
+    { "name": "pseudo", "type": "string" },
+    { "name": "DateDeCreationDuCompte",
+      "type": { "type": "long", "logicalType": "timestamp-millis" }
+    },
+    {
+      "name": "games",
+      "type": {
+        "type": "array",
+        "items": "long",
+        "default": []
+      }
+    }
+  ]
+}

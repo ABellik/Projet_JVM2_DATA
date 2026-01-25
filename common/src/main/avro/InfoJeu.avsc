@@ -1,0 +1,19 @@
+{
+  "type":"record",
+  "name":"InfoJeu",
+  "namespace": "com.example.events",
+  "fields":
+  [
+    {"name": "id", "type": "long"},
+    {"name": "nom", "type": "string"},
+    {"name": "versionActuelle", "type": "string"},
+    {"name": "genre", "type":
+      {
+        "type":"array",
+        "items": "string"
+      }
+    },
+    {"name": "prix", "type": "int"},
+    {"name": "nomEditeur", "type": "string"}
+  ]
+}
