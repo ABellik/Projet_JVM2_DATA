@@ -17,7 +17,12 @@ public class Genrejeu {
     @Column(name="genre", nullable = false, insertable = false, updatable = false)
     private TypeGenre genre;
 
-    //TODO : constructeur
+    public Genrejeu() {}
+    public Genrejeu(Jeu jeu, TypeGenre genre) {
+        this.id = new GenrejeuId(jeu.getId(), genre);
+        this.idjeu = jeu;
+        this.genre = genre;
+    }
 
     public GenrejeuId getId() {
         return id;
