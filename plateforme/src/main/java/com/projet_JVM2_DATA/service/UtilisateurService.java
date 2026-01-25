@@ -54,4 +54,91 @@ public class UtilisateurService {
         }
         return utilisateurs;
     }
+
+    public void creationAmitie(Long idUtilisateur1, Long idUtilisateur2){
+        EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+
+            UtilisateurRepository repository = new UtilisateurRepository(em);
+
+            Utilisateur utilisateur1 = repository.findById(idUtilisateur1);
+            Utilisateur utilisateur2 = repository.findById(idUtilisateur2);
+
+            // Vérification simple
+            if (utilisateur1 == null || utilisateur2 == null) {
+                throw new IllegalArgumentException("Un des joueurs n'existe pas !");
+            }
+
+            utilisateur1.ajouterAmi(utilisateur2);
+
+            tx.commit();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        finally{
+            em.close();
+        }
+    }
+
+    public void supprimerAmitie(Long idUtilisateur1, Long idUtilisateur2){
+        EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+
+        try {
+            tx.begin();
+
+            //instanciation du repository
+            UtilisateurRepository repository = new UtilisateurRepository(em);
+
+            Utilisateur utilisateur1 = repository.findById(idUtilisateur1);
+            Utilisateur utilisateur2 = repository.findById(idUtilisateur2);
+
+            if (utilisateur1 == null || utilisateur2 == null) {
+                throw new IllegalArgumentException("Un des joueurs n'existe pas !");
+            }
+
+            utilisateur1.retirerAmi(utilisateur2);
+
+            tx.commit();
+        }
+        catch(Exception e){
+            if(tx.isActive()){
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+        finally{
+            em.close();
+        }
+    }
+
+    public void supprimerCompte(Long idUtilisateur){
+        EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+
+            //instanciation du repository
+            UtilisateurRepository repository = new UtilisateurRepository(em);
+
+            //récupération de l'utilisateur
+            Utilisateur utilisateur = repository.findById(idUtilisateur);
+
+            repository.delete(utilisateur);
+
+            tx.commit();
+        }
+        catch(Exception e){
+            if(tx.isActive()){
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+        finally{
+            em.close();
+        }
+    }
 }

@@ -41,7 +41,7 @@ public class Bibliothèque {
     private Long prixAchat;
 
     public Bibliothèque(){}
-    public Bibliothèque(Utilisateur utilisateur, Plateforme plateforme, Jeu jeu, long prixAchat) {
+    public Bibliothèque(Utilisateur utilisateur, Plateforme plateforme, Jeu jeu, LocalDate dateAchat, long prixAchat) {
         this.id = new BibliothèqueId(utilisateur.getId(), plateforme.getId(), jeu.getId());
 
         this.utilisateur = utilisateur;
@@ -50,8 +50,8 @@ public class Bibliothèque {
 
         this.prixAchat = prixAchat;
         this.noteJoueur = null;
-        this.tempsJeu = null;
-        this.dateAchat = LocalDate.now();
+        this.tempsJeu = 0L;
+        this.dateAchat = dateAchat;
         this.commentaireJoueur = null;
     }
 

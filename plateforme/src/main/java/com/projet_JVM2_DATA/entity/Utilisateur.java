@@ -48,6 +48,11 @@ public class Utilisateur {
         ami.getAmis().add(this); // Si l'amitié est symétrique
     }
 
+    public void retirerAmi(Utilisateur ancienAmi) {
+        ancienAmi.getAmis().remove(this);
+        this.amis.remove(ancienAmi);
+    }
+
     public Utilisateur() {}
     public Utilisateur(String nom, String prenom, String pseudo, String mdp, LocalDate dateInscription, LocalDate dateNaissance) {
         this.nom = nom;

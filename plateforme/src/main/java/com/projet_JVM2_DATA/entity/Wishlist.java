@@ -29,14 +29,14 @@ public class Wishlist {
     private LocalDate dateAjout;
 
     public Wishlist(){}
-    public Wishlist(Utilisateur utilisateur,  Plateforme plateforme, Jeu jeu) {
+    public Wishlist(Utilisateur utilisateur,  Plateforme plateforme, Jeu jeu, LocalDate dateAjout) {
         this.id = new WishlistId(utilisateur.getId(), plateforme.getId(), jeu.getId());
 
         this.idUtilisateur = utilisateur;
         this.idPlateforme = plateforme;
         this.idJeu = jeu;
 
-        this.dateAjout = LocalDate.now();
+        this.dateAjout = dateAjout;
     }
 
     public WishlistId getId() {
