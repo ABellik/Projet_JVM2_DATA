@@ -79,7 +79,7 @@ public class BibliothèqueService {
 
             //modification de l'évaluation et possiblement du commentaire
             if(bibliotheque != null) {
-                if(commentaire != null && !commentaire.equals("")) {
+                if(commentaire != null && !commentaire.isEmpty()) {
                     bibliotheque.setCommentaireJoueur(commentaire);
                 }
                 bibliotheque.setNoteJoueur((long) note);
