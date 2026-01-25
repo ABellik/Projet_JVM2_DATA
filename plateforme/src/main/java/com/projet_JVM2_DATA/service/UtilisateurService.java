@@ -6,7 +6,9 @@ import com.projet_JVM2_DATA.repository.UtilisateurRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UtilisateurService {
@@ -42,17 +44,15 @@ public class UtilisateurService {
         }
     }
 
-    public void afficherListeUtilisateurs(){
+    public List<Utilisateur> ListeUtilisateurs(){
+        List<Utilisateur> utilisateurs = new ArrayList<>();
         try{
             UtilisateurRepository repository = new UtilisateurRepository(JpaUtil.getEntityManagerFactory().createEntityManager());
-            List<Utilisateur> utilisateurs = repository.findAll();
-            for (Utilisateur utilisateur : utilisateurs) {
-                System.out.println("prénom : " + utilisateur.getPrenom() + "; nom : "+ utilisateur.getNom() + "; pseudo : "+ utilisateur.getPseudo());
-
-            }
+            utilisateurs = repository.findAll();
         }
         catch(Exception e){
             e.printStackTrace();
         }
+        return utilisateurs;
     }
 }
