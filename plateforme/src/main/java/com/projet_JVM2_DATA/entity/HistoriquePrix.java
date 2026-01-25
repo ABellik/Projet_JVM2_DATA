@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "\"Historique_Prix\"")
 public class HistoriquePrix {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -22,7 +23,13 @@ public class HistoriquePrix {
     @Column(name = "commentaire", nullable = false)
     private String commentaire;
 
-    //TODO Constructeur
+    public HistoriquePrix() {}
+    public HistoriquePrix(Jeu jeu, Long ancienPrix, Long nouveauPrix, String commentaire) {
+        this.idJeu = jeu;
+        this.ancienPrix = ancienPrix;
+        this.nouveauPrix = nouveauPrix;
+        this.commentaire = commentaire;
+    }
 
     public Long getId() {
         return id;
