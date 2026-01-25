@@ -31,7 +31,7 @@ public class InscriptionJoueurConsumer implements Runnable {
     @Override
     public void run() {
         try {
-            consumer.subscribe(Collections.singletonList("creation-compte-joueur")); // Le nom de ton topic
+            consumer.subscribe(Collections.singletonList("creation-compte-joueur")); // TODO : à changer par le vrai nom du topic
 
             while (true) {
                 ConsumerRecords<String, CreationCompteJoueur> records = consumer.poll(Duration.ofMillis(1000));
