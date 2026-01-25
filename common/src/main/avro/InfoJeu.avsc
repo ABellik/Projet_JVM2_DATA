@@ -13,7 +13,7 @@
         "items": "string"
       }
     },
-    {"name": "prix", "type": "int"},
+    {"name": "prix", "type": "double"},
     {"name": "nomEditeur", "type": "string"}
   ]
 }

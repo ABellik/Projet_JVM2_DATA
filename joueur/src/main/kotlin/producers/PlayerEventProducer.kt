@@ -5,7 +5,9 @@ import com.example.events.CreationCompteJoueur
 import com.example.events.AchatJeu
 import com.example.events.Session
 import com.example.events.CauseFermetureSession
-import com.projet_JVM2_DATA.data.PlayerCache
+import com.example.events.EvaluationJeu
+import com.projet_JVM2_DATA.cache.GameCatalogCache
+import com.projet_JVM2_DATA.cache.PlayerCache
 import java.lang.Math.random
 import java.time.Instant
 
@@ -47,25 +49,26 @@ fun productionCompteJoueur(pseudo: String, nom: String, prenom: String, email: S
     KafkaProducerManager.send("creation-compte-joueur", pseudo, event)
 }
 
-
-fun productionAchatJeu(idJoueur: Long, idJeu: Long, support: String, prixPaye: Double, versionInstallee: String) {
-    if (!PlayerCache.isCurrentPlayer(idJoueur)) {
+fun productionAchatJeu(idJeu: Long, support: String) {
+    if (!PlayerCache.isConnected()) {
         println("Achat refusé : Joueur non connecté")
         return
     }
+    val selectedGame = GameCatalogCache.getGame(idJeu)!!
 
     val event = AchatJeu.newBuilder()
-        .setIdJoueur(idJoueur)
+        .setIdJoueur(PlayerCache.getId())
         .setIdJeu(idJeu)
         .setSupport(support)
-        .setPrixPaye(prixPaye)
-        .setVersionInstallee(versionInstallee)
+        .setPrixPaye(selectedGame.price)
+        .setVersionInstallee(selectedGame.version)
         .setDateAchat(Instant.now())
         .build()
 
-    KafkaProducerManager.send("game-purchases", idJoueur.toString(), event)
+    KafkaProducerManager.send("game-purchases", PlayerCache.getId().toString(), event)
 }
 
+/*
 fun productionAchatDLC(idJoueur: Long, idJeu: Long, idDlc: Long, prixPaye: Double, versionInstallee: String) {
     if (!PlayerCache.isCurrentPlayer(idJoueur)) {
         println("Achat refusé : Joueur non connecté")
@@ -82,11 +85,11 @@ fun productionAchatDLC(idJoueur: Long, idJeu: Long, idDlc: Long, prixPaye: Doubl
         .build()
 
     KafkaProducerManager.send("dlc-purchases", idJoueur.toString(), event)
-}
+}*/
 
-fun productionSession(idJoueur: Long, idJeu: Long, versionJeu: String) {
-    if ((!(PlayerCache.isCurrentPlayer(idJoueur))) || (!(PlayerCache.isGamePurchased(idJeu)))) {
-        println("Session refusée : Le joueur n'est pas connecté et/ou ne possède pas ce jeu")
+fun productionSession(idJeu: Long) {
+    if ((!(PlayerCache.isConnected())) || (!(PlayerCache.hasGame(idJeu)))) {
+        println("Session refusée : Le joueur n'est pas connecté ou ne possède pas ce jeu")
         return
     }
 
@@ -98,9 +101,9 @@ fun productionSession(idJoueur: Long, idJeu: Long, versionJeu: String) {
     val randomCause = random()
 
     val event = Session.newBuilder()
-        .setIdJoueur(idJoueur)
+        .setIdJoueur(PlayerCache.getId())
         .setIdJeu(idJeu)
-        .setVersionJeu(versionJeu)
+        .setVersionJeu(GameCatalogCache.getGame(idJeu)!!.version)
         .setHeureDeDebut(Instant.now())
         .setHeureDeFin(Instant.now().plusSeconds(randomSeconds))
         .setCauseFermeture(
@@ -112,6 +115,28 @@ fun productionSession(idJoueur: Long, idJeu: Long, versionJeu: String) {
         )
         .build()
 
-    KafkaProducerManager.send("session-launched", idJoueur.toString(), event)
+    KafkaProducerManager.send("session-launched", PlayerCache.getId().toString(), event)
 }
 
+fun productionEvaluationJeu(idJeu: Long, note: Int, versionJeu: String, commentaire: String?, dateEvaluationJeu: String) {
+    if (!PlayerCache.isConnected()) {
+        println("Evaluation refusée : Vous n'êtes pas connecté")
+        return
+    }
+
+    if (!(PlayerCache.hasGame(idJeu))) {
+        println("Evaluation refusée : Vous ne possédez pas ce jeu")
+        return
+    }
+
+    val event = EvaluationJeu.newBuilder()
+        .setIdJoueur(PlayerCache.getId())
+        .setIdJeu(idJeu)
+        .setNote(note)
+        .setVersionJeu(versionJeu)
+        .setCommentaire(commentaire)
+        .setDateEvaluationJeu(Instant.now())
+        .build()
+
+    KafkaProducerManager.send("game-rated", PlayerCache.getId().toString(), event)
+}

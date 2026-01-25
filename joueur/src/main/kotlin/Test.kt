@@ -1,8 +1,7 @@
 package com.projet_JVM2_DATA
 
-import com.projet_JVM2_DATA.data.PlayerCache
+import com.projet_JVM2_DATA.cache.PlayerCache
 import com.projet_JVM2_DATA.producers.KafkaProducerManager
-import com.projet_JVM2_DATA.producers.productionAchatDLC
 import com.projet_JVM2_DATA.producers.productionAchatJeu
 import com.projet_JVM2_DATA.producers.productionCompteJoueur
 
