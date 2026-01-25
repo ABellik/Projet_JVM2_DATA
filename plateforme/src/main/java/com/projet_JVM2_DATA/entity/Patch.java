@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "\"Patch\"")
 public class Patch {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -19,7 +20,12 @@ public class Patch {
     @Column(name = "commentaire_editeur", nullable = false)
     private String commentaireEditeur;
 
-    //TODO : constructeur
+    public Patch() {}
+    public Patch(Jeu jeu, String version, String commentaireEditeur) {
+        this.idJeu = jeu;
+        this.version = version;
+        this.commentaireEditeur = commentaireEditeur;
+    }
 
     public Long getId() {
         return id;
