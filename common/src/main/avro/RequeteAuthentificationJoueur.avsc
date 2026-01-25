@@ -1,6 +1,6 @@
 {
   "type": "record",
-  "name": "RequeteAuthentification",
+  "name": "RequeteAuthentificationJoueur",
   "namespace": "com.example.events",
   "fields": [
     { "name": "pseudo", "type": "string" }

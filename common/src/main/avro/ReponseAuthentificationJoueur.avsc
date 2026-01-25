@@ -1,6 +1,6 @@
 {
   "type": "record",
-  "name": "ReponseAuthentification",
+  "name": "ReponseAuthentificationJoueur",
   "namespace": "com.example.events",
   "fields": [
     { "name": "idJoueur", "type": ["long", "null"] },
