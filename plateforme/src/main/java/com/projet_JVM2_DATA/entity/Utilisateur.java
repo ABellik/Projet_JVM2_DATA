@@ -3,6 +3,8 @@ package com.projet_JVM2_DATA.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "\"Utilisateur\"")
@@ -29,6 +31,22 @@ public class Utilisateur {
 
     @Column(name = "mdp")
     private String mdp;
+
+    @ManyToMany
+    @JoinTable(
+            name = "\"Amitié\"", // Nom exact de la table intermédiaire
+            joinColumns = @JoinColumn(name = "joueur_1_id"), // Colonne qui pointe vers CE joueur (moi)
+            inverseJoinColumns = @JoinColumn(name = "joueur_2_id") // Colonne qui pointe vers L'AMI
+    )
+    private Set<Utilisateur> amis = new HashSet<>();
+
+    // Getters et méthode utilitaire
+    public Set<Utilisateur> getAmis() {return amis;}
+
+    public void ajouterAmi(Utilisateur ami) {
+        this.amis.add(ami);
+        ami.getAmis().add(this); // Si l'amitié est symétrique
+    }
 
     public Utilisateur() {}
     public Utilisateur(String nom, String prenom, String pseudo, String mdp, LocalDate dateInscription, LocalDate dateNaissance) {
