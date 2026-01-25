@@ -20,6 +20,10 @@ public class PlateformeRepository {
         return em.find(Plateforme.class, id);
     }
 
+    public Plateforme findByNom(String nom) {
+        return em.find(Plateforme.class, nom);
+    }
+
     public List<Plateforme> findAll() {
         return em.createQuery("SELECT p FROM Plateforme p", Plateforme.class).getResultList();
     }
