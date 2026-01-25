@@ -5,7 +5,7 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 
 public class JeuRepository {
-    private EntityManager em;
+    private final EntityManager em;
 
     public JeuRepository(EntityManager em) {
         this.em = em;

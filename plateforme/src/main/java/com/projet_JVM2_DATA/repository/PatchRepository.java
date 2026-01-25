@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 
 public class PatchRepository {
-    private EntityManager em;
+    private final EntityManager em;
 
     public PatchRepository(EntityManager em) {
         this.em = em;

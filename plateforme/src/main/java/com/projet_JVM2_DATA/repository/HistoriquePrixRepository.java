@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 
 public class HistoriquePrixRepository {
-    private EntityManager em;
+    private final EntityManager em;
 
     public HistoriquePrixRepository(EntityManager em) {
         this.em = em;

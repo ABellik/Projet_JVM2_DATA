@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 
 public class LicenceRepository {
-    private EntityManager em;
+    private final EntityManager em;
 
     public LicenceRepository(EntityManager em) {
         this.em = em;
