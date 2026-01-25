@@ -16,6 +16,13 @@ public class LicenceId implements Serializable {
     @Column(name = "\"idJeu\"", nullable = false)
     private Long idJeu;
 
+    public LicenceId(){}
+
+    public LicenceId(Long idPlateforme, Long idJeu) {
+        this.idPlateforme = idPlateforme;
+        this.idJeu = idJeu;
+    }
+
     public Long getIdPlateforme() {
         return idPlateforme;
     }
