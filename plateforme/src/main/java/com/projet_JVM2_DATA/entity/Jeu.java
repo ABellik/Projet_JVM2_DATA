@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "\"Jeu\"")
 public class Jeu {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -34,7 +35,16 @@ public class Jeu {
     @Column(name = "type",  nullable = false)
     private TypeJeu type;
 
-    //TODO : constructeur
+    public Jeu() {}
+    public Jeu(Editeur editeur, String nom, String versionActuelle, Long prixEditeur, Long prixActuel, Jeu idjeuparent, TypeJeu type) {
+        this.idEditeur = editeur;
+        this.nom = nom;
+        this.versionActuelle = versionActuelle;
+        this.prixEditeur = prixEditeur;
+        this.prixActuel = prixActuel;
+        this.idjeuparent = idjeuparent;
+        this.type = type;
+    }
 
     public Long getId() {
         return id;
