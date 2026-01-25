@@ -10,7 +10,7 @@ public class Plateforme {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "nom", nullable = false)
+    @Column(name = "nom", nullable = false,  unique = true)
     private String nom;
 
     public Plateforme() {}

@@ -24,7 +24,7 @@ public class Utilisateur {
     @Column(name = "prenom", nullable = false)
     private String prenom;
 
-    @Column(name = "pseudo", nullable = false)
+    @Column(name = "pseudo", nullable = false, unique = true)
     private String pseudo;
 
     @Column(name = "mdp")
