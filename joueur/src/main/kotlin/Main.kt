@@ -4,6 +4,7 @@ import com.example.events.ReponseAuthentificationJoueur
 import com.projet_JVM2_DATA.cache.*
 import com.projet_JVM2_DATA.consumers.startBackgroundConsumers
 import com.projet_JVM2_DATA.producers.*
+import java.time.Instant
 import java.util.Scanner
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -29,10 +30,6 @@ fun clearScreen() {
  */
 fun recupererPseudos(): MutableList<String> {
     return PlayerCache.getAllPlayers().map { it.pseudo }.toMutableList()
-}
-
-fun isPassword(pseudo : String, passwordTry : String) : Boolean{
-    return true;
 }
 
 fun main() {
@@ -100,6 +97,48 @@ fun main() {
                                 "${GameCatalogCache.getGame(idJeu)!!.name} - " +
                                 "${GameCatalogCache.getGame(idJeu)!!.price}€"
                         )
+                    }
+                    var reponse3: String
+                    do {
+                        println(
+                            "Souhaitez-vous : " +
+                                    "\n\t 1) Voir les commentaires d'un jeu" +
+                                    "\n\t 2) Évaluer un jeu" +
+                                    "\n\t Autre chose) Quitter"
+                        )
+                        reponse3 = scanner.nextLine()
+                        if(reponse3.toIntOrNull() !in 1..3){
+                            println("Réponse incorrecte !")
+                        }
+                    } while (reponse3.toIntOrNull() !in 1..3)
+
+                    if(reponse3.toInt() == 1){
+                        //A COMPLETER : Ajouter un consommateur pour les commentaires d'un jeu (contenant au moins l'id du commentaire)
+                        //Proposer de répondre à ce commentaire
+                    }
+                    else if(reponse3.toInt() == 2){
+                        var reponse4: String
+                        do {
+                            println("Entrez le numéro du jeu à évaluer : ")
+                            reponse4 = scanner.nextLine()
+                            if(reponse4.toLongOrNull() !in PlayerCache.getGames()){
+                                println("Numéro de jeu non valide !")
+                            }
+                        } while (reponse4.toLongOrNull() !in PlayerCache.getGames())
+                        //A COMPLETER, VERIFIER QU'IL N'A PAS DEJA FAIT D'ÉVALUATION SUR CE JEU
+                        var noteJeu: String
+                        do {
+                            println("Entrez une note entière (entre 1 et 5) : ")
+                            noteJeu = scanner.nextLine()
+                            if(noteJeu.toIntOrNull() !in 1..5) println("Valeur de note interdite")
+                        } while(noteJeu.toIntOrNull() !in 1..5)
+                        println("Entrez un commentaire : ")
+                        val commentaire = scanner.nextLine()
+
+                        productionEvaluationJeu(reponse4.toLong(), noteJeu.toInt(), commentaire)
+                        println("Evaluation réussie !")
+                        Thread.sleep(1500)
+
                     }
                 }
                 println("Appuyez n'importe où pour quitter")

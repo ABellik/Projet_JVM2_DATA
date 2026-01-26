@@ -125,7 +125,7 @@ fun productionSession(idJeu: Long) {
     KafkaProducerManager.send("session-launched", PlayerCache.getId().toString(), event)
 }
 
-fun productionEvaluationJeu(idJeu: Long, note: Int, versionJeu: String, commentaire: String?, dateEvaluationJeu: String) {
+fun productionEvaluationJeu(idJeu: Long, note: Int, commentaire: String?) {
     if (!PlayerCache.isConnected()) {
         println("Evaluation refusée : Vous n'êtes pas connecté")
         return
@@ -140,7 +140,7 @@ fun productionEvaluationJeu(idJeu: Long, note: Int, versionJeu: String, commenta
         .setIdJoueur(PlayerCache.getId())
         .setIdJeu(idJeu)
         .setNote(note)
-        .setVersionJeu(versionJeu)
+        .setVersionJeu(GameCatalogCache.getGame(idJeu)!!.version)
         .setCommentaire(commentaire)
         .setDateEvaluationJeu(Instant.now())
         .build()
