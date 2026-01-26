@@ -36,13 +36,13 @@ public class Jeu {
     private TypeJeu type;
 
     public Jeu() {}
-    public Jeu(Editeur editeur, String nom, String versionActuelle, Long prixEditeur, Long prixActuel, Jeu idjeuparent, TypeJeu type) {
+    public Jeu(Editeur editeur, String nom, String versionActuelle, Long prixEditeur, Jeu idJeuParent, TypeJeu type) {
         this.idEditeur = editeur;
         this.nom = nom;
         this.versionActuelle = versionActuelle;
         this.prixEditeur = prixEditeur;
-        this.prixActuel = prixActuel;
-        this.idjeuparent = idjeuparent;
+        this.prixActuel = prixEditeur;
+        this.idjeuparent = idJeuParent;
         this.type = type;
     }
 
