@@ -6,6 +6,8 @@ import com.example.events.AchatJeu
 import com.example.events.Session
 import com.example.events.CauseFermetureSession
 import com.example.events.EvaluationJeu
+import com.example.events.EvaluationNotee
+import com.example.events.RequeteListeEvaluations
 import com.projet_JVM2_DATA.cache.GameCatalogCache
 import com.projet_JVM2_DATA.cache.PlayerCache
 import java.lang.Math.random
@@ -145,5 +147,24 @@ fun productionEvaluationJeu(idJeu: Long, note: Int, commentaire: String?) {
         .setDateEvaluationJeu(Instant.now())
         .build()
 
-    KafkaProducerManager.send("game-rated", PlayerCache.getId().toString(), event)
+    KafkaProducerManager.send("evaluation-jeu", PlayerCache.getId().toString(), event)
+}
+
+fun productionRequeteListeEvaluations(idJeu: Long) {
+    val event = RequeteListeEvaluations.newBuilder()
+        .setIdJeu(idJeu)
+        .build()
+    KafkaProducerManager.send("requete-liste-evaluations", idJeu.toString(), event)
+}
+
+fun productionReactionEvaluation(idEvaluation: Long, estUtile: Boolean) {
+    val event = EvaluationNotee.newBuilder()
+        .setIdJoueur(PlayerCache.getId())
+        .setIdEvaluation(idEvaluation)
+        .setUtile(estUtile)
+        .setDateEvalutionDeLEvaluation(Instant.now())
+        .build()
+
+    KafkaProducerManager.send("evaluation-notee", PlayerCache.getId().toString(), event)
+    println("Réaction envoyée !")
 }

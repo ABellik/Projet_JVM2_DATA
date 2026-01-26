@@ -102,7 +102,7 @@ fun main() {
                     do {
                         println(
                             "Souhaitez-vous : " +
-                                    "\n\t 1) Voir les commentaires d'un jeu" +
+                                    "\n\t 1) Voir les évaluations d'un jeu" +
                                     "\n\t 2) Évaluer un jeu" +
                                     "\n\t Autre chose) Quitter"
                         )
@@ -113,8 +113,59 @@ fun main() {
                     } while (reponse3.toIntOrNull() !in 1..3)
 
                     if(reponse3.toInt() == 1){
-                        //A COMPLETER : Ajouter un consommateur pour les commentaires d'un jeu (contenant au moins l'id du commentaire)
-                        //Proposer de répondre à ce commentaire
+                        println("Voici la liste des jeux que nous avons actuellement : ")
+                        GameCatalogCache.getAllGames().forEach { game ->
+                            println("${game.id} - ${game.name} - ${game.price}€")
+                        }
+                        println("De quel jeu voulez-vous voir les avis ? (Entrez l'ID)")
+                        val idJeuConsult = scanner.nextLine().toLongOrNull() ?: -1L
+
+                        if (idJeuConsult != -1L) {
+                            ReviewSync.initExpectation()
+                            productionRequeteListeEvaluations(idJeuConsult)
+
+                            try {
+                                val reponse = ReviewSync.futureReponse!!.get(5, java.util.concurrent.TimeUnit.SECONDS)
+                                val listeAvis = reponse.evaluations
+
+                                if (listeAvis.isEmpty()) {
+                                    println("Aucun avis pour ce jeu.")
+                                } else {
+                                    println("\n--- Avis pour le jeu ${reponse.idJeu} ---")
+
+                                    listeAvis.forEachIndexed { index, avis ->
+                                        val etoiles = "*".repeat(avis.note)
+                                        println("[${index + 1}] $etoiles (${avis.note}/5)")
+                                        println("    Version : ${avis.versionJeu}")
+                                        if (avis.commentaire != null) {
+                                            println("    Commentaire : \"${avis.commentaire}\"")
+                                        }
+                                    }
+
+                                    var choixReaction: String
+                                    do {
+                                        println("\nEntrez le numéro de l'avis pour réagir (ou 0 pour quitter) :")
+                                        choixReaction = scanner.nextLine()
+                                        val choixIndex = choixReaction.toIntOrNull() ?: 0
+
+                                        if (choixIndex in 1..listeAvis.size) {
+                                            val avisCible = listeAvis[choixIndex - 1]
+
+                                            println("Cet avis est-il utile ? (1: Oui, 2: Non)")
+                                            val utilite = scanner.nextLine()
+
+                                            if (utilite == "1") {
+                                                productionReactionEvaluation(avisCible.idEvaluation, true)
+                                            } else if (utilite == "2") {
+                                                productionReactionEvaluation(avisCible.idEvaluation, false)
+                                            }
+                                        }
+                                    } while (choixReaction != "0")
+                                }
+                            } catch (e: Exception) {
+                                println("Erreur ou Timeout lors de la récupération des avis.")
+                            }
+                        }
                     }
                     else if(reponse3.toInt() == 2){
                         var reponse4: String

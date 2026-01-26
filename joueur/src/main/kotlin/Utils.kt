@@ -12,3 +12,11 @@ object AuthSync {
         futureReponse = CompletableFuture()
     }
 }
+
+object ReviewSync {
+    var futureReponse: CompletableFuture<com.example.events.ReponseListeEvaluations>? = null
+
+    fun initExpectation() {
+        futureReponse = CompletableFuture()
+    }
+}

@@ -3,7 +3,9 @@ package com.projet_JVM2_DATA.consumers
 import com.example.events.InfoJeu
 import com.example.events.InfoJoueur
 import com.example.events.ReponseAuthentificationJoueur
+import com.example.events.ReponseListeEvaluations
 import com.projet_JVM2_DATA.AuthSync
+import com.projet_JVM2_DATA.ReviewSync
 import com.projet_JVM2_DATA.cache.GameCatalogCache
 import com.projet_JVM2_DATA.cache.PlayerCache
 import java.util.concurrent.ConcurrentHashMap
@@ -44,9 +46,7 @@ fun consommationReponseAuthentificationJoueur() {
 
             println("[DEBUG] Réponse reçue pour : ${response.pseudo}")
 
-            // On vérifie si le Main attend une réponse
             if (AuthSync.futureReponse != null && !AuthSync.futureReponse!!.isDone) {
-                // On débloque le Main en lui donnant la réponse
                 AuthSync.futureReponse!!.complete(response)
             }
         }
@@ -72,6 +72,19 @@ fun consommationInfoJeu() {
                 )
             } catch (e: Exception) {
                 println("Erreur lors de la mise en cache du joueur : ${e.message}")
+            }
+        }
+    }.start()
+}
+
+fun consommationReponseListeEvaluations() {
+    Thread {
+        KafkaConsumerManager.listen<ReponseListeEvaluations>(
+            topic = "reponse-liste-evaluations",
+            groupId = "console-reviews-reader"
+        ) { key, response ->
+            if (ReviewSync.futureReponse != null && !ReviewSync.futureReponse!!.isDone) {
+                ReviewSync.futureReponse!!.complete(response)
             }
         }
     }.start()
