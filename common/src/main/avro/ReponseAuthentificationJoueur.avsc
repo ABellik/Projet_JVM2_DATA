@@ -12,6 +12,14 @@
     { "name": "DateDeNaissance", "type": ["string", "null"] },
     { "name": "DateDeCreationDuCompte",
       "type": [{ "type": "long", "logicalType": "timestamp-millis" }, "null"]
+    },
+    {
+      "name": "games",
+      "type": {
+        "type": "array",
+        "items": "long",
+        "default": []
+      }
     }
   ]
 }

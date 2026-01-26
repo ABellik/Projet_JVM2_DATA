@@ -1,8 +1,12 @@
 package com.projet_JVM2_DATA
 
+import com.example.events.ReponseAuthentificationJoueur
 import com.projet_JVM2_DATA.cache.*
+import com.projet_JVM2_DATA.consumers.startBackgroundConsumers
 import com.projet_JVM2_DATA.producers.*
 import java.util.Scanner
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 /**
  * Nettoie l'affichage de la console.
@@ -35,6 +39,8 @@ fun main() {
     //Démarrage de l'interface console du module Joueur
     println("Démarrage du simulateur Joueur...")
     Thread.sleep(2000)
+
+    startBackgroundConsumers()
 
     //Initialisation des variables de l'interface
     var isFinished = false
@@ -192,24 +198,44 @@ fun main() {
             //......................................... SE CONNECTER .........................................
             if (reponse1.toInt() == 1) {
                 //Entrée du pseudo
-                println("Pseudo : ")
+                print("Pseudo : ")
                 var pseudo = scanner.nextLine()
-                val listePseudos = recupererPseudos()
-                if (listePseudos.contains(pseudo)) {
-                    //Entrée du mot de passe
-                    println("Mot de passe : ")
-                    var motDePasse = scanner.nextLine()
-                    if (isPassword(pseudo, motDePasse)) {
-                        //À COMPLETER : Code permettant de remplir le joueur du PlayerCache
-                        println("Connecté !")
-                        Thread.sleep(2000)
+
+                AuthSync.initExpectation()
+
+                productionRequeteAuthentificationJoueur(pseudo)
+
+                try{
+                    val reponse = AuthSync.futureReponse!!.get(5, TimeUnit.SECONDS)
+
+                    if (reponse.idJoueur!=null){
+                        print("Mot de passe : ")
+                        val motDePasseSaisi = scanner.nextLine()
+
+                        if(reponse.motDePasse.toString() == motDePasseSaisi){
+                            PlayerCache.login(reponse.idJoueur, reponse.pseudo, reponse.nom, reponse.prenom, reponse.email, reponse.dateDeNaissance, reponse.dateDeCreationDuCompte, reponse.motDePasse, reponse.games)
+                            println("Connecté avec succès !")
+                            Thread.sleep(1500)
+                        }
+                        else{
+                            println("Mot de passe incorrect")
+                            Thread.sleep(1500)
+                        }
                     }
-                } else {
-                    println("Pseudo inconnu")
-                    println("Retour au menu précédent")
-                    Thread.sleep(2000)
-                    clearScreen()
+                    else{
+                        println("Ce pseudo n'existe pas")
+                        Thread.sleep(1500)
+                    }
                 }
+                catch(e: TimeoutException) {
+                    println("ERREUR : La plateforme ne répond pas")
+                    Thread.sleep(1500)
+                }
+                catch(e: Exception) {
+                    println("Erreur technique : ${e.message}")
+                }
+
+                clearScreen()
             } else if (reponse1.toInt() == 2) {
                 println("Procédure d'inscription : \n")
 

@@ -1,5 +1,6 @@
 package com.projet_JVM2_DATA.cache
 
+import java.time.Instant
 import java.time.LocalDateTime
 import java.util.concurrent.ConcurrentHashMap
 
@@ -21,7 +22,7 @@ object PlayerCache {
         val prenom: String?,
         val email: String?,
         val dateDeNaissance: String?,
-        val dateDeCreationDuCompte: String,
+        val dateDeCreationDuCompte: Instant,
         val motDePasse: String?,
         val games: MutableSet<Long> = ConcurrentHashMap.newKeySet()
     ) {
@@ -50,7 +51,7 @@ object PlayerCache {
         prenom: String,
         email: String,
         dateDeNaissance: String,
-        dateDeCreationDuCompte: String,
+        dateDeCreationDuCompte: Instant,
         motDePasse: String,
         games: List<Long> = emptyList()
     ) {
@@ -111,7 +112,7 @@ object PlayerCache {
 
     fun getDateDeNaissance(): String? = requirePlayer().dateDeNaissance
 
-    fun getDateDeCreationDuCompte(): String = requirePlayer().dateDeCreationDuCompte
+    fun getDateDeCreationDuCompte(): Instant = requirePlayer().dateDeCreationDuCompte
 
     fun getGames(): Set<Long> = requirePlayer().games.toSet()  // Copie immuable
 
@@ -190,7 +191,7 @@ object PlayerCache {
     fun updateOrAddPlayer(
         id: Long,
         pseudo: String,
-        dateDeCreationDuCompte: String,
+        dateDeCreationDuCompte: Instant,
         games: List<Long>
     ) {
         val newPlayer = Player(

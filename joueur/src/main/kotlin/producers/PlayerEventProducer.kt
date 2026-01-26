@@ -1,6 +1,6 @@
 package com.projet_JVM2_DATA.producers
 
-import com.example.events.AchatDLC
+import com.example.events.RequeteAuthentificationJoueur
 import com.example.events.CreationCompteJoueur
 import com.example.events.AchatJeu
 import com.example.events.Session
@@ -45,8 +45,15 @@ fun productionCompteJoueur(pseudo: String, nom: String, prenom: String, email: S
         .build()
 
 
-    // Envoi via le Manager technique
     KafkaProducerManager.send("creation-compte-joueur", pseudo, event)
+}
+
+fun productionRequeteAuthentificationJoueur(pseudo: String) {
+    val event = RequeteAuthentificationJoueur.newBuilder()
+        .setPseudo(pseudo)
+        .build()
+
+    KafkaProducerManager.send("requete-authentification-joueur", pseudo, event)
 }
 
 fun productionAchatJeu(idJeu: Long, support: String) {
