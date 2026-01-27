@@ -10,7 +10,7 @@ import jakarta.persistence.EntityTransaction;
 
 public class JeuService {
 
-    public void publication(
+    public void publier(
             Editeur editeur,
             String nomJeu,
             String versionActuelle,
