@@ -15,9 +15,8 @@ out/
 **/generated-sources/
 **/generated-test-sources/
 
-#éviter le déposer le dossier target
+
 target/
 *.class
+.idea/
 .settings/
-.project
-.classpath
