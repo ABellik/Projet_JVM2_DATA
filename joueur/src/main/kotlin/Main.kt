@@ -1,10 +1,8 @@
 package com.projet_JVM2_DATA
 
-import com.example.events.ReponseAuthentificationJoueur
 import com.projet_JVM2_DATA.cache.*
 import com.projet_JVM2_DATA.consumers.startBackgroundConsumers
 import com.projet_JVM2_DATA.producers.*
-import java.time.Instant
 import java.util.Scanner
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -78,8 +76,84 @@ fun main() {
                 GameCatalogCache.getAllGames().forEach { game ->
                     println("${game.id} - ${game.name} - ${game.price}€")
                 }
-                println("Appuyez sur n'importe quelle touche pour quitter")
-                scanner.nextLine()
+                var reponse5: String
+                do {
+                    println(
+                        "Souhaitez-vous:" +
+                                "\n\t1) Voir les évaluations d'un jeu" +
+                                "\n\t2) Ajouter un jeu à la liste de souhaits" +
+                                "\n\t3) Quitter"
+                    )
+                    reponse5 = scanner.nextLine()
+                    if(reponse5.toIntOrNull() !in 1..3){
+                        println("Choix interdit")
+                    }
+                } while(reponse5.toIntOrNull() !in 1..3)
+
+                if(reponse5.toInt() == 1){
+                    println("De quel jeu voulez-vous voir les avis ? (Entrez l'ID)")
+                    val idJeuConsult = scanner.nextLine().toLongOrNull() ?: -1L
+
+                    if (idJeuConsult != -1L) {
+                        ReviewSync.initExpectation()
+                        productionRequeteListeEvaluations(idJeuConsult)
+
+                        try {
+                            val reponse = ReviewSync.futureReponse!!.get(5, TimeUnit.SECONDS)
+                            val listeAvis = reponse.evaluations
+
+                            if (listeAvis.isEmpty()) {
+                                println("Aucun avis pour ce jeu.")
+                            } else {
+                                println("\n--- Avis pour le jeu ${reponse.idJeu} ---")
+
+                                listeAvis.forEachIndexed { index, avis ->
+                                    val etoiles = "*".repeat(avis.note)
+                                    println("[${index + 1}] $etoiles (${avis.note}/5)")
+                                    println("    Version : ${avis.versionJeu}")
+                                    if (avis.commentaire != null) {
+                                        println("    Commentaire : \"${avis.commentaire}\"")
+                                    }
+                                }
+
+                                var choixReaction: String
+                                do {
+                                    println("\nEntrez le numéro de l'avis pour réagir (ou 0 pour quitter) :")
+                                    choixReaction = scanner.nextLine()
+                                    val choixIndex = choixReaction.toIntOrNull() ?: 0
+
+                                    if (choixIndex in 1..listeAvis.size) {
+                                        val avisCible = listeAvis[choixIndex - 1]
+
+                                        println("Cet avis est-il utile ? (1: Oui, 2: Non)")
+                                        val utilite = scanner.nextLine()
+
+                                        if (utilite == "1") {
+                                            productionReactionEvaluation(avisCible.idEvaluation, true)
+                                        } else if (utilite == "2") {
+                                            productionReactionEvaluation(avisCible.idEvaluation, false)
+                                        }
+                                    }
+                                } while (choixReaction != "0")
+                            }
+                        } catch (e: Exception) {
+                            println("Erreur ou Timeout lors de la récupération des avis : ${e.message}")
+                        }
+                    }
+                }
+                else if(reponse5.toInt() == 2){
+                    var numJeu: String
+                    do{
+                        println("Entrez le numéro du jeu que vous voulez ajouter à la liste de souhaits")
+                        numJeu = scanner.nextLine()
+                        if (!GameCatalogCache.getGameIds().contains(numJeu.toLongOrNull())){
+                            println("Valeur interdite")
+                        }
+                    } while (!GameCatalogCache.getGameIds().contains(numJeu.toLongOrNull()))
+                    productionAjoutWishlist(numJeu.toLong())
+                    println("Ajout réussi !")
+                    Thread.sleep(1500)
+                }
             }
             //......................................... VUE PROFIL ET BIBLIOTHÈQUE .........................................
             else if(reponse2.toInt() == 2){
@@ -102,72 +176,15 @@ fun main() {
                     do {
                         println(
                             "Souhaitez-vous : " +
-                                    "\n\t 1) Voir les évaluations d'un jeu" +
-                                    "\n\t 2) Évaluer un jeu" +
-                                    "\n\t Autre chose) Quitter"
+                                    "\n\t 1) Évaluer un jeu" +
+                                    "\n\t 2) Quitter"
                         )
                         reponse3 = scanner.nextLine()
-                        if(reponse3.toIntOrNull() !in 1..3){
+                        if(reponse3.toIntOrNull() !in 1..2){
                             println("Réponse incorrecte !")
                         }
-                    } while (reponse3.toIntOrNull() !in 1..3)
-
+                    } while (reponse3.toIntOrNull() !in 1..2)
                     if(reponse3.toInt() == 1){
-                        println("Voici la liste des jeux que nous avons actuellement : ")
-                        GameCatalogCache.getAllGames().forEach { game ->
-                            println("${game.id} - ${game.name} - ${game.price}€")
-                        }
-                        println("De quel jeu voulez-vous voir les avis ? (Entrez l'ID)")
-                        val idJeuConsult = scanner.nextLine().toLongOrNull() ?: -1L
-
-                        if (idJeuConsult != -1L) {
-                            ReviewSync.initExpectation()
-                            productionRequeteListeEvaluations(idJeuConsult)
-
-                            try {
-                                val reponse = ReviewSync.futureReponse!!.get(5, java.util.concurrent.TimeUnit.SECONDS)
-                                val listeAvis = reponse.evaluations
-
-                                if (listeAvis.isEmpty()) {
-                                    println("Aucun avis pour ce jeu.")
-                                } else {
-                                    println("\n--- Avis pour le jeu ${reponse.idJeu} ---")
-
-                                    listeAvis.forEachIndexed { index, avis ->
-                                        val etoiles = "*".repeat(avis.note)
-                                        println("[${index + 1}] $etoiles (${avis.note}/5)")
-                                        println("    Version : ${avis.versionJeu}")
-                                        if (avis.commentaire != null) {
-                                            println("    Commentaire : \"${avis.commentaire}\"")
-                                        }
-                                    }
-
-                                    var choixReaction: String
-                                    do {
-                                        println("\nEntrez le numéro de l'avis pour réagir (ou 0 pour quitter) :")
-                                        choixReaction = scanner.nextLine()
-                                        val choixIndex = choixReaction.toIntOrNull() ?: 0
-
-                                        if (choixIndex in 1..listeAvis.size) {
-                                            val avisCible = listeAvis[choixIndex - 1]
-
-                                            println("Cet avis est-il utile ? (1: Oui, 2: Non)")
-                                            val utilite = scanner.nextLine()
-
-                                            if (utilite == "1") {
-                                                productionReactionEvaluation(avisCible.idEvaluation, true)
-                                            } else if (utilite == "2") {
-                                                productionReactionEvaluation(avisCible.idEvaluation, false)
-                                            }
-                                        }
-                                    } while (choixReaction != "0")
-                                }
-                            } catch (e: Exception) {
-                                println("Erreur ou Timeout lors de la récupération des avis.")
-                            }
-                        }
-                    }
-                    else if(reponse3.toInt() == 2){
                         var reponse4: String
                         do {
                             println("Entrez le numéro du jeu à évaluer : ")
@@ -192,8 +209,6 @@ fun main() {
 
                     }
                 }
-                println("Appuyez n'importe où pour quitter")
-                scanner.nextLine()
             }
             //......................................... JOUER A UN JEU .........................................
             else if(reponse2.toInt() == 3){
@@ -217,7 +232,10 @@ fun main() {
             }
 
             //......................................... VOIR ACTUALITÉS .........................................
-            else if(reponse2.toInt() == 4){}
+            else if(reponse2.toInt() == 4){
+                println("Voici vos notifications :")
+                println(PlayerCache.getNotifications())
+            }
 
             //......................................... ACHETER UN JEU .........................................
             else if(reponse2.toInt() == 5){
@@ -289,7 +307,7 @@ fun main() {
             if (reponse1.toInt() == 1) {
                 //Entrée du pseudo
                 print("Pseudo : ")
-                var pseudo = scanner.nextLine()
+                val pseudo = scanner.nextLine()
 
                 AuthSync.initExpectation()
 
@@ -318,7 +336,7 @@ fun main() {
                     }
                 }
                 catch(e: TimeoutException) {
-                    println("ERREUR : La plateforme ne répond pas")
+                    println("ERREUR : La plateforme ne répond pas : ${e.message}")
                     Thread.sleep(1500)
                 }
                 catch(e: Exception) {

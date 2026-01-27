@@ -20,6 +20,14 @@
         "items": "long",
         "default": []
       }
+    },
+    {
+      "name": "wishlist",
+      "type": {
+        "type": "array",
+        "items": "long",
+        "default": []
+      }
     }
   ]
 }

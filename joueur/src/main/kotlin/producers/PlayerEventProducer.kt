@@ -3,6 +3,7 @@ package com.projet_JVM2_DATA.producers
 import com.example.events.RequeteAuthentificationJoueur
 import com.example.events.CreationCompteJoueur
 import com.example.events.AchatJeu
+import com.example.events.AjoutWishlist
 import com.example.events.Session
 import com.example.events.CauseFermetureSession
 import com.example.events.EvaluationJeu
@@ -167,4 +168,14 @@ fun productionReactionEvaluation(idEvaluation: Long, estUtile: Boolean) {
 
     KafkaProducerManager.send("evaluation-notee", PlayerCache.getId().toString(), event)
     println("Réaction envoyée !")
+}
+
+fun productionAjoutWishlist(idJeu: Long) {
+    val event = AjoutWishlist.newBuilder()
+        .setIdJoueur(PlayerCache.getId())
+        .setIdJeu(idJeu)
+        .build()
+
+    KafkaProducerManager.send("ajout-wishlist", PlayerCache.getId().toString(), event)
+    println("Ajout Wishlist envoyé !")
 }

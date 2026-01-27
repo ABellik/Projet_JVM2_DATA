@@ -24,7 +24,9 @@ object PlayerCache {
         val dateDeNaissance: String?,
         val dateDeCreationDuCompte: Instant,
         val motDePasse: String?,
-        val games: MutableSet<Long> = ConcurrentHashMap.newKeySet()
+        val games: MutableSet<Long> = ConcurrentHashMap.newKeySet(),
+        val wishlist: MutableSet<Long> = ConcurrentHashMap.newKeySet(),
+        val notifications: MutableSet<String> = ConcurrentHashMap.newKeySet()
     ) {
         val dateDeConnexion: LocalDateTime = LocalDateTime.now()
 
@@ -53,7 +55,9 @@ object PlayerCache {
         dateDeNaissance: String,
         dateDeCreationDuCompte: Instant,
         motDePasse: String,
-        games: List<Long> = emptyList()
+        games: List<Long> = emptyList(),
+        wishlist : List<Long> = emptyList(),
+        notifications: List<String> = emptyList()
     ) {
         if (isConnected()) {
             throw IllegalStateException("Un joueur est déjà connecté : ${currentPlayer?.pseudo}")
@@ -68,7 +72,8 @@ object PlayerCache {
             dateDeNaissance = dateDeNaissance,
             dateDeCreationDuCompte = dateDeCreationDuCompte,
             motDePasse = motDePasse,
-            games = games.toMutableSet().let { ConcurrentHashMap.newKeySet<Long>().apply { addAll(it) } }
+            games = games.toMutableSet().let { ConcurrentHashMap.newKeySet<Long>().apply { addAll(it) } },
+            wishlist = wishlist.toMutableSet().let { ConcurrentHashMap.newKeySet<Long>().apply { addAll(it) } }
         )
 
         println("Cache : Joueur '$pseudo' connecté (${games.size} jeux)")
@@ -115,6 +120,8 @@ object PlayerCache {
     fun getDateDeCreationDuCompte(): Instant = requirePlayer().dateDeCreationDuCompte
 
     fun getGames(): Set<Long> = requirePlayer().games.toSet()  // Copie immuable
+
+    fun getNotifications(): MutableSet<String> = requirePlayer().notifications
 
     fun getDateDeConnexion(): LocalDateTime = requirePlayer().dateDeConnexion
 
