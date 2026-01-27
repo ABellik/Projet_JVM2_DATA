@@ -1,0 +1,13 @@
+{
+  "type": "record",
+  "name": "CalculateurMoyenne",
+  "namespace": "com.example.events",
+  "fields": [
+    { "name": "nbValeurs", "type": "int", "doc": "Nombre de valeurs pour le calcul de la somme"},
+    { "name": "nbValeursSupMoyenne", "type": "int", "doc": "Nombre de valeurs ayant un temps de jeu supérieur à la moyenne"},
+    { "name": "somme", "type": "long"},
+    {"name": "dlcPublie", "type": "boolean", "default": false,
+      "doc": "ce champs permet de mettre un flag à vrai pour la publication d'un nouveau jeu ou dlc "
+    }
+  ]
+}

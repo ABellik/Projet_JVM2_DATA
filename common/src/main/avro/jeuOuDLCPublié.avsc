@@ -1,0 +1,58 @@
+{
+    "type":"record",
+    "name":"PublicationJeuOuDLC",
+    "namespace": "com.example.events",
+    "doc" : "Évènement émis lorsqu'un jeu ou un DLC est publié par l'éditeur",
+    "fields":
+    [
+        {
+            "name": "id", 
+            "type": "long"
+        },
+
+        {
+            "name": "nom", 
+            "type": "string"
+        },
+        {
+            "name": "versionActuelle", 
+            "type": "string"
+        },
+        
+        {
+            "name": "genre",
+            "type":
+            {
+                "type":"array",
+                "items": "string"
+            }
+        },
+        
+        {
+            "name": "prixEditeur", 
+            "type": "int"
+        },
+        
+        {
+            "name": "type", 
+            "type": "string"
+        },
+
+        {
+            "name": "idEditeur", 
+            "type": "long"
+        },
+
+        {
+            "name": "date", 
+            "type": {"type":"int", "logicalType": "date"}
+        },
+
+        {
+            "name": "idParent",
+            "type": ["null", "long"],
+            "default": null,
+            "doc" : "id du jeu auquel se rapporte le DLC"
+        }
+    ]
+}

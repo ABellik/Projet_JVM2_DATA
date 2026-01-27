@@ -1,0 +1,13 @@
+com\projet_JVM2_DATA\consumer\AuthentificationConsumer.class
+com\projet_JVM2_DATA\consumer\DLCConsumer.class
+com\projet_JVM2_DATA\producer\AuthEditeurProducer.class
+com\projet_JVM2_DATA\producer\AuthentificationProducer.class
+com\projet_JVM2_DATA\OrderProducer.class
+com\projet_JVM2_DATA\service\Service.class
+com\projet_JVM2_DATA\Main.class
+com\projet_JVM2_DATA\producer\ModificationCompteProducer.class
+com\projet_JVM2_DATA\producer\DLCProducer.class
+com\projet_JVM2_DATA\producer\JeuProducer.class
+com\projet_JVM2_DATA\producer\SuppressionJeuOuDLCProducer.class
+com\projet_JVM2_DATA\producer\SuppressionCompteProducer.class
+com\projet_JVM2_DATA\producer\NouveauCompteProducer.class

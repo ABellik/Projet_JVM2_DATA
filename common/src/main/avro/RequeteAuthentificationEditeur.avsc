@@ -1,0 +1,9 @@
+{
+  "type": "record",
+  "name": "RequeteAuthentificationEditeur",
+  "namespace": "com.example.events",
+  "fields": [
+    { "name": "pseudo", "type": "string" },
+    { "name": "motDePasse", "type": "string" }
+  ]
+}
