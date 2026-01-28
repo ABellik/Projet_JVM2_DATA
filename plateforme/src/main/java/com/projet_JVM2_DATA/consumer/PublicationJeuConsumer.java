@@ -43,7 +43,7 @@ public class PublicationJeuConsumer implements Runnable{
                     PublicationJeuOuDLC event = record.value();
 
                     //Enregistrement du jeu dans la table Jeu (genres inclus)
-                    jeuService.publier2(event.getIdEditeur(), event.getNom(), event.getVersionActuelle(), (long) event.getPrixEditeur(), event.getIdParent(), TypeJeu.BASE ,event.getGenre());
+                    jeuService.publier(event.getIdEditeur(), event.getNom(), event.getVersionActuelle(), (long) event.getPrixEditeur(), event.getIdParent(), TypeJeu.BASE ,event.getGenre());
                 }
             }
         } finally {
