@@ -366,10 +366,10 @@ fun main() {
                 //Demande de la date de naissance
                 var dateDeNaissance: String
                 do {
-                    println("Entrez votre date de naissance (format : jj/mm/yyyy) : ")
+                    println("Entrez votre date de naissance (format : yyyy-mm-jj) : ")
                     dateDeNaissance = scanner.nextLine()
-                    val isFormatValid = dateDeNaissance.matches("\\d{2}/\\d{2}/\\d{4}".toRegex())
-                    if (!isFormatValid) println("Date invalide. Veuillez respecter le format jj/mm/aaaa.")
+                    val isFormatValid = dateDeNaissance.matches("\\d{4}-\\d{2}-\\d{2}".toRegex())
+                    if (!isFormatValid) println("Date invalide. Veuillez respecter le format aaaa-mm-jj.")
 
                 } while (!isFormatValid)
 

@@ -8,6 +8,9 @@ import com.projet_JVM2_DATA.repository.JeuRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class JeuService {
 
     public void publier(
@@ -43,6 +46,24 @@ public class JeuService {
                 tx.rollback();
             }
             e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Long> getJeuByPseudo(String pseudo) {
+        EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+
+        try {
+            JeuRepository repository = new JeuRepository(em);
+
+            List<Long> jeux = repository.findByPseudo(pseudo);
+
+            if (jeux == null || jeux.isEmpty()) {
+                return new ArrayList<>();
+            }
+            return jeux;
+
         } finally {
             em.close();
         }

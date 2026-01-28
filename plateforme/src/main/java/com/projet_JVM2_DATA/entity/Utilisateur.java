@@ -29,7 +29,10 @@ public class Utilisateur {
     @Column(name = "pseudo", nullable = false, unique = true)
     private String pseudo;
 
-    @Column(name = "mdp")
+    @Column(name = "mail", nullable = false)
+    private String mail;
+
+    @Column(name = "mdp", nullable = false)
     private String mdp;
 
     @ManyToMany
@@ -54,10 +57,11 @@ public class Utilisateur {
     }
 
     public Utilisateur() {}
-    public Utilisateur(String nom, String prenom, String pseudo, String mdp, LocalDate dateInscription, LocalDate dateNaissance) {
+    public Utilisateur(String nom, String prenom, String pseudo, String mail, String mdp, LocalDate dateInscription, LocalDate dateNaissance) {
         this.nom = nom;
         this.prenom = prenom;
         this.pseudo = pseudo;
+        this.mail = mail;
         this.mdp = mdp;
         this.dateInscription = dateInscription;
         this.dateNaissance = dateNaissance;
@@ -110,6 +114,10 @@ public class Utilisateur {
     public void setPseudo(String pseudo) {
         this.pseudo = pseudo;
     }
+
+    public String getMail() {return mail;}
+
+    public void setMail(String mail) {this.mail = mail;}
 
     public String getMdp() {
         return mdp;
