@@ -32,7 +32,7 @@ public class SessionConsumer implements Runnable{
     @Override
     public void run() {
         try {
-            consumer.subscribe(Collections.singletonList("creation-session")); // TODO : à changer par le vrai nom du topic
+            consumer.subscribe(Collections.singletonList("session-launched"));
             while (true) {
                 ConsumerRecords<String, Session> records = consumer.poll(Duration.ofMillis(1000));
                 for (ConsumerRecord<String, Session> record : records) {

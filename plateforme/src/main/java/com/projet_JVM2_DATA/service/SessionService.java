@@ -23,7 +23,7 @@ public class SessionService {
         try {
             tx.begin();
 
-            // --- 1. RÉCUPÉRATION DE L'ID PLATEFORME (Logique fusionnée) ---
+            // --- 1. RÉCUPÉRATION DE L'ID PLATEFORME ---
             Long idPlateforme = plateformeCache.get(nomPlateforme);
             if (idPlateforme == null) {
                 PlateformeRepository platRepo = new PlateformeRepository(em);

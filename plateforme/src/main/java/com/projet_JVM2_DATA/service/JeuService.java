@@ -1,9 +1,8 @@
 package com.projet_JVM2_DATA.service;
 
 import com.projet_JVM2_DATA.config.JpaUtil;
-import com.projet_JVM2_DATA.entity.Editeur;
-import com.projet_JVM2_DATA.entity.Jeu;
-import com.projet_JVM2_DATA.entity.TypeJeu;
+import com.projet_JVM2_DATA.entity.*;
+import com.projet_JVM2_DATA.repository.GenreJeuRepository;
 import com.projet_JVM2_DATA.repository.JeuRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -14,39 +13,47 @@ import java.util.List;
 public class JeuService {
 
     public void publier(
-            Editeur editeur,
+            Long idEditeur,
             String nomJeu,
             String versionActuelle,
             Long prixEditeur,
-            Jeu jeuParent,
-            TypeJeu type
-            ) {
-        // 1. On ouvre l'EntityManager
+            Long idJeuParent,
+            TypeJeu type,
+            List<String> genres
+    ){
         EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
-
         try {
             tx.begin();
 
-            // 2. On instancie le Repository avec cet EM
-            JeuRepository repository = new JeuRepository(em);
+            //instanciation des répository
+            JeuRepository jeuRepository = new JeuRepository(em);
+            GenreJeuRepository genreJeuRepository = new GenreJeuRepository(em);
 
-            // 3. Logique Métier
-            Jeu jeu = new Jeu(editeur, nomJeu, versionActuelle, prixEditeur, jeuParent, type);
+            //création des proxys
+            Editeur editeurProxy = em.getReference(Editeur.class, idEditeur);
+            Jeu parentProxy = (idJeuParent != null) ? em.getReference(Jeu.class, idJeuParent) : null;
 
-            // Appel propre au repository
-            repository.save(jeu);
+            //création du jeu
+            Jeu jeu = new Jeu(editeurProxy, nomJeu, versionActuelle, prixEditeur, parentProxy, type);
+            //enregistrement
+            jeuRepository.save(jeu);
 
-            // 4. Validation
+            //enregistrements des genres associés au jeu
+            for(String genre : genres){
+                Genrejeu genrejeu = new Genrejeu(jeu, genre);
+                genreJeuRepository.save(genrejeu);
+            }
+
             tx.commit();
-            System.out.println("Service : Jeu sauvegardé avec succès.");
-
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             em.close();
         }
     }
@@ -78,9 +85,21 @@ public class JeuService {
             //instanciation du repository
             JeuRepository repository = new JeuRepository(em);
 
-            //récupération de l'utilisateur
-            Jeu jeu = repository.findById(idJeu);
+            // Suppression de l'historique des prix
+            HistoriquePrixService historiquePrixService = new HistoriquePrixService();
+            historiquePrixService.supprimerJeu(idJeu);
 
+            // Suppression en cascade
+            /*
+             * Patch (+modification)
+             * Licence
+             * Genre
+             * Bibliothèque (+Session)
+             * Wishlist
+             * */
+
+            // Et enfin suppression du jeu
+            Jeu jeu = repository.findById(idJeu);
             repository.delete(jeu);
 
             tx.commit();

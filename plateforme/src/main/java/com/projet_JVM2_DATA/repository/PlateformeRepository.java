@@ -2,6 +2,8 @@ package com.projet_JVM2_DATA.repository;
 
 import jakarta.persistence.EntityManager;
 import com.projet_JVM2_DATA.entity.Plateforme;
+import jakarta.persistence.NoResultException;
+
 import java.util.List;
 
 public class PlateformeRepository {
@@ -21,7 +23,13 @@ public class PlateformeRepository {
     }
 
     public Plateforme findByNom(String nom) {
-        return em.find(Plateforme.class, nom);
+        try {
+            return this.em.createQuery("SELECT p FROM Plateforme p WHERE p.nom = :pNom", Plateforme.class)
+                    .setParameter("pNom", nom)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null; // Retourne null si aucune plateforme n'est trouvé
+        }
     }
 
     public List<Plateforme> findAll() {

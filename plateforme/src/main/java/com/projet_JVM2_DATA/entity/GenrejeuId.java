@@ -2,8 +2,6 @@ package com.projet_JVM2_DATA.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import org.hibernate.Hibernate;
 
 import java.io.Serializable;
@@ -15,12 +13,11 @@ public class GenrejeuId implements Serializable {
     @Column(name = "idjeu", nullable = false)
     private Long idjeu;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "genre", nullable = false)
-    private TypeGenre genre;
+    private String genre;
 
     public GenrejeuId() {}
-    public GenrejeuId(Long idjeu, TypeGenre genre) {
+    public GenrejeuId(Long idjeu, String genre) {
         this.idjeu = idjeu;
         this.genre = genre;
     }
@@ -33,11 +30,11 @@ public class GenrejeuId implements Serializable {
         this.idjeu = idjeu;
     }
 
-    public TypeGenre getGenre() {
+    public String getGenre() {
         return genre;
     }
 
-    public void setGenre(TypeGenre genre) {
+    public void setGenre(String genre) {
         this.genre = genre;
     }
 

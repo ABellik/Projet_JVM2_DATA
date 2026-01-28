@@ -24,6 +24,12 @@ public class HistoriquePrixRepository {
         return em.createQuery("select h from  HistoriquePrix h", HistoriquePrix.class).getResultList();
     }
 
+    public List<HistoriquePrix> findByJeuId(Long idJeu) {
+        return em.createQuery("select h from  HistoriquePrix h where h.idJeu=:idJeu", HistoriquePrix.class)
+                .setParameter("idJeu", idJeu)
+                .getResultList();
+    }
+
     public void delete(HistoriquePrix historiquePrix) {
         em.remove(historiquePrix);
     }

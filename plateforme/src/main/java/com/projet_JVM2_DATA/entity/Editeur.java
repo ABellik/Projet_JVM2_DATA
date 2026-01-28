@@ -13,11 +13,14 @@ public class Editeur {
     @Column(name = "type", nullable = false)
     private String type;
 
-    @Column(name = "nom", nullable = false)
+    @Column(name = "nom", nullable = false, unique = true)
     private String nom;
 
     @Column(name = "mdp", nullable = false)
     private String mdp;
+
+    @Column(name = "email", nullable = false)
+    private String email;
 
     public Editeur() {}
     public Editeur(String type, String nom, String mdp) {
@@ -48,5 +51,21 @@ public class Editeur {
 
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public String getMdp() {
+        return mdp;
+    }
+
+    public void setMdp(String mdp) {
+        this.mdp = mdp;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
