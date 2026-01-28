@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.Properties;
 
 public class PublicationJeuConsumer implements Runnable{
-    //TODO
     private final KafkaConsumer<String, PublicationJeuOuDLC> consumer;
     private final JeuService jeuService;
 
