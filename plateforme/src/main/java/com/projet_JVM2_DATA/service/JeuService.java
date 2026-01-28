@@ -1,12 +1,13 @@
 package com.projet_JVM2_DATA.service;
 
 import com.projet_JVM2_DATA.config.JpaUtil;
-import com.projet_JVM2_DATA.entity.Editeur;
-import com.projet_JVM2_DATA.entity.Jeu;
-import com.projet_JVM2_DATA.entity.TypeJeu;
+import com.projet_JVM2_DATA.entity.*;
+import com.projet_JVM2_DATA.repository.GenreJeuRepository;
 import com.projet_JVM2_DATA.repository.JeuRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+
+import java.util.List;
 
 public class JeuService {
 
@@ -44,6 +45,52 @@ public class JeuService {
             }
             e.printStackTrace();
         } finally {
+            em.close();
+        }
+    }
+
+    public void publier2(
+            Long idEditeur,
+            String nomJeu,
+            String versionActuelle,
+            Long prixEditeur,
+            Long idJeuParent,
+            TypeJeu type,
+            List<String> genres
+    ){
+        EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+
+            //instanciation des répository
+            JeuRepository jeuRepository = new JeuRepository(em);
+            GenreJeuRepository genreJeuRepository = new GenreJeuRepository(em);
+
+            //création des proxys
+            Editeur editeurProxy = em.getReference(Editeur.class, idEditeur);
+            Jeu parentProxy = (idJeuParent != null) ? em.getReference(Jeu.class, idJeuParent) : null;
+
+            //création du jeu
+            Jeu jeu = new Jeu(editeurProxy, nomJeu, versionActuelle, prixEditeur, parentProxy, type);
+            //enregistrement
+            jeuRepository.save(jeu);
+
+            //enregistrements des genres associés au jeu
+            for(String genre : genres){
+                Genrejeu genrejeu = new Genrejeu(jeu, genre);
+                genreJeuRepository.save(genrejeu);
+            }
+
+            tx.commit();
+        }
+        catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        }
+        finally {
             em.close();
         }
     }
