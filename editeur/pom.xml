@@ -28,19 +28,31 @@
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
+            <!--<version>7.5.0</version>-->
         </dependency>
 
-        <!-- Avro -->
+        <!-- Avro + schema registry -->
         <dependency>
             <groupId>io.confluent</groupId>
             <artifactId>kafka-avro-serializer</artifactId>
+            <version>7.5.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.11.3</version>
         </dependency>
 
         <!-- Base de données -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+<<<<<<< HEAD
             <version>42.7.1</version>
+=======
+            <version>42.7.0</version>
+>>>>>>> 517a434 (Changement dans PatchCree.avsc et ajout de l'autre partie sue editeur)
         </dependency>
 
 
@@ -84,6 +96,18 @@
                     <target>25</target>
                 </configuration>
             </plugin>
+
+            <!-- Exécution de l'application -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.projet_JVM2_DATA.Main</mainClass>
+                </configuration>
+            </plugin>
+
+
         </plugins>
     </build>
 
