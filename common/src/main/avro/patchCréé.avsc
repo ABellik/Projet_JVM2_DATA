@@ -25,13 +25,6 @@
             "type": "string"
         },
         {
-            "name": "nouvelleVersion",
-            "type": "string",
-            "default": "",
-            "doc": "Ce champs est utilisé si le patch sert à publier une nouvelle version de jeu"
-        },
-        
-        {
             "name": "commentaireEditeur", 
             "type": "string"
         },

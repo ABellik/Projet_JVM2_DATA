@@ -140,7 +140,7 @@ fun productionEvaluationJeu(idJeu: Long, note: Int, commentaire: String?) {
     }
 
     val event = EvaluationJeu.newBuilder()
-        .setIdJoueur(PlayerCache.getId())
+        //.setIdJoueur(PlayerCache.getId())
         .setIdJeu(idJeu)
         .setNote(note)
         .setVersionJeu(GameCatalogCache.getGame(idJeu)!!.version)

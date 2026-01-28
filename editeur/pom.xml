@@ -48,11 +48,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-<<<<<<< HEAD
-            <version>42.7.1</version>
-=======
             <version>42.7.0</version>
->>>>>>> 517a434 (Changement dans PatchCree.avsc et ajout de l'autre partie sue editeur)
         </dependency>
 
 
