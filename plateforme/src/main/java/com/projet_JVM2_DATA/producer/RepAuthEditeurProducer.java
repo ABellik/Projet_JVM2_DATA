@@ -1,7 +1,6 @@
 package com.projet_JVM2_DATA.producer;
 
 import com.example.events.ReponseAuthentificationEditeur;
-import com.projet_JVM2_DATA.entity.Editeur;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -34,6 +33,11 @@ public class RepAuthEditeurProducer {
     public void envoyerAuthentificationEditeur(long id) {
         ReponseAuthentificationEditeur reponseAuthentificationEditeur = ReponseAuthentificationEditeur.newBuilder()
                 .setIdEditeur(id)
+                .setDateDeNaissance(null)
+                .setPseudo(null)
+                .setNom(null)
+                .setPrenom(null)
+                .setEmail(null)
                 .build();
         ProducerRecord<String, ReponseAuthentificationEditeur> record =
                 new ProducerRecord<>("reponse-requete-authentification-editeur", null, reponseAuthentificationEditeur);
