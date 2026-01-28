@@ -1,3 +1,4 @@
+
 version: '3.8'
 
 services:
@@ -24,6 +25,10 @@ services:
     ports:
       - "9092:9092"
       - "29092:29092"
+    #Ce qui est dans commande est équivalent à écrire ça dans le bash :
+    #kafka-topics --create --topic evaluations --partitions 3 --replication-factor 1 --bootstrap-server localhost:9092
+
+
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
@@ -70,14 +75,21 @@ services:
     container_name: postgres-editeur
     hostname: postgres-editeur
     ports:
-      - "5432:5432"
+      - "5435:5432"
     environment:
       POSTGRES_DB: editeur_db
       POSTGRES_USER: editeur
       POSTGRES_PASSWORD: editeur123
-    #volumes:
-    #  - editeur-data:/var/lib/postgresql/data
-    #  - ./scripts/sql/init-editeur.sql:/docker-entrypoint-initdb.d/init.sql
+    volumes:
+      - ./scripts/sql/schema-db-editeur.sql:/docker-entrypoint-initdb.d/init.sql
+
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    ports:
+      - "8085:8080"
+
 
   postgres-plateforme:
     image: postgres:15
@@ -91,7 +103,7 @@ services:
       POSTGRES_PASSWORD: plateforme123
     #volumes:
     #  - plateforme-data:/var/lib/postgresql/data
-    #  - ./scripts/sql/init-plateforme.sql:/docker-entrypoint-initdb.d/init.sql
+    #  - ../schema-db-editeur.sql:/docker-entrypoint-initdb.d/init.sql
 
   postgres-joueur:
     image: postgres:15
@@ -116,6 +128,9 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@projet.com
       PGADMIN_DEFAULT_PASSWORD: admin
+
+
+
 
 #volumes:
 #  editeur-data:

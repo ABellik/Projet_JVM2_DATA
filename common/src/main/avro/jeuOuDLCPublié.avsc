@@ -1,8 +1,8 @@
 {
     "type":"record",
-    "name":"PublicationJeu",
-    "namespace": "editeur.src.main.java.com.projet_JVM2_DATA",
-    "doc" : "Évènement émis lorsqu'un jeu est publié par l'éditeur",
+    "name":"PublicationJeuOuDLC",
+    "namespace": "com.example.events",
+    "doc" : "Évènement émis lorsqu'un jeu ou un DLC est publié par l'éditeur",
     "fields":
     [
         {
@@ -14,7 +14,6 @@
             "name": "nom", 
             "type": "string"
         },
-
         {
             "name": "versionActuelle", 
             "type": "string"
@@ -47,6 +46,13 @@
         {
             "name": "date", 
             "type": {"type":"int", "logicalType": "date"}
+        },
+
+        {
+            "name": "idParent",
+            "type": ["null", "long"],
+            "default": null,
+            "doc" : "id du jeu auquel se rapporte le DLC"
         }
     ]
 }

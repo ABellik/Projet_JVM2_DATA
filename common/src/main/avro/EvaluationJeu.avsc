@@ -5,15 +5,14 @@
   "fields": [
     { "name": "idJeu", "type": "long" },
     { "name": "Note", "type": "int" },
-    { "name": "idJoueur", "type": "long" },
     {"name": "versionJeu","type": "string"},
     {
       "name": "Commentaire",
       "type": ["null", "string"],
       "default": null
     },
-    { "name": "DateEvaluationJeu", 
-      "type": { "type": "long", "logicalType": "timestamp-millis" } 
+    { "name": "DateEvaluationJeu",
+      "type": { "type": "long", "logicalType": "timestamp-millis" }
     }
   ]
 }
