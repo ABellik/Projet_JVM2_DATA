@@ -1,3 +1,4 @@
+
 version: '3.8'
 
 services:
@@ -102,7 +103,7 @@ services:
       POSTGRES_PASSWORD: plateforme123
     #volumes:
     #  - plateforme-data:/var/lib/postgresql/data
-    #  - ./scripts/sql/init-plateforme.sql:/docker-entrypoint-initdb.d/init.sql
+    #  - ../schema-db-editeur.sql:/docker-entrypoint-initdb.d/init.sql
 
   postgres-joueur:
     image: postgres:15

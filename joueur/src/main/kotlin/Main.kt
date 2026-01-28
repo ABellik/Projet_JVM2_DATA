@@ -314,7 +314,7 @@ fun main() {
                 productionRequeteAuthentificationJoueur(pseudo)
 
                 try{
-                    val reponse = AuthSync.futureReponse!!.get(5, TimeUnit.SECONDS)
+                    val reponse = AuthSync.futureReponse!!.get(15, TimeUnit.SECONDS)
 
                     if (reponse.idJoueur!=null){
                         print("Mot de passe : ")
