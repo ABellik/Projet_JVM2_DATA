@@ -12,7 +12,7 @@ import java.util.List;
 
 public class UtilisateurService {
 
-    public void inscription(String prenom, String nom, String pseudo, LocalDate date_naissance, String mdp) {
+    public void inscription(String prenom, String nom, String pseudo, String mail, LocalDate date_naissance, String mdp, LocalDate date_creation_compte) {
         // 1. On ouvre l'EntityManager
         EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
@@ -24,7 +24,7 @@ public class UtilisateurService {
             UtilisateurRepository repository = new UtilisateurRepository(em);
 
             // 3. Logique Métier
-            Utilisateur utilisateur = new Utilisateur(prenom, nom, pseudo, mdp, LocalDate.now(),date_naissance);
+            Utilisateur utilisateur = new Utilisateur(prenom, nom, pseudo, mail, mdp, date_creation_compte,date_naissance);
 
             // Appel propre au repository
             repository.save(utilisateur);
@@ -140,5 +140,18 @@ public class UtilisateurService {
         finally{
             em.close();
         }
+    }
+
+    public Utilisateur getUtilisateurByPseudo(String pseudo){
+        EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+        Utilisateur utilisateur = new Utilisateur();
+        try {
+            UtilisateurRepository repository = new UtilisateurRepository(em);
+            utilisateur = repository.findByPseudo(pseudo);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return utilisateur;
     }
 }

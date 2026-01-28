@@ -10,6 +10,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WishlistService {
 
@@ -41,5 +43,24 @@ public class WishlistService {
         finally{
             em.close();
         }
+    }
+
+    public List<Long> getWishlistByIdUtilisateur(Long idUtilisateur) {
+        EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+
+        try {
+            WishlistRepository repository = new WishlistRepository(em);
+
+            List<Long> wishlist = repository.findByIdUtilisateur(idUtilisateur);
+
+            if(wishlist == null || wishlist.isEmpty()){
+                return new ArrayList<>();
+            }
+
+            return wishlist;
+        } finally {
+            em.close();
+        }
+
     }
 }
