@@ -1,6 +1,6 @@
 {
   "type": "record",
-  "name": "ModficationProfilJoueur",
+  "name": "ModificationProfilJoueur",
   "namespace": "com.example.events",
   "fields": [
     { "name": "idJoueur", "type": "long" },

@@ -1,0 +1,28 @@
+package com.projet_JVM2_DATA.repository;
+
+import com.projet_JVM2_DATA.entity.Modification;
+import jakarta.persistence.EntityManager;
+
+import java.util.List;
+
+public class ModificationRepository {
+    private final EntityManager em;
+    public ModificationRepository(EntityManager em) {
+        this.em = em;
+    }
+    public void save(Modification modification) {
+        em.persist(modification);
+    }
+
+    public Modification findById(int id) {
+        return em.find(Modification.class, id);
+    }
+
+    public List<Modification> findAll() {
+        return em.createQuery("select m from Modification m", Modification.class).getResultList();
+    }
+
+    public void delete(Modification modification) {
+        em.remove(modification);
+    }
+}
