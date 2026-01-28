@@ -21,6 +21,14 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.Properties;
 
+/*
+Dans cette classe, on calule la moyenne des temps de jeu globaux sur 300 sessions par jeu.
+Une fois cette moyenne calculée, on regarde le nombre de sessions dont le temps
+de jeu est supérieur à cette celle-ci.
+Si plus de la moitié des sessions ont été repertoriées, on publie les jeux
+possédant un genre commun avec celui dont on a calculé la moyenne au dévut
+*/
+
 public class TempsJeuStreamProcessor {
 
     public static void main(String[] args) {
@@ -78,26 +86,37 @@ public class TempsJeuStreamProcessor {
                             System.out.println("\n Nombre de session : " + calculateurMoyenne.getNbValeurs()
                                     + "pour le jeu : " + session.getIdJeu() + "\n");
 
+
                             long tpsJeu = session.getHeureDeFin().toEpochMilli()-session.getHeureDeDebut().toEpochMilli();
                             calculateurMoyenne.setSomme(calculateurMoyenne.getSomme()+tpsJeu);
                             System.out.println("Somme : " + calculateurMoyenne.getSomme() + "\n");
 
-
-                            double moyenne = (calculateurMoyenne.getNbValeurs() > 0) ?
-                                    (double) calculateurMoyenne.getSomme() / calculateurMoyenne.getNbValeurs() : 0.0;
-
-                            logger.info("!!!!!!!!!!! Moyenne calculée de : {} , sur le jeu : {}", moyenne, session.getIdJeu());
+                            calculateurMoyenne.getListeTempsTemporaire().add(tpsJeu);
 
 
-                            if (calculateurMoyenne.getNbValeurs() % 300 == 0 && moyenne >= 3.0) {
-                                calculateurMoyenne.setDlcPublie(true);
-                                System.out.println(
-                                        "Un jeu du même genre sera publié : "+ session.getIdJeu()
-                                );
+                            if (calculateurMoyenne.getNbValeurs() % 300 == 0 ) {
 
+                                double moyenne = (calculateurMoyenne.getNbValeurs() > 0) ?
+                                        (double) calculateurMoyenne.getSomme() / calculateurMoyenne.getNbValeurs() : 0.0;
+
+                                logger.info("!!!!!!!!!!! Moyenne calculée de : {} , sur le jeu : {}", moyenne, session.getIdJeu());
+
+                                long nbSupMoyenne = calculateurMoyenne.getListeTempsTemporaire().stream()
+                                        .filter(t -> t > moyenne)
+                                        .count();
+
+                                if(nbSupMoyenne> calculateurMoyenne.getNbValeurs()/2)
+                                {
+                                    calculateurMoyenne.setDlcPublie(true);
+                                    System.out.println(
+                                            "Un jeu du même genre sera publié : " + session.getIdJeu()
+                                    );
+                                }
                                 //Nettoyage pour éviter les conflits dans les caluls
                                 calculateurMoyenne.setNbValeurs(0);
                                 calculateurMoyenne.setSomme(0);
+
+
 
                             } else {
                                 // on remet à false si on n'est pas pile sur le palier

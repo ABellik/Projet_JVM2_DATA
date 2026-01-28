@@ -1,7 +1,7 @@
 package com.projet_JVM2_DATA.dao;
-
+/*
 import com.projet_JVM2_DATA.db.DatabaseConnection;
-import com.projet_JVM2_DATA.model.Game;
+
 import com.example.events.Session;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -71,4 +71,4 @@ public class GameDao {
             return st.executeUpdate();
         }
     }
-}
+}*/

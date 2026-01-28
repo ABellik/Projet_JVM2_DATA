@@ -79,6 +79,12 @@
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-streams</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.projet_JVM2_DATA</groupId>
+            <artifactId>processor-stream</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,5 +1,5 @@
 package com.projet_JVM2_DATA.consumers;
-
+/*
 import com.example.events.PublicationJeuOuDLC;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
@@ -58,7 +58,6 @@ public class JeuConsumer {
                 }
             }
         }
-
 }
-
+*/
 

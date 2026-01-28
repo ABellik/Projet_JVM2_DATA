@@ -21,6 +21,10 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.Properties;
 
+/*
+Dans cette classe, on calule la moyenne des notes sur 300 évaluations par jeu
+et on décide de publier un dlc sur ce jeu si la moyenne est supérieure ou égale à 3
+*/
 public class EvaluationJeuStreamProcessor {
 
     public static void main(String[] args)

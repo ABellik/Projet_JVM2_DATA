@@ -15,7 +15,8 @@ import java.util.*;
 
 public class ReponseAuthentificationConsumer {
 
-    public static long idEditeur;
+    // VOLATILE est obligatoire pour que le changement soit visible entre Threads
+    public static volatile long idEditeur;
 
     public static void main(String[] args) {
         Properties props = new Properties();
