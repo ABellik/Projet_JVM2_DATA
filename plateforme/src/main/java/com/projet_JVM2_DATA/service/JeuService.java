@@ -92,9 +92,13 @@ public class JeuService {
 
             // Suppression de l'historique des prix
             HistoriquePrixService historiquePrixService = new HistoriquePrixService();
-            historiquePrixService.supprimerIdJeu(idJeu);
+            historiquePrixService.supprimerJeu(jeu);
 
-            // Suppression en cascade
+            // Suppression des patchs
+            PatchService patchService = new PatchService();
+            patchService.supprimerJeu(jeu);
+
+            // TODO : Suppression en cascade
             /*
              * Patch (+modification)
              * Licence

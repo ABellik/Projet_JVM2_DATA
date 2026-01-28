@@ -1,6 +1,7 @@
 package com.projet_JVM2_DATA.repository;
 
 import com.projet_JVM2_DATA.entity.HistoriquePrix;
+import com.projet_JVM2_DATA.entity.Jeu;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
@@ -25,9 +26,9 @@ public class HistoriquePrixRepository {
         return em.createQuery("select h from  HistoriquePrix h", HistoriquePrix.class).getResultList();
     }
 
-    public List<HistoriquePrix> findByIdJeu(Long idJeu) {
-        return em.createQuery("select h from  HistoriquePrix h where h.idJeu=:idJeu", HistoriquePrix.class)
-                .setParameter("idJeu", idJeu)
+    public List<HistoriquePrix> findByJeu(Jeu jeu) {
+        return em.createQuery("select h from  HistoriquePrix h where h.idJeu=:jeu", HistoriquePrix.class)
+                .setParameter("jeu", jeu)
                 .getResultList();
     }
 

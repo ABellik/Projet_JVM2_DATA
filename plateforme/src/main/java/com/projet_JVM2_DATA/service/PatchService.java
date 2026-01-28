@@ -1,13 +1,17 @@
 package com.projet_JVM2_DATA.service;
 
 import com.projet_JVM2_DATA.config.JpaUtil;
+import com.projet_JVM2_DATA.entity.Genrejeu;
 import com.projet_JVM2_DATA.entity.Jeu;
 import com.projet_JVM2_DATA.entity.Patch;
+import com.projet_JVM2_DATA.repository.GenreJeuRepository;
 import com.projet_JVM2_DATA.repository.PatchRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
-public class PatchService {
+import java.util.List;
+
+public class PatchService extends MainService{
 
     public void creer(
             Jeu jeu,
@@ -43,6 +47,16 @@ public class PatchService {
             em.close();
         }
 
+    }
+
+    public void supprimerJeu(Jeu jeu) {
+        executeInTransaction(em -> {
+            PatchRepository repository = new PatchRepository(em);
+            List<Patch> list = repository.findByJeu(jeu);
+            for (Patch patch : list) {
+                repository.delete(patch);
+            }
+        });
     }
 
 
