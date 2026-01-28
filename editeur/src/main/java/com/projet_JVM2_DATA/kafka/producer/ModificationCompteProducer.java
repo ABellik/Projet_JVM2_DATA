@@ -1,4 +1,4 @@
-package com.projet_JVM2_DATA.producer;
+package com.projet_JVM2_DATA.kafka.producer;
 
 import com.example.events.ModificationCompteEditeur;
 import com.example.events.SuppressionCompteEditeur;

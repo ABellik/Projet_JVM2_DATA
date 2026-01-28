@@ -1,4 +1,4 @@
-package com.projet_JVM2_DATA.service;
+package com.projet_JVM2_DATA.dao;
 
 import com.example.events.PublicationJeuOuDLC;
 import java.sql.*;
@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class JeuOuDLCDAO {
+public class JeuOuDlcDao {
 
     private String url;
     private String username;
     private String password;
 
 
-    public JeuOuDLCDAO(String url, String username, String mdp)
+    public JeuOuDlcDao(String url, String username, String mdp)
     {
         this.url=url;
         this.username=username;

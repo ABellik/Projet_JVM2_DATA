@@ -1,7 +1,7 @@
-package com.projet_JVM2_DATA.producer;
+package com.projet_JVM2_DATA.kafka.producer;
 
 import com.example.events.PublicationJeuOuDLC;
-import com.projet_JVM2_DATA.service.JeuOuDLCDAO;
+import com.projet_JVM2_DATA.dao.JeuOuDlcDao;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -36,7 +36,7 @@ public class JeuProducer {
                 String password = System.getenv("DB_PASSWORD");
 
                 //permettre d'effectuer les requêtes à la base pour récupérer le dlc associé au jeu
-                JeuOuDLCDAO jeuOuDLCDAO = new JeuOuDLCDAO(url, username,password);
+                JeuOuDlcDao jeuOuDLCDAO = new JeuOuDlcDao(url, username,password);
 
                 List<PublicationJeuOuDLC> jeux = jeuOuDLCDAO.recuperationDLCOuJeu();
                 for (PublicationJeuOuDLC jeu : jeux)

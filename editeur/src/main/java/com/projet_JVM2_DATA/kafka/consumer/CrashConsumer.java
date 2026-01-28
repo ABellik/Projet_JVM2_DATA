@@ -1,4 +1,4 @@
-package com.projet_JVM2_DATA.kafka;
+package com.projet_JVM2_DATA.kafka.consumer;
 
 import com.example.events.Session;
 import com.projet_JVM2_DATA.dao.CrashDao;

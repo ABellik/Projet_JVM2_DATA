@@ -1,7 +1,7 @@
-package com.projet_JVM2_DATA.producer;
+package com.projet_JVM2_DATA.kafka.producer;
 
-import com.example.events.RequeteAuthentificationEditeur;
 import com.example.events.SuppressionCompteEditeur;
+import com.example.events.SuppressionJeuOuDLC;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -13,8 +13,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Properties;
 
-public class SuppressionCompteProducer {
-
+public class SuppressionJeuOuDLCProducer {
     public static void main(String[] args) throws SQLException
     {
         //Configuration pour la Sérialisation + vérification de conformité des données par rapport au schéma avro
@@ -27,17 +26,17 @@ public class SuppressionCompteProducer {
         props.put(ProducerConfig.ACKS_CONFIG, "all");
 
 
-        try (KafkaProducer<String, SuppressionCompteEditeur> producer = new KafkaProducer<>(props)) {
+        try (KafkaProducer<String, SuppressionJeuOuDLC> producer = new KafkaProducer<>(props)) {
 
-            SuppressionCompteEditeur suppressionCompte = new SuppressionCompteEditeur(Long.parseLong(args[0]), LocalDate.now());
+            SuppressionJeuOuDLC suppressionJeu = new SuppressionJeuOuDLC(Long.parseLong(args[0]), Long.parseLong(args[1]),LocalDate.now());
 
-            ProducerRecord<String, SuppressionCompteEditeur> record = new ProducerRecord<>("suppression-compte-editeur", null, suppressionCompte);
+            ProducerRecord<String, SuppressionJeuOuDLC> record = new ProducerRecord<>("suppression-jeu", null, suppressionJeu);
 
             producer.send(record, (metadata, exception) -> {
                 if (exception == null) {
-                    System.out.printf(" Suppression du compte publiée : id=%s , date=%d%n ",
-                            suppressionCompte.getId(),
-                            suppressionCompte.getDate());
+                    System.out.printf(" Suppression du jeu publiée : id=%s , date=%d%n ",
+                            suppressionJeu.getId(),
+                            suppressionJeu.getDate());
                 } else {
                     System.err.println("❌ Erreur d'envoi : " + exception.getMessage());
                 }
@@ -49,12 +48,10 @@ public class SuppressionCompteProducer {
                 e.printStackTrace();
             }
             producer.flush();
-            System.out.println("🏁 Fin de l'envoi des notifications de suppression de compte.");
+            System.out.println("🏁 Fin de l'envoi des notifications de suppression de jeux ou dlcs.");
 
         }
 
 
     }
-
-
 }

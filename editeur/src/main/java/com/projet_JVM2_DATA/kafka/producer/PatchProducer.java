@@ -1,4 +1,4 @@
-package com.projet_JVM2_DATA.kafka;
+package com.projet_JVM2_DATA.kafka.producer;
 
 import com.example.events.CreationPatch;
 import com.example.events.typeModification;

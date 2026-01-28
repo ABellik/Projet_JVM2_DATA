@@ -1,7 +1,6 @@
-package com.projet_JVM2_DATA.producer;
+package com.projet_JVM2_DATA.kafka.producer;
 
-import com.example.events.SuppressionCompteEditeur;
-import com.example.events.SuppressionJeuOuDLC;
+import com.example.events.RequeteAuthentificationEditeur;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -10,10 +9,9 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.Properties;
 
-public class SuppressionJeuOuDLCProducer {
+public class AuthentificationProducer {
     public static void main(String[] args) throws SQLException
     {
         //Configuration pour la Sérialisation + vérification de conformité des données par rapport au schéma avro
@@ -26,17 +24,17 @@ public class SuppressionJeuOuDLCProducer {
         props.put(ProducerConfig.ACKS_CONFIG, "all");
 
 
-        try (KafkaProducer<String, SuppressionJeuOuDLC> producer = new KafkaProducer<>(props)) {
+        try (KafkaProducer<String, RequeteAuthentificationEditeur> producer = new KafkaProducer<>(props)) {
 
-            SuppressionJeuOuDLC suppressionJeu = new SuppressionJeuOuDLC(Long.parseLong(args[0]), Long.parseLong(args[1]),LocalDate.now());
+            RequeteAuthentificationEditeur requete = new RequeteAuthentificationEditeur(args[0], args[1]);
 
-            ProducerRecord<String, SuppressionJeuOuDLC> record = new ProducerRecord<>("suppression-jeu", null, suppressionJeu);
+            ProducerRecord<String, RequeteAuthentificationEditeur> record = new ProducerRecord<>("nouvelle-connexion-editeur", null, requete);
 
             producer.send(record, (metadata, exception) -> {
                 if (exception == null) {
-                    System.out.printf(" Suppression du jeu publiée : id=%s , date=%d%n ",
-                            suppressionJeu.getId(),
-                            suppressionJeu.getDate());
+                    System.out.printf(" requête publiée : pseudo=%s , mdp=%d ",
+                            requete.getPseudo(),
+                            requete.getMotDePasse());
                 } else {
                     System.err.println("❌ Erreur d'envoi : " + exception.getMessage());
                 }
@@ -48,10 +46,14 @@ public class SuppressionJeuOuDLCProducer {
                 e.printStackTrace();
             }
             producer.flush();
-            System.out.println("🏁 Fin de l'envoi des notifications de suppression de jeux ou dlcs.");
+            System.out.println("🏁 Fin de l'envoi des donnéees d'authentification.");
 
         }
 
 
+        }
+
+
+
     }
-}
+

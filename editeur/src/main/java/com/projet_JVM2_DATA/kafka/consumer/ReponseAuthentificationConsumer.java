@@ -1,7 +1,6 @@
-package com.projet_JVM2_DATA.consumer;
+package com.projet_JVM2_DATA.kafka.consumer;
 
-import com.example.events.PublicationJeuOuDLC;
-import com.projet_JVM2_DATA.service.JeuOuDLCDAO;
+import com.example.events.ReponseAuthentificationEditeur;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
@@ -12,10 +11,12 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.time.Duration;
-import java.util.Collections;
-import java.util.Properties;
+import java.util.*;
 
-public class DLCConsumer {
+public class ReponseAuthentificationConsumer {
+
+    public static long idEditeur;
+
     public static void main(String[] args) {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -33,26 +34,19 @@ public class DLCConsumer {
 
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-        //Permet de récupérer les dlc par id de jeu, en établissant une connexion à la base au préalable
-        JeuOuDLCDAO jeuOuDLCDAO = new JeuOuDLCDAO(
-                System.getenv("DB_URL"),
-                System.getenv("DB_USER"),
-                System.getenv("DB_PASSWORD")
-        );
-        try (KafkaConsumer<String, PublicationJeuOuDLC > consumer = new KafkaConsumer<>(props)) {
-            consumer.subscribe(Collections.singletonList("demandes-creation-dlc"));
+
+        try (KafkaConsumer<String, ReponseAuthentificationEditeur> consumer = new KafkaConsumer<>(props)) {
+            consumer.subscribe(Collections.singletonList("reponse-requete-authentification"));
 
             System.out.println("🎧 En attente d'évènements Avro...");
 
             while (true) {
-                ConsumerRecords<String, PublicationJeuOuDLC > records = consumer.poll(Duration.ofMillis(1000));
+                ConsumerRecords<String, ReponseAuthentificationEditeur> records = consumer.poll(Duration.ofMillis(1000));
 
-                for (ConsumerRecord<String, PublicationJeuOuDLC > record : records) {
+                for (ConsumerRecord<String, ReponseAuthentificationEditeur > record : records) {
 
-                    //on récupère le dlc associé à l'id du jeu donné
-                    jeuOuDLCDAO.getDLCByID(record.value().getId());
-
-                    PublicationJeuOuDLC event = record.value();
+                    ReponseAuthentificationEditeur event = record.value();
+                    idEditeur= event.getIdEditeur();
 
                     System.out.printf("Message reçu ! User: %s, Montant: %.2f%n");
                 }

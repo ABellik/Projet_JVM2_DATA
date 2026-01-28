@@ -1,6 +1,7 @@
-package com.projet_JVM2_DATA.producer;
+package com.projet_JVM2_DATA.kafka.producer;
 
 import com.example.events.RequeteAuthentificationEditeur;
+import com.example.events.SuppressionCompteEditeur;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -9,9 +10,11 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Properties;
 
-public class AuthentificationProducer {
+public class SuppressionCompteProducer {
+
     public static void main(String[] args) throws SQLException
     {
         //Configuration pour la Sérialisation + vérification de conformité des données par rapport au schéma avro
@@ -24,17 +27,17 @@ public class AuthentificationProducer {
         props.put(ProducerConfig.ACKS_CONFIG, "all");
 
 
-        try (KafkaProducer<String, RequeteAuthentificationEditeur> producer = new KafkaProducer<>(props)) {
+        try (KafkaProducer<String, SuppressionCompteEditeur> producer = new KafkaProducer<>(props)) {
 
-            RequeteAuthentificationEditeur requete = new RequeteAuthentificationEditeur(args[0], args[1]);
+            SuppressionCompteEditeur suppressionCompte = new SuppressionCompteEditeur(Long.parseLong(args[0]), LocalDate.now());
 
-            ProducerRecord<String, RequeteAuthentificationEditeur> record = new ProducerRecord<>("nouvelle-connexion-editeur", null, requete);
+            ProducerRecord<String, SuppressionCompteEditeur> record = new ProducerRecord<>("suppression-compte-editeur", null, suppressionCompte);
 
             producer.send(record, (metadata, exception) -> {
                 if (exception == null) {
-                    System.out.printf(" requête publiée : pseudo=%s , mdp=%d ",
-                            requete.getPseudo(),
-                            requete.getMotDePasse());
+                    System.out.printf(" Suppression du compte publiée : id=%s , date=%d%n ",
+                            suppressionCompte.getId(),
+                            suppressionCompte.getDate());
                 } else {
                     System.err.println("❌ Erreur d'envoi : " + exception.getMessage());
                 }
@@ -46,14 +49,12 @@ public class AuthentificationProducer {
                 e.printStackTrace();
             }
             producer.flush();
-            System.out.println("🏁 Fin de l'envoi des donnéees d'authentification.");
+            System.out.println("🏁 Fin de l'envoi des notifications de suppression de compte.");
 
         }
-
-
-        }
-
 
 
     }
 
+
+}

@@ -2,12 +2,10 @@ package com.projet_JVM2_DATA.dao;
 
 import com.example.events.CreationPatch; // Ta classe générée par Avro
 import com.projet_JVM2_DATA.db.DatabaseConnection;
-import com.projet_JVM2_DATA.model.Patch;
-import com.example.events.CreationPatch;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 
 public class PatchDao {
 
