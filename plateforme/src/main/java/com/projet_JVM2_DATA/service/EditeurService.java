@@ -5,12 +5,29 @@ import com.projet_JVM2_DATA.entity.Editeur;
 import com.projet_JVM2_DATA.repository.EditeurRepository;
 import jakarta.persistence.EntityManager;
 
-public class EditeurService {
+public class EditeurService extends MainService {
 
     public Editeur getEditeur(String nom) {
         EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
         EditeurRepository editeurRepository = new EditeurRepository(em);
         return  editeurRepository.findByNom(nom);
     }
-    // TODO : à compléter
+
+    public void creer(String type, String nom, String mdp) {
+
+        Editeur editeur = new Editeur(type, nom, mdp);
+
+        executeInTransaction(em -> {
+            EditeurRepository repository = new EditeurRepository(em);
+            repository.save(editeur);
+        });
+    }
+
+    public void supprimer(Long idEditeur) {
+        executeInTransaction(em -> {
+            EditeurRepository repository = new EditeurRepository(em);
+            Editeur editeur = repository.findById(idEditeur);
+            repository.delete(editeur);
+        });
+    }
 }

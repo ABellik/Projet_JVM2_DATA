@@ -14,7 +14,7 @@ public class GenreJeuRepository {
         em.persist(genrejeu);
     }
 
-    public Genrejeu findById(int id){
+    public Genrejeu findById(long id){
         return em.find(Genrejeu.class, id);
     }
 
