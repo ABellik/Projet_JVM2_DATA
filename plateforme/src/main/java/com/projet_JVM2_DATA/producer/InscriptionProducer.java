@@ -10,6 +10,8 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
 
+
+//TODO : à supprimer
 /**
  * Producer d'inscription pour tester si le consumer fonctionne
  */

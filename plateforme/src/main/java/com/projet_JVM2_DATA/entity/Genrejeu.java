@@ -13,12 +13,12 @@ public class Genrejeu {
     @JoinColumn(name = "idjeu", nullable = false)
     private Jeu idjeu;
 
-    @Enumerated(EnumType.STRING)
+    //deuxième option, supprimer cette partie car déjà présente dans id
     @Column(name="genre", nullable = false, insertable = false, updatable = false)
-    private TypeGenre genre;
+    private String genre;
 
     public Genrejeu() {}
-    public Genrejeu(Jeu jeu, TypeGenre genre) {
+    public Genrejeu(Jeu jeu, String genre) {
         this.id = new GenrejeuId(jeu.getId(), genre);
         this.idjeu = jeu;
         this.genre = genre;
@@ -40,11 +40,11 @@ public class Genrejeu {
         this.idjeu = idjeu;
     }
 
-    public TypeGenre getGenre() {
+    public String getGenre() {
         return genre;
     }
 
-    public void setGenre(TypeGenre genre) {
+    public void setGenre(String genre) {
         this.genre = genre;
     }
 

@@ -5,6 +5,8 @@ import com.example.events.CreationCompteJoueur;
 import java.time.Instant;
 
 
+//TODO : à supprimer
+
 /**
  * Test pour InscriptionCompteConsumer
  */
