@@ -4,6 +4,8 @@ import com.projet_JVM2_DATA.entity.HistoriquePrix;
 import com.projet_JVM2_DATA.entity.Jeu;
 import com.projet_JVM2_DATA.repository.HistoriquePrixRepository;
 
+import java.util.List;
+
 public class HistoriquePrixService extends MainService {
 
     public void creer(Jeu jeu, Long ancienPrix, Long nouveauPrix, String commentaire) {
@@ -11,6 +13,16 @@ public class HistoriquePrixService extends MainService {
         executeInTransaction(em -> {
             HistoriquePrixRepository repository = new HistoriquePrixRepository(em);
             repository.save(historiquePrix);
+        });
+    }
+
+    public void supprimerJeu(Long idJeu) {
+        executeInTransaction(em -> {
+            HistoriquePrixRepository repository = new HistoriquePrixRepository(em);
+            List<HistoriquePrix> list = repository.findByJeuId(idJeu);
+            for(HistoriquePrix historiquePrix : list) {
+                repository.delete(historiquePrix);
+            }
         });
     }
 

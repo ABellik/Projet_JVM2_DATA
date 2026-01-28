@@ -66,9 +66,21 @@ public class JeuService {
             //instanciation du repository
             JeuRepository repository = new JeuRepository(em);
 
-            //récupération de l'utilisateur
-            Jeu jeu = repository.findById(idJeu);
+            // Suppression de l'historique des prix
+            HistoriquePrixService historiquePrixService = new HistoriquePrixService();
+            historiquePrixService.supprimerJeu(idJeu);
 
+            // Suppression en cascade
+            /*
+             * Patch (+modification)
+             * Licence
+             * Genre
+             * Bibliothèque (+Session)
+             * Wishlist
+             * */
+
+            // Et enfin suppression du jeu
+            Jeu jeu = repository.findById(idJeu);
             repository.delete(jeu);
 
             tx.commit();
