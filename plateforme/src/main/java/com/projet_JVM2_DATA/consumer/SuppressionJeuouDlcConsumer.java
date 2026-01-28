@@ -1,7 +1,6 @@
 package com.projet_JVM2_DATA.consumer;
 
-import com.example.events.PublicationJeuOuDLC;
-import com.projet_JVM2_DATA.entity.TypeJeu;
+import com.example.events.SuppressionJeuOuDLC;
 import com.projet_JVM2_DATA.service.JeuService;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
@@ -14,11 +13,12 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 
-public class PublicationJeuConsumer implements Runnable{
-    private final KafkaConsumer<String, PublicationJeuOuDLC> consumer;
+public class SuppressionJeuouDlcConsumer implements Runnable{
+    //TODO : Vérifier que tout est ok (notamment pour la fonction de suppression au niveau du service)
+    private final KafkaConsumer<String, SuppressionJeuOuDLC> consumer;
     private final JeuService jeuService;
 
-    public PublicationJeuConsumer(JeuService service){
+    public SuppressionJeuouDlcConsumer(JeuService service) {
         this.jeuService = service; // On injecte le service ici
 
         Properties props = new Properties();
@@ -35,15 +35,15 @@ public class PublicationJeuConsumer implements Runnable{
     @Override
     public void run() {
         try {
-            consumer.subscribe(Collections.singletonList("nouveau-jeu"));
+            consumer.subscribe(Collections.singletonList("suppression-jeu"));
 
             while (true) {
-                ConsumerRecords<String, PublicationJeuOuDLC> records = consumer.poll(Duration.ofMillis(1000));
-                for (ConsumerRecord<String, PublicationJeuOuDLC> record : records) {
-                    PublicationJeuOuDLC event = record.value();
+                ConsumerRecords<String, SuppressionJeuOuDLC> records = consumer.poll(Duration.ofMillis(1000));
+                for (ConsumerRecord<String, SuppressionJeuOuDLC> record : records) {
+                    SuppressionJeuOuDLC event = record.value();
 
                     //Enregistrement du jeu dans la table Jeu (genres inclus)
-                    jeuService.publier(event.getIdEditeur(), event.getNom(), event.getVersionActuelle(), (long) event.getPrixEditeur(), event.getIdParent(), TypeJeu.BASE ,event.getGenre());
+                    jeuService.supprimer(event.getId());
                 }
             }
         } finally {

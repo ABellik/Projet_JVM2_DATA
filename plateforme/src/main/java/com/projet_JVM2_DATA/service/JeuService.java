@@ -12,44 +12,6 @@ import java.util.List;
 public class JeuService {
 
     public void publier(
-            Editeur editeur,
-            String nomJeu,
-            String versionActuelle,
-            Long prixEditeur,
-            Jeu jeuParent,
-            TypeJeu type
-            ) {
-        // 1. On ouvre l'EntityManager
-        EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
-        EntityTransaction tx = em.getTransaction();
-
-        try {
-            tx.begin();
-
-            // 2. On instancie le Repository avec cet EM
-            JeuRepository repository = new JeuRepository(em);
-
-            // 3. Logique Métier
-            Jeu jeu = new Jeu(editeur, nomJeu, versionActuelle, prixEditeur, jeuParent, type);
-
-            // Appel propre au repository
-            repository.save(jeu);
-
-            // 4. Validation
-            tx.commit();
-            System.out.println("Service : Jeu sauvegardé avec succès.");
-
-        } catch (Exception e) {
-            if (tx.isActive()) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-    }
-
-    public void publier2(
             Long idEditeur,
             String nomJeu,
             String versionActuelle,
