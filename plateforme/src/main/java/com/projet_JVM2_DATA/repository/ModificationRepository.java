@@ -14,7 +14,8 @@ public class ModificationRepository {
         em.persist(modification);
     }
 
-    public Modification findById(int id) {
+    // TODO : à verifier pour l'id car le id est composé
+    public Modification findById(Long id) {
         return em.find(Modification.class, id);
     }
 

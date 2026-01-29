@@ -7,6 +7,7 @@ import com.projet_JVM2_DATA.repository.JeuRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JeuService {
@@ -57,6 +58,24 @@ public class JeuService {
         }
     }
 
+    public List<Long> getJeuByPseudo(String pseudo) {
+        EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+
+        try {
+            JeuRepository repository = new JeuRepository(em);
+
+            List<Long> jeux = repository.findByPseudo(pseudo);
+
+            if (jeux == null || jeux.isEmpty()) {
+                return new ArrayList<>();
+            }
+            return jeux;
+
+        } finally {
+            em.close();
+        }
+    }
+
     public void supprimer(Long idJeu) {
         EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
@@ -65,10 +84,29 @@ public class JeuService {
 
             //instanciation du repository
             JeuRepository repository = new JeuRepository(em);
-
-            //récupération de l'utilisateur
             Jeu jeu = repository.findById(idJeu);
 
+            // Suppression des genres du jeu
+            GenreJeuService genreJeuService = new GenreJeuService();
+            genreJeuService.supprimerJeu(jeu);
+
+            // Suppression de l'historique des prix
+            HistoriquePrixService historiquePrixService = new HistoriquePrixService();
+            historiquePrixService.supprimerJeu(jeu);
+
+            // Suppression des patchs
+            PatchService patchService = new PatchService();
+            patchService.supprimerJeu(jeu);
+
+            // TODO : Suppression en cascade
+            /*
+             * Patch (+modification)
+             * Licence
+             * Bibliothèque (+Session)
+             * Wishlist
+             * */
+
+            // Et enfin suppression du jeu
             repository.delete(jeu);
 
             tx.commit();

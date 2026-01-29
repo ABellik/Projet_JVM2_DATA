@@ -30,6 +30,10 @@ public class WishlistRepository {
         return em.createQuery("SELECT w FROM Wishlist w", Wishlist.class).getResultList();
     }
 
+    public List<Long> findByIdUtilisateur(Long idUtilisateur) {
+        return em.createQuery("SELECT w.idJeu.id FROM Wishlist w WHERE w.idUtilisateur.id = :idUtilisateur",Long.class).setParameter("idUtilisateur", idUtilisateur).getResultList();
+    }
+
     public void delete(Wishlist wishlist) {
         em.remove(wishlist);
     }
