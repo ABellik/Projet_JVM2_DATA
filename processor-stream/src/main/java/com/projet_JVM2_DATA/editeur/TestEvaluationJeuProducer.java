@@ -1,4 +1,4 @@
-package com.projet_JVM2_DATA;
+package com.projet_JVM2_DATA.editeur;
 
 import com.example.events.EvaluationJeu;
 import com.projet_JVM2_DATA.editeur.dao.JeuOuDLCDAO;

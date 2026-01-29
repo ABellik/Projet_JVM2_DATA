@@ -1,4 +1,4 @@
-package com.projet_JVM2_DATA;
+package com.projet_JVM2_DATA.editeur;
 
 import com.example.events.CauseFermetureSession;
 import com.example.events.Session;
@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 
-public class CrashStreamProcessor {
+public class CrashAggregationStream {
 
     private static final long THRESHOLD = 10L;
 
@@ -38,18 +38,17 @@ public class CrashStreamProcessor {
         StreamsBuilder builder = new StreamsBuilder();
 
         KStream<String, Session> sessionStream = builder.stream(
-                "game-sessions",
+                "detected-crashs",
                 Consumed.with(Serdes.String(), sessionSerde)
         );
 
         sessionStream
-                .filter((key, session) -> session.getCauseFermeture() == CauseFermetureSession.CRASH)
                 .selectKey((key, session) ->
                         session.getIdJeu() + ":" + session.getVersionJeu() + ":" + session.getSupport())
                 .groupByKey(Grouped.with(Serdes.String(), sessionSerde))
                 .count()
                 .toStream()
-                .filter((groupKey, count) -> count != null && count == THRESHOLD) //pas de spam
+                .filter((groupKey, count) -> count != null && count % THRESHOLD == 0) //pas de spam
                 .to("potential-patches", Produced.with(Serdes.String(), Serdes.Long()));
 
         final KafkaStreams streams = new KafkaStreams(builder.build(), props);

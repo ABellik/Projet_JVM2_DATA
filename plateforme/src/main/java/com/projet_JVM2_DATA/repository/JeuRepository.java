@@ -20,7 +20,7 @@ public class JeuRepository {
     }
 
     public List<Jeu> findAll() {
-        return em.createQuery("select j from Jeu j", Jeu.class).getResultList();
+        return em.createQuery("select j from Jeu j JOIN FETCH j.idEditeur", Jeu.class).getResultList();
     }
 
     public List<Jeu> findByIdEditeur(Long idEditeur) {

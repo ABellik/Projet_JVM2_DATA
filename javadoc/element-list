@@ -4,7 +4,7 @@ com.projet_JVM2_DATA.consumer
 com.projet_JVM2_DATA.dao
 com.projet_JVM2_DATA.db
 com.projet_JVM2_DATA.editeur
-com.projet_JVM2_DATA.editeur.service
+com.projet_JVM2_DATA.editeur.dao
 com.projet_JVM2_DATA.entity
 com.projet_JVM2_DATA.kafka.consumer
 com.projet_JVM2_DATA.kafka.producer

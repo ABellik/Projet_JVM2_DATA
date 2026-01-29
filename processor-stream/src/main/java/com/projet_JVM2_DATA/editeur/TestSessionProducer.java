@@ -1,4 +1,4 @@
-package com.projet_JVM2_DATA;
+package com.projet_JVM2_DATA.editeur;
 
 import com.example.events.Session;
 import com.example.events.CauseFermetureSession;
