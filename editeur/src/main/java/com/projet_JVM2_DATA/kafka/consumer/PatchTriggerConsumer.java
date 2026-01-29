@@ -1,6 +1,7 @@
-package com.projet_JVM2_DATA.kafka.producer;
+package com.projet_JVM2_DATA.kafka.consumer;
 
 import com.example.events.typeModification;
+import com.projet_JVM2_DATA.kafka.producer.PatchProducer;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -8,6 +9,12 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
+
+/*
+* Consomme les crashs filtrés par kafka stream
+* Lorsqu'on atteint 10 crashs, un patch est créé et un événement CreationPatch est publié
+*
+* */
 
 public class PatchTriggerConsumer {
 
@@ -33,7 +40,7 @@ public class PatchTriggerConsumer {
                 patchTopic
         );
     }
-
+ // Methode principale de consommation des triggers
     public void start(String triggerTopic) {
         consumer.subscribe(Collections.singletonList(triggerTopic));
         System.out.println("PatchTriggerConsumer démarré, en attente de triggers...");
