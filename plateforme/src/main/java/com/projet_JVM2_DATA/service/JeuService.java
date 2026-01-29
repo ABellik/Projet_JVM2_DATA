@@ -102,22 +102,29 @@ public class JeuService {
 
             //instanciation du repository
             JeuRepository repository = new JeuRepository(em);
+            Jeu jeu = repository.findById(idJeu);
+
+            // Suppression des genres du jeu
+            GenreJeuService genreJeuService = new GenreJeuService();
+            genreJeuService.supprimerJeu(jeu);
 
             // Suppression de l'historique des prix
             HistoriquePrixService historiquePrixService = new HistoriquePrixService();
-            historiquePrixService.supprimerJeu(idJeu);
+            historiquePrixService.supprimerJeu(jeu);
 
-            // Suppression en cascade
+            // Suppression des patchs
+            PatchService patchService = new PatchService();
+            patchService.supprimerJeu(jeu);
+
+            // TODO : Suppression en cascade
             /*
              * Patch (+modification)
              * Licence
-             * Genre
              * Bibliothèque (+Session)
              * Wishlist
              * */
 
             // Et enfin suppression du jeu
-            Jeu jeu = repository.findById(idJeu);
             repository.delete(jeu);
 
             tx.commit();

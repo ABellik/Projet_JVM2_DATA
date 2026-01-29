@@ -20,7 +20,15 @@ public class GenreJeuService extends MainService {
         });
     }
 
-    // TODO : supprimer (POURQUOI ??)
+    public void supprimerJeu(Jeu jeu) {
+        executeInTransaction(em -> {
+            GenreJeuRepository repository = new GenreJeuRepository(em);
+            List<Genrejeu> list = repository.findByJeu(jeu);
+            for (Genrejeu genreJeu : list) {
+                repository.delete(genreJeu);
+            }
+        });
+    }
 
     public List<String> getGenresByIdJeu(Long idJeu) {
         EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
@@ -39,5 +47,6 @@ public class GenreJeuService extends MainService {
             em.close();
         }
     }
+
 
 }

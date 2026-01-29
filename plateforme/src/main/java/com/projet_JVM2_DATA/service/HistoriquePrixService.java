@@ -16,10 +16,10 @@ public class HistoriquePrixService extends MainService {
         });
     }
 
-    public void supprimerJeu(Long idJeu) {
+    public void supprimerJeu(Jeu jeu) {
         executeInTransaction(em -> {
             HistoriquePrixRepository repository = new HistoriquePrixRepository(em);
-            List<HistoriquePrix> list = repository.findByJeuId(idJeu);
+            List<HistoriquePrix> list = repository.findByJeu(jeu);
             for(HistoriquePrix historiquePrix : list) {
                 repository.delete(historiquePrix);
             }
