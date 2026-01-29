@@ -38,9 +38,7 @@ public class AchatJeuConsumer implements Runnable {
 
         this.consumer = new KafkaConsumer<>(props);
     }
-
-    // TODO : Questionner sur la table Licence et sur la finitude de la table plateforme
-    // TODO : Changer l'UIConsole de Joueur pour que, parmi les réponses possibles de support, il ne puisse y avoir que les supports pour lesquels il y a des jeux (licences)
+    
     @Override
     public void run() {
         try {
