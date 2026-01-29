@@ -17,28 +17,23 @@ public class Main {
 
     public static void main(String[] args) throws SQLException {
 
-        try (Connection con = DriverManager.getConnection(System.getenv("DB_URL"), System.getenv("DB_USER"), System.getenv("DB_PASSWORD"))) {
-            System.out.println("Connecté à la base de données !");
-
-
-        } catch (Exception e) {
-            System.err.println("Erreur : non connecté !");
-            e.printStackTrace();
-        }
-
         //Ce qui permet de faire des requêtes à la base de données
 
         String url = System.getenv("DB_URL");
         String username = System.getenv("DB_USER");
         String password = System.getenv("DB_PASSWORD");
+
+
+
         JeuOuDlcDao jeuOuDLCDAO = new JeuOuDlcDao(url, username, password);
 
         //Tous les producers nécessaires pour la suite
-        AuthentificationProducer auth = new AuthentificationProducer();
-        JeuProducer jeuProducer = new JeuProducer();
-        NouveauCompteProducer nouveauCompteProducer = new NouveauCompteProducer();
-        SuppressionCompteProducer suppressionCompteProducer = new SuppressionCompteProducer();
-        SuppressionJeuOuDLCProducer suppressionJeuProducer = new SuppressionJeuOuDLCProducer();
+        AuthentificationProducer auth = new AuthentificationProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"nouvelle-connexion-editeur");
+        JeuProducer jeuProducer = new JeuProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"),   System.getenv("SCHEMA_REGISTRY_URL"), "nouveau-jeu");
+        NouveauCompteProducer nouveauCompteProducer = new NouveauCompteProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"nouveau-compte-editeur");
+        ModificationCompteProducer modificationCompteProducer = new ModificationCompteProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"modification-compte-editeur");
+        SuppressionCompteProducer suppressionCompteProducer = new SuppressionCompteProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"suppression-compte-editeur");
+        SuppressionJeuOuDLCProducer suppressionJeuProducer = new SuppressionJeuOuDLCProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"suppression-jeu");
 
 
         //Tous les consumers necessaires pour la suite
@@ -96,7 +91,7 @@ public class Main {
                     producerArgs[6] = dateNaissance;
 
 
-                    nouveauCompteProducer.main(producerArgs);
+                    nouveauCompteProducer.envoyer(producerArgs);
 
                     System.out.println("Votre compte est créé !  Redirection vers la connexion");
 
@@ -119,7 +114,7 @@ public class Main {
                     producerArgs[6] = "";
 
 
-                    nouveauCompteProducer.main(producerArgs);
+                    nouveauCompteProducer.envoyer(producerArgs);
 
                     System.out.println("Votre compte est créé !  Redirection vers la connexion");
 
@@ -148,22 +143,22 @@ public class Main {
                 authThread.start();
 
                 //envoie un évènement à la plateforme pour demander la connexion
-                auth.main(new String[]{pseudo, mdp});
+                auth.envoyer(new String[]{pseudo, mdp});
 
                 //produit les jeux en grâce aux calculs faits dans le stream
-                jeuProducer.main();
+                jeuProducer.envoyer();
 
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                 }
 
-                long idEditeur = authCons.idEditeur;
+                long idEditeur = 1;
 
 
                 if (idEditeur <= 0)
                 {
-                    System.out.println("Connexion impossible !  Pseudo ou mot de passe incorrect.");
+                    System.out.println("\n Connexion impossible !  Pseudo ou mot de passe incorrect.");
                     valeurChoisie = -1; // Retour au menu principal dans ce cas
                     continue;
                 }
@@ -194,7 +189,7 @@ public class Main {
                     case 1:
                         System.out.println("Entrez l'id du jeu à supprimer :");
                         long idJeu = Long.parseLong(scanner.next());
-                        suppressionJeuProducer.main(new String[]{String.valueOf(idJeu), String.valueOf(idEditeur)});
+                        suppressionJeuProducer.envoyer(new String[]{String.valueOf(idJeu), String.valueOf(idEditeur)});
                         break;
 
                     case 2:
@@ -214,7 +209,7 @@ public class Main {
                         if (nomChamp != null) {
                             System.out.print("Nouvelle valeur : ");
                             String nouvelleValeur = scanner.nextLine();
-                            ModificationCompteProducer.main(new String[]{nomChamp, nouvelleValeur, String.valueOf(idEditeur)});
+                            modificationCompteProducer.envoyer(new String[]{nomChamp, nouvelleValeur, String.valueOf(idEditeur)});
                         }
                         break;
 
@@ -222,7 +217,7 @@ public class Main {
                         System.out.println("Voulez-vous vraiment supprimer votre compte ? (oui/non)");
                         if (scanner.next().equalsIgnoreCase("oui")) {
                             jeuOuDLCDAO.supprimerJeuxEditeur(idEditeur);
-                            suppressionCompteProducer.main(new String[]{String.valueOf(idEditeur)});
+                            suppressionCompteProducer.envoyer(new String[]{String.valueOf(idEditeur)});
                             valeurChoisie = -1; // Déconnexion forcée après suppression
                         }
                         break;

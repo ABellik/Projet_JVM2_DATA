@@ -1,4 +1,4 @@
-package com.projet_JVM2_DATA.editeur.service;
+package com.projet_JVM2_DATA.editeur.dao;
 
 import com.example.events.EvaluationJeu;
 

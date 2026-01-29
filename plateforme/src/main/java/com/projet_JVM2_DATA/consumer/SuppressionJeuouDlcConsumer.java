@@ -14,12 +14,12 @@ import java.util.Collections;
 import java.util.Properties;
 
 public class SuppressionJeuouDlcConsumer implements Runnable{
-    //TODO : Vérifier que tout est ok (notamment pour la fonction de suppression au niveau du service)
+    //TODO : Vérifier que tout est ok (notamment pour la fonction de suppression au niveau du dao)
     private final KafkaConsumer<String, SuppressionJeuOuDLC> consumer;
     private final JeuService jeuService;
 
     public SuppressionJeuouDlcConsumer(JeuService service) {
-        this.jeuService = service; // On injecte le service ici
+        this.jeuService = service; // On injecte le dao ici
 
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");

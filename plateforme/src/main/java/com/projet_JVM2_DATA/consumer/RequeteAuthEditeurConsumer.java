@@ -21,7 +21,7 @@ public class RequeteAuthEditeurConsumer implements Runnable {
     private final EditeurService editeurService;
 
     public RequeteAuthEditeurConsumer(EditeurService service) {
-        this.editeurService = service; // On injecte le service ici
+        this.editeurService = service; // On injecte le dao ici
 
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");

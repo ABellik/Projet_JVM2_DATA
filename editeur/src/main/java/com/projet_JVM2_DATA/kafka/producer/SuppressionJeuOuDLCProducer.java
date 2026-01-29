@@ -5,6 +5,7 @@ import com.example.events.SuppressionJeuOuDLC;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -13,9 +14,20 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Properties;
 
+/*
+ *Cette classe permet de produire des évènements pour
+ * informer la plateforme qu'un jeu a été supprimé
+ *
+ * */
+
+
 public class SuppressionJeuOuDLCProducer {
-    public static void main(String[] args) throws SQLException
-    {
+
+    private final Producer<String, SuppressionJeuOuDLC> producer;
+    private final String topic;
+
+    public SuppressionJeuOuDLCProducer(String bootstrapServers, String schemaRegistryUrl, String topic) {
+        this.topic = topic;
         //Configuration pour la Sérialisation + vérification de conformité des données par rapport au schéma avro
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -25,8 +37,10 @@ public class SuppressionJeuOuDLCProducer {
         // Configuration pour éviter de perdre des messages en cas de kill brutal
         props.put(ProducerConfig.ACKS_CONFIG, "all");
 
+        producer = new KafkaProducer<>(props);
 
-        try (KafkaProducer<String, SuppressionJeuOuDLC> producer = new KafkaProducer<>(props)) {
+    }
+        public void envoyer(String []args) {
 
             SuppressionJeuOuDLC suppressionJeu = new SuppressionJeuOuDLC(Long.parseLong(args[0]), Long.parseLong(args[1]),LocalDate.now());
 
@@ -47,11 +61,14 @@ public class SuppressionJeuOuDLCProducer {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            producer.flush();
-            System.out.println("🏁 Fin de l'envoi des notifications de suppression de jeux ou dlcs.");
+
 
         }
+    public void close() {
+        producer.flush();
+        producer.close();
+    }
 
 
     }
-}
+

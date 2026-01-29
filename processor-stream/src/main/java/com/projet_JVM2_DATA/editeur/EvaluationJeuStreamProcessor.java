@@ -2,7 +2,7 @@ package com.projet_JVM2_DATA.editeur;
 
 import com.example.events.CalculateurMoyenne;
 import com.example.events.EvaluationJeu;
-import com.projet_JVM2_DATA.editeur.service.JeuOuDLCDAO;
+import com.projet_JVM2_DATA.editeur.dao.JeuOuDLCDAO;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;

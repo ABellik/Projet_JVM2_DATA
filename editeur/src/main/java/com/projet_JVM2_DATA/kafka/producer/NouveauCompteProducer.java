@@ -1,10 +1,12 @@
 package com.projet_JVM2_DATA.kafka.producer;
 
 import com.example.events.CompteEditeur;
+import com.example.events.ModificationCompteEditeur;
 import com.projet_JVM2_DATA.dao.JeuOuDlcDao;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -13,10 +15,24 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Properties;
 
+/*
+ *Cette classe permet de produire des évènements pour
+ * créer un nouveau compte à l'editeur avec toutes les informations
+ * le concernant
+ *
+ * */
+
+
 public class NouveauCompteProducer {
 
-    public static void main(String[] args) throws SQLException
+    private final Producer<String,CompteEditeur> producer;
+    private final String topic;
+
+    public NouveauCompteProducer(String bootstrapServers, String schemaRegistryUrl, String topic)
     {
+
+        this.topic=topic;
+
         //Configuration pour la Sérialisation + vérification de conformité des données par rapport au schéma avro
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -26,8 +42,11 @@ public class NouveauCompteProducer {
         // Configuration pour éviter de perdre des messages en cas de kill brutal
         props.put(ProducerConfig.ACKS_CONFIG, "all");
 
+        producer = new KafkaProducer<>(props);
+    }
 
-        try (KafkaProducer<String, CompteEditeur> producer = new KafkaProducer<>(props)) {
+    public void envoyer(String[] args)
+    {
 
             String url = System.getenv("DB_URL");
             String username = System.getenv("DB_USER");
@@ -62,14 +81,12 @@ public class NouveauCompteProducer {
                 }
 
 
-
-                producer.flush();
-                System.out.println("🏁 Fin de l'envoi des données du nouveau compte.");
-
-            }
-
-        }
+    }
 
 
+    public void close() {
+        producer.flush();
+        producer.close();
+    }
 
     }
