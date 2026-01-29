@@ -27,6 +27,12 @@ public class JeuRepository {
         return em.createQuery("select j from Jeu j where j.idEditeur=:idEditeur", Jeu.class).setParameter("idEditeur", idEditeur).getResultList();
     }
 
+    public List<Long> findByPseudo(String pseudo){
+        return em.createQuery(
+                "select b.jeu.id from Bibliothèque b where b.utilisateur.pseudo = :pseudo",
+                Long.class).setParameter("pseudo", pseudo).getResultList();
+    }
+
     public void delete(Jeu jeu) {
         em.remove(jeu);
     }

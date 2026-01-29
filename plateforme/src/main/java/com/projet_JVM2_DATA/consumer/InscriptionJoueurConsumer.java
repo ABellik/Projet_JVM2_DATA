@@ -7,6 +7,7 @@ import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import org.apache.kafka.clients.consumer.*;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -42,13 +43,18 @@ public class InscriptionJoueurConsumer implements Runnable {
                     // Note : Si ton Avro envoie une String pour la date, il faut la parser
                     LocalDate dateNais = LocalDate.parse(event.getDateDeNaissance());
 
+                    java.time.Instant instantRecu = event.getDateDeCreationDuCompte();
+                    LocalDate dateCreationCompte = instantRecu.atZone(ZoneId.systemDefault()).toLocalDate();
+
                     // APPEL DU SERVICE
                     utilisateurService.inscription(
                             event.getPrenom(),
                             event.getNom(),
                             event.getPseudo(),
+                            event.getEmail(),
                             dateNais,
-                            event.getMotDePasse()
+                            event.getMotDePasse(),
+                            dateCreationCompte
                     );
                 }
             }
