@@ -1,8 +1,8 @@
 package com.projet_JVM2_DATA.consumer;
 
 import com.example.events.EvaluationJeu;
-import com.projet_JVM2_DATA.service.EvaluationService;
 
+import com.projet_JVM2_DATA.service.BibliothèqueService;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -16,9 +16,9 @@ import java.util.Properties;
 
 public class EvaluationJeuConsumer {
     private final KafkaConsumer<String, EvaluationJeu> consumer;
-    private final EvaluationService evaluationService;
+    private final BibliothèqueService evaluationService;
 
-    public EvaluationJeuConsumer(EvaluationService service) {
+    public EvaluationJeuConsumer(BibliothèqueService service) {
         this.evaluationService = service; // On injecte le dao ici
 
         Properties props = new Properties();
@@ -43,9 +43,10 @@ public class EvaluationJeuConsumer {
                     EvaluationJeu event = record.value();
 
 
-                    evaluationService.creerEvaluation(
-                            event.getIdJeu(), event.getNote(), event.getVersionJeu(), event.getCommentaire(), event.getDateEvaluationJeu()
-                    );
+                    //Long idUtilisateur, Long idPlateforme, Long idJeu, int note, String commentaire
+                    /*evaluationService.evaluationJeu(
+                            null,null, event.getIdJeu(), event.getVersionJeu(), event.getIdJeu(), event.getNote(), event.getCommentaire()
+                    );*/
 
                 }
             }

@@ -13,9 +13,9 @@ public class EditeurService extends MainService {
         return  editeurRepository.findByNom(nom);
     }
 
-    public void creer(String type, String nom, String mdp) {
+    public void creer(String type, String nom, String mdp, String email) {
 
-        Editeur editeur = new Editeur(type, nom, mdp);
+        Editeur editeur = new Editeur(type, nom, mdp, email);
 
         executeInTransaction(em -> {
             EditeurRepository repository = new EditeurRepository(em);

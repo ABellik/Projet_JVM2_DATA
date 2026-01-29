@@ -2,6 +2,8 @@ package com.projet_JVM2_DATA.producer;
 
 import com.example.events.EvaluationJeu;
 import com.example.events.ReponseAuthentificationEditeur;
+import com.projet_JVM2_DATA.entity.Bibliothèque;
+import com.projet_JVM2_DATA.service.BibliothèqueService;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -9,6 +11,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 
+import java.time.Instant;
 import java.util.Properties;
 
 public class EvaluationProducer {
@@ -27,10 +30,14 @@ public class EvaluationProducer {
         this.producer = new KafkaProducer<>(props);
     }
 
-    public void envoyer(EvaluationJeu eval) {
+    public void envoyer(Bibliothèque eval) {
 
         ProducerRecord<String, EvaluationJeu> record =
-                new ProducerRecord<>("evaluation-jeu", null, eval);
+                new ProducerRecord<>("evaluations-jeu", null,
+                        new EvaluationJeu(
+                                Long.parseLong(eval.getId().toString()), Integer.parseInt(eval.getNoteJoueur().toString()), "1.0", eval.getCommentaireJoueur(), Instant.parse(eval.getDateAchat().toString())
+                        )
+                );
 
         producer.send(record, (metadata, exception) -> {
             if (exception == null) {

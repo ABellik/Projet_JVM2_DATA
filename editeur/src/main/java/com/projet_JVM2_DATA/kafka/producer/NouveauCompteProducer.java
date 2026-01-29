@@ -2,7 +2,7 @@ package com.projet_JVM2_DATA.kafka.producer;
 
 import com.example.events.CompteEditeur;
 import com.example.events.ModificationCompteEditeur;
-import com.projet_JVM2_DATA.dao.JeuOuDlcDao;
+//import com.projet_JVM2_DATA.dao.JeuOuDlcDao;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -22,6 +22,9 @@ import java.util.Properties;
  *
  * */
 
+
+import com.projet_JVM2_DATA.dao.JeuOuDlcDao;
+import org.apache.kafka.clients.producer.KafkaProducer;
 
 public class NouveauCompteProducer {
 

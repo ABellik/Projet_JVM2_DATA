@@ -1,6 +1,7 @@
 package com.projet_JVM2_DATA.kafka.consumer;
 
 import com.example.events.PublicationJeuOuDLC;
+//import com.projet_JVM2_DATA.dao.JeuOuDlcDao;
 import com.projet_JVM2_DATA.dao.JeuOuDlcDao;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
@@ -14,6 +15,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
+
 
 public class DLCConsumer {
     public static void main(String[] args) {

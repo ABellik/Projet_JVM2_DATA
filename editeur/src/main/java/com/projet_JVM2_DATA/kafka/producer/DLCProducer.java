@@ -1,6 +1,7 @@
 package com.projet_JVM2_DATA.kafka.producer;
 
 import com.example.events.PublicationJeuOuDLC;
+//import com.projet_JVM2_DATA.dao.JeuOuDlcDao;
 import com.projet_JVM2_DATA.dao.JeuOuDlcDao;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
@@ -19,6 +20,8 @@ import java.util.Properties;
  *Cette classe permet de produire des dlcs
  *
  * */
+
+
 public class DLCProducer {
 
     private final Producer<String, PublicationJeuOuDLC> producer;

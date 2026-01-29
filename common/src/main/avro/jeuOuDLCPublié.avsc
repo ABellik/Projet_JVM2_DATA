@@ -27,6 +27,15 @@
                 "items": "string"
             }
         },
+
+        {
+            "name": "support",
+            "type":
+            {
+                "type":"array",
+                "items": "string"
+            }
+        },
         
         {
             "name": "prixEditeur", 

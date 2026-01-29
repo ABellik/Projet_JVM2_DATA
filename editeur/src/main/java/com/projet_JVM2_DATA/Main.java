@@ -242,6 +242,16 @@ public class Main {
                         }
 
 
+                        System.out.println("Entrez le nombre de supports que vous voulez entrer");
+                        int nbSupports = scanner.nextInt();
+                        //Collection des supports
+                        ArrayList<String> supports = new ArrayList<>();
+                        for (int i=0; i<nbGenres; i++)
+                        {
+                            System.out.println("Entrez le nom du support");
+                            supports.add( scanner.next());
+                        }
+
                         System.out.println("Entrez le prix");
                         int prix = scanner.nextInt();
 
@@ -259,7 +269,7 @@ public class Main {
 
 
                         PublicationJeuOuDLC jeuOuDLC= new PublicationJeuOuDLC(
-                                jeuOuDLCDAO.getMaxIDJeu(), nom, "", genres, prix, type, idEditeur, LocalDate.now(), idParent
+                                jeuOuDLCDAO.getMaxIDJeu(), nom, "", genres,supports, prix, type, idEditeur, LocalDate.now(), idParent
                         );
                         jeuOuDLCDAO.insertionNouveauJeuOuDLC(jeuOuDLC);
                         break;
@@ -268,6 +278,8 @@ public class Main {
             else{
                 sessionActive = false;
             }
+
+
         }
 
 
