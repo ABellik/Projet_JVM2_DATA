@@ -454,6 +454,7 @@ fun featureAchat() {
     }
 
     // Gestion des supports
+    println("TESSSSSSST : "+jeu.supports.toList())
     val supports = jeu.supports.toList()
     if (supports.isEmpty()) {
         ConsoleUI.error("Erreur technique: Aucun support dispo pour ce jeu.")

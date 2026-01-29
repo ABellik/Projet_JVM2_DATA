@@ -7,6 +7,7 @@ import com.projet_JVM2_DATA.entity.Plateforme;
 import com.projet_JVM2_DATA.repository.JeuRepository;
 import com.projet_JVM2_DATA.repository.LicenceRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,45 @@ public class LicenceService extends MainService {
             LicenceRepository repository = new LicenceRepository(em);
             repository.save(licence);
         });
+    }
+
+    public void creerLicencesPourJeu(Long idJeu, List<String> nomsSupports) {
+        EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+        em.getTransaction().begin();
+
+        try {
+            Jeu jeu = em.find(Jeu.class, idJeu);
+            if (jeu == null) throw new RuntimeException("Jeu introuvable avec l'ID " + idJeu);
+
+            for (String nomSupport : nomsSupports) {
+
+
+                TypedQuery<Plateforme> query = em.createQuery(
+                        "SELECT p FROM Plateforme p WHERE p.nom = :nom", Plateforme.class);
+                query.setParameter("nom", nomSupport);
+
+                List<Plateforme> resultats = query.getResultList();
+
+                if (!resultats.isEmpty()) {
+                    Plateforme plateforme = resultats.get(0);
+
+                    Licence nouvelleLicence = new Licence();
+                    nouvelleLicence.setIdJeu(jeu);
+                    nouvelleLicence.setIdPlateforme(plateforme);
+
+                    em.persist(nouvelleLicence);
+                } else {
+                    System.err.println("Attention : Support inconnu reçu dans le message Kafka : " + nomSupport);
+                }
+            }
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
     }
 
     public List<String> getNomLicencesByIdJeu(Long idJeu) {

@@ -1,11 +1,8 @@
 package com.projet_JVM2_DATA;
 
 import com.example.events.RequeteAuthentificationEditeur;
-import com.projet_JVM2_DATA.consumer.InscriptionEditeurConsumer;
+import com.projet_JVM2_DATA.consumer.*;
 import com.example.events.InfoJeu;
-import com.projet_JVM2_DATA.consumer.InscriptionJoueurConsumer;
-import com.projet_JVM2_DATA.consumer.RequeteAuthEditeurConsumer;
-import com.projet_JVM2_DATA.consumer.RequeteAuthentificationJoueurConsumer;
 import com.projet_JVM2_DATA.service.EditeurService;
 import com.projet_JVM2_DATA.entity.Jeu;
 import com.projet_JVM2_DATA.producer.InfoJeuProducer;
@@ -53,6 +50,8 @@ public class Main {
         InscriptionEditeurConsumer consumerEd= new InscriptionEditeurConsumer(editeurService);
         RequeteAuthEditeurConsumer consumer= new RequeteAuthEditeurConsumer(editeurService);
 
+        AchatJeuConsumer consumerAchatJeu= new AchatJeuConsumer(utilisateurService);
+
 
         // 3. Lancer le consumer dans un thread dédié pour ne pas bloquer le Main
         Thread kafkaThreadInscriptionJoueur = new Thread(consumerTask);
@@ -60,11 +59,16 @@ public class Main {
         Thread kafkaThreadRequeteAuthentificationJoueur = new Thread(consumerRequest);
         kafkaThreadRequeteAuthentificationJoueur.start();
 
-        Thread kafkaThreadInscriptionEditeur= new Thread(consumer);
-        kafkaThreadInscriptionJoueur.start();
-        Thread kafkaThreadRequeteAuthEditeur = new Thread(consumer);
-        kafkaThreadRequeteAuthentificationJoueur.start();
+        Thread kafkaThreadAchatJeu = new Thread(consumerAchatJeu);
+        kafkaThreadAchatJeu.start();
 
+
+        /*
+        Thread kafkaThreadInscriptionEditeur= new Thread(consumer);
+        kafkaThreadInscriptionEditeur.start();
+        Thread kafkaThreadRequeteAuthEditeur = new Thread(consumer);
+        kafkaThreadRequeteAuthEditeur.start();
+*/
 
         System.out.println("Plateforme démarrée. En attente d'inscriptions via Kafka...");
 

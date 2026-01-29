@@ -14,7 +14,7 @@ import java.util.List;
 
 public class JeuService {
 
-    public void publier(
+    public Long publier(
             Long idEditeur,
             String nomJeu,
             String versionActuelle,
@@ -48,12 +48,15 @@ public class JeuService {
             }
 
             tx.commit();
+
+            return jeu.getId();
         }
         catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
             e.printStackTrace();
+            return null;
         }
         finally {
             em.close();

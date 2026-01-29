@@ -2,6 +2,7 @@ package com.projet_JVM2_DATA.consumer;
 
 import com.example.events.AchatJeu;
 import com.example.events.CreationCompteJoueur; // Ta classe générée par Avro
+import com.projet_JVM2_DATA.producer.EvaluationProducer;
 import com.projet_JVM2_DATA.service.BibliothèqueService;
 import com.projet_JVM2_DATA.service.LicenceService;
 import com.projet_JVM2_DATA.service.PlateformeService;
@@ -25,7 +26,7 @@ public class AchatJeuConsumer implements Runnable {
 
     public AchatJeuConsumer(UtilisateurService service) {
         this.licenceService = new LicenceService();
-        this.bibliothèqueService = new BibliothèqueService();
+        this.bibliothèqueService = new BibliothèqueService(new EvaluationProducer());
         this.plateformeService = new PlateformeService();
 
         Properties props = new Properties();

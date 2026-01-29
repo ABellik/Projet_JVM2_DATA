@@ -64,15 +64,21 @@ fun consommationInfoJeu() {
         ) { key, event ->
 
             try {
+
+                // 1. On crée le set concurrent vide
+                val supportsConcurrent = ConcurrentHashMap.newKeySet<String>()
+                // 2. On y ajoute le contenu de l'événement (en convertissant en String pour être sûr avec Avro)
+                supportsConcurrent.addAll(event.supports.map { it.toString() })
+
                 GameCatalogCache.addOrUpdateGame(
                     GameCatalogCache.GameInfo(
                         id = event.id,
                         name = event.nom,
-                        genres = event.genre.toMutableSet().let { ConcurrentHashMap.newKeySet() },
+                        genres = ConcurrentHashMap.newKeySet<String>().apply { addAll(event.genre.map { it.toString() }) },
                         publisher = event.nomEditeur,
                         price = event.prix,
                         version = event.versionActuelle,
-                        supports = event.supports.toMutableSet().let { ConcurrentHashMap.newKeySet() }
+                        supports = supportsConcurrent
                     )
                 )
             } catch (e: Exception) {
