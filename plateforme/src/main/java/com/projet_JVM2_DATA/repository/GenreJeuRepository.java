@@ -22,6 +22,10 @@ public class GenreJeuRepository {
         return em.createQuery("SELECT g from Genrejeu g",Genrejeu.class).getResultList();
     }
 
+    public List<String> findByIdJeu(long idJeu){
+        return em.createQuery("SELECT g.genre FROM Genrejeu g WHERE g.idjeu.id = :idJeu",String.class).setParameter("idJeu",idJeu).getResultList();
+    }
+
     public void delete(Genrejeu genrejeu){
         em.remove(genrejeu);
     }

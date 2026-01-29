@@ -76,6 +76,24 @@ public class JeuService {
         }
     }
 
+    public List<Jeu> getAllJeu(){
+        EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+
+        try {
+            JeuRepository repository = new JeuRepository(em);
+
+            List<Jeu> jeux = repository.findAll();
+
+            if (jeux == null || jeux.isEmpty()) {
+                return new ArrayList<>();
+            }
+            return jeux;
+
+        } finally {
+            em.close();
+        }
+    }
+
     public void supprimer(Long idJeu) {
         EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
