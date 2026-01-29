@@ -12,33 +12,39 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
+import static java.lang.System.getenv;
+
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, InterruptedException {
 
         //Ce qui permet de faire des requêtes à la base de données
 
-        String url = System.getenv("DB_URL");
-        String username = System.getenv("DB_USER");
-        String password = System.getenv("DB_PASSWORD");
+        String url = getenv("DB_URL");
+        String username = getenv("DB_USER");
+        String password = getenv("DB_PASSWORD");
 
 
 
         JeuOuDlcDao jeuOuDLCDAO = new JeuOuDlcDao(url, username, password);
 
         //Tous les producers nécessaires pour la suite
-        AuthentificationProducer auth = new AuthentificationProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"nouvelle-connexion-editeur");
-        JeuProducer jeuProducer = new JeuProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"),   System.getenv("SCHEMA_REGISTRY_URL"), "nouveau-jeu");
-        NouveauCompteProducer nouveauCompteProducer = new NouveauCompteProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"nouveau-compte-editeur");
-        ModificationCompteProducer modificationCompteProducer = new ModificationCompteProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"modification-compte-editeur");
-        SuppressionCompteProducer suppressionCompteProducer = new SuppressionCompteProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"suppression-compte-editeur");
-        SuppressionJeuOuDLCProducer suppressionJeuProducer = new SuppressionJeuOuDLCProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"suppression-jeu");
+        AuthentificationProducer auth = new AuthentificationProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"nouvelle-connexion-editeur");
+        JeuProducer jeuProducer = new JeuProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"),   getenv("SCHEMA_REGISTRY_URL"), "nouveau-jeu");
+        NouveauCompteProducer nouveauCompteProducer = new NouveauCompteProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"nouveau-compte-editeur");
+        ModificationCompteProducer modificationCompteProducer = new ModificationCompteProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"modification-compte-editeur");
+        SuppressionCompteProducer suppressionCompteProducer = new SuppressionCompteProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"suppression-compte-editeur");
+        SuppressionJeuOuDLCProducer suppressionJeuProducer = new SuppressionJeuOuDLCProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"suppression-jeu");
 
 
         //Tous les consumers necessaires pour la suite
-        ReponseAuthentificationConsumer authCons = new ReponseAuthentificationConsumer();
+        ReponseAuthentificationConsumer authCons = new ReponseAuthentificationConsumer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"));
 
+        //Thread qui sera actif sur toute la durée de l'application
+        Thread authThread = new Thread(authCons::demarrerEcoute);
+        authThread.setDaemon(true);//fait en sorte de couper le thread quand le principal est coupé
+        authThread.start();
 
 
         //Ce qui permettra une entrée en console
@@ -50,8 +56,11 @@ public class Main {
 
         while (sessionActive) {
             if (valeurChoisie == -1) {
-                System.out.println("Entrez 0 pour créer un nouveau compte et 1 pour se connecter");
-                valeurChoisie = Integer.parseInt(scanner.next());
+                System.out.println("\nEntrez 0 pour créer un compte ou 1 pour se connecter (autre pour quitter)");
+                String input = scanner.next();
+                if (input.equals("0")) valeurChoisie = 0;
+                else if (input.equals("1")) valeurChoisie = 1;
+                else sessionActive = false;
             }
 
             if (valeurChoisie == 0) {
@@ -79,6 +88,23 @@ public class Main {
 
                     System.out.println("Entrez votre date de naissance sous ce format : XX/XX/XXXX");
                     String dateNaissance = scanner.next();
+
+                    auth.envoyer(new String[]{pseudo, mdp});
+
+                    // 4. Attente de la réponse
+                    long idEditeur = -1;
+                    int tentatives = 0;
+                    while (idEditeur <= 0 && tentatives < 5) {
+                        Thread.sleep(1000);
+                        idEditeur = authCons.getIdEditeur();
+                        tentatives++;
+                    }
+
+                    if (idEditeur <= 0) {
+                        System.out.println("problème avec id editeur");
+                        valeurChoisie = -1;
+                        continue;
+                    }
 
                     String[] producerArgs = new String[8];
 
@@ -129,31 +155,29 @@ public class Main {
                 System.out.print("Mot de passe : ");
                 String mdp = scanner.next();
 
+                long idEditeur = -1;
 
-                // On le lance dans un thread car le main() du consumer contient une boucle infinie (poll)
-                Thread authThread = new Thread(() -> {
-                    try {
-                        // On passe les args nécessaires à ton Consumer
-                        authCons.main(new String[]{pseudo, mdp});
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-                authThread.setDaemon(true);
-                authThread.start();
+                // Demande de l'id
+                authCons.resetId();
 
                 //envoie un évènement à la plateforme pour demander la connexion
                 auth.envoyer(new String[]{pseudo, mdp});
+
+                int tentatives = 0;
+                while (idEditeur <= 0 && tentatives < 5) {
+                    Thread.sleep(1000);
+                    idEditeur = authCons.getIdEditeur(); // Mise à jour de l'id editeur
+                    tentatives++;
+                }
 
                 //produit les jeux en grâce aux calculs faits dans le stream
                 jeuProducer.envoyer();
 
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {
                 }
-
-                long idEditeur = 1;
+                catch (InterruptedException e) {
+                }
 
 
                 if (idEditeur <= 0)
@@ -261,10 +285,18 @@ public class Main {
                         Long idParent;
                         if (!type.equals("DLC"))
                         {
-                            idParent = idEditeur;
+                            idParent=Long.parseLong("-1");
                         }
                         else{
-                            idParent=Long.parseLong("-1");
+                            String nomJeu;
+                            do {
+                                System.out.print("Entrez un nom existant : ");
+                                nomJeu = scanner.nextLine();
+                            } while (!jeuOuDLCDAO.existeParNom(nomJeu));
+
+                            System.out.println("Nom valide : " + nomJeu);
+                            idParent=jeuOuDLCDAO.getIDParent(nomJeu);
+
                         }
 
 
