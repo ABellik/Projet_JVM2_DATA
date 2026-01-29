@@ -6,16 +6,23 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 
+/*
+* Accède à la table crash
+* Responsable du stockage des crashs
+* */
 public class CrashDao {
 
+    //Requete d'insertion des crashs
     private static final String requeteInsert =
             "INSERT INTO crash (idJeu, idSession, versionJeuConcernee, codeErreur, dateCrash, support, isTreated) " +
                     "VALUES (?, ?, ?, ?, ?, ?, false) ON CONFLICT (idSession) DO NOTHING";
+
+    // Requete pour marquer qu'un crash est traité
     private static final String MARK_TREATED =
             "UPDATE crash SET isTreated = true " +
                     "WHERE idJeu = ? AND versionJeuConcernee = ? AND support = ? AND isTreated = false";
 
-
+// Methode d'insertion des crashs
     public void insert(Session s) throws Exception {
         // idSession n’existe pas dans Avro -> on le fabrique
         String idSession = s.getIdJoueur() + "-" + s.getIdJeu() + "-" + s.getHeureDeDebut();
@@ -38,6 +45,7 @@ public class CrashDao {
         }
     }
 
+    //Methode pour marquer les crashs traités
     public int markTreated(long idJeu, String versionJeuConcernee, String support) throws Exception {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement st = conn.prepareStatement(MARK_TREATED)) {

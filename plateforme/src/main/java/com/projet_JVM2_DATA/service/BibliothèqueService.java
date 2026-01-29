@@ -2,12 +2,20 @@ package com.projet_JVM2_DATA.service;
 
 import com.projet_JVM2_DATA.config.JpaUtil;
 import com.projet_JVM2_DATA.entity.*;
+import com.projet_JVM2_DATA.producer.EvaluationProducer;
 import com.projet_JVM2_DATA.repository.BibliothequeRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import java.time.LocalDate;
 
 public class BibliothèqueService {
+
+    private final EvaluationProducer producer;
+
+    public BibliothèqueService(EvaluationProducer producer) {
+        this.producer = producer;
+    }
+
 
     public void ajouterJeu(Long idUtilisateur, Long idPlateforme, Long idJeu, LocalDate dateAchat, long prixAchat) {
         EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
@@ -83,6 +91,7 @@ public class BibliothèqueService {
                     bibliotheque.setCommentaireJoueur(commentaire);
                 }
                 bibliotheque.setNoteJoueur((long) note);
+                producer.envoyer(bibliotheque);
             }
 
             tx.commit();
@@ -95,4 +104,5 @@ public class BibliothèqueService {
             em.close();
         }
     }
+
 }

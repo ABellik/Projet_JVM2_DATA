@@ -41,14 +41,17 @@ public class JeuOuDlcDao {
             if (rs.next()) {
                 // on split la chaîne par les espaces pour obtenir tous les genres
                 String[] mots = rs.getString("genre").split(" ");
+                String[] supportsMots = rs.getString("supports").split(" ");
 
                 String type=rs.getBoolean("isDLC") ? "DLC" : "Jeu";
 
                 // on transforme le tableau en liste
                 List<String> genres = Arrays.asList(mots);
+                List<String> supports = Arrays.asList(supportsMots);
+
                 return new PublicationJeuOuDLC(rs.getLong("id"), rs.getString("nom"),
                         rs.getString("versionActuelle"),
-                        genres, rs.getInt("prixEditeur"),
+                        genres,supports, rs.getInt("prixEditeur"),
                         type, rs.getLong("idEditeur"),LocalDate.now(),rs.getLong("idParent"));
             }
         } catch (SQLException e) {
@@ -124,6 +127,7 @@ public class JeuOuDlcDao {
                         .setNom(rs.getString("nom"))
                         .setVersionActuelle(rs.getString("versionCourante"))
                         .setGenre(Arrays.asList((String[]) rs.getArray("genre").getArray()))
+                        .setSupport(Arrays.asList((String[]) rs.getArray("supports").getArray()))
                         .setPrixEditeur(rs.getInt("prix"))
                         .setType(rs.getBoolean("isDLC") ? "DLC" : "Jeu")
                         .setIdEditeur(rs.getInt("idEditeur"))
@@ -163,6 +167,9 @@ public class JeuOuDlcDao {
                 Array sqlArray = rs.getArray("genre");
                 List<String> genres = Arrays.asList((String[]) sqlArray.getArray());
 
+                Array sqlArray2 = rs.getArray("supports");
+                List<String> supports = Arrays.asList((String[]) sqlArray.getArray());
+
                 String type = rs.getBoolean("isDLC") ? "DLC" : "Jeu";
 
 
@@ -174,6 +181,7 @@ public class JeuOuDlcDao {
                         rs.getString("nom"),
                         rs.getString("versionCourante"),
                         genres,
+                        supports,
                         rs.getInt("prix"),
                         type,
                         rs.getLong("idEditeur"),
@@ -275,7 +283,7 @@ public class JeuOuDlcDao {
 
     public void insertionNouveauJeuOuDLC(PublicationJeuOuDLC jeuOuDLC)
     {
-        String requete= "INSERT INTO Jeu(id,nom,datePublication, genre, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)  VALUES(?,?,?,?,?,?,?,?,?,?,?) ";
+        String requete= "INSERT INTO Jeu(id,nom,datePublication, genre,supports, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)  VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ";
 
         System.out.println("Tentative de connexion...");
 
@@ -285,18 +293,20 @@ public class JeuOuDlcDao {
 
 
             String[] valeurs = jeuOuDLC.getGenre().toArray(new String[0]);
+            String[] supports = jeuOuDLC.getSupport().toArray(new String[0]);
 
             pstmt.setLong(1, getMaxIDJeu()+1);
             pstmt.setString(2, jeuOuDLC.getNom());
             pstmt.setDate(  3, java.sql.Date.valueOf(jeuOuDLC.getDate()));
             pstmt.setArray(4, connection.createArrayOf("VARCHAR", valeurs));
-            pstmt.setString(5, "1.0");
+            pstmt.setArray(5, connection.createArrayOf("VARCHAR", supports));
             pstmt.setString(6, "1.0");
-            pstmt.setBoolean(7, "DLC".equals(jeuOuDLC.getType()));
-            pstmt.setInt(8, jeuOuDLC.getPrixEditeur());
-            pstmt.setBoolean(9, false);
-            pstmt.setLong(10, jeuOuDLC.getIdEditeur());
-            pstmt.setLong(11,jeuOuDLC.getIdParent() );
+            pstmt.setString(7, "1.0");
+            pstmt.setBoolean(8, "DLC".equals(jeuOuDLC.getType()));
+            pstmt.setInt(9, jeuOuDLC.getPrixEditeur());
+            pstmt.setBoolean(10, false);
+            pstmt.setLong(11, jeuOuDLC.getIdEditeur());
+            pstmt.setLong(12,jeuOuDLC.getIdParent() );
 
             pstmt.executeUpdate();
 

@@ -16,7 +16,7 @@ public class InscriptionJoueurConsumer implements Runnable {
     private final UtilisateurService utilisateurService;
 
     public InscriptionJoueurConsumer(UtilisateurService service) {
-        this.utilisateurService = service; // On injecte le service ici
+        this.utilisateurService = service; // On injecte le dao ici
 
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");

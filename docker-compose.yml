@@ -103,7 +103,7 @@ services:
       POSTGRES_PASSWORD: plateforme123
     #volumes:
     #  - plateforme-data:/var/lib/postgresql/data
-    #  - ../schema-db-editeur.sql:/docker-entrypoint-initdb.d/init.sql
+    #  - ../schema-db.sql:/docker-entrypoint-initdb.d/init.sql
 
   postgres-joueur:
     image: postgres:15
@@ -142,8 +142,8 @@ services:
 # ==========================================
 # Démarrer tous les services : docker-compose up -d
 # Arrêter tous les services : docker-compose down
-# Voir les logs : docker-compose logs -f [service]
-# Redémarrer un service : docker-compose restart [service]
+# Voir les logs : docker-compose logs -f [dao]
+# Redémarrer un dao : docker-compose restart [dao]
 # Supprimer les volumes : docker-compose down -v
 #
 # INTERFACES WEB :

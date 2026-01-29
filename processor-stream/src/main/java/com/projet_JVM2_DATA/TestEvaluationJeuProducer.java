@@ -1,7 +1,7 @@
 package com.projet_JVM2_DATA;
 
 import com.example.events.EvaluationJeu;
-import com.projet_JVM2_DATA.editeur.service.JeuOuDLCDAO;
+import com.projet_JVM2_DATA.editeur.dao.JeuOuDLCDAO;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
