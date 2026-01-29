@@ -75,7 +75,7 @@ fun productionAchatJeu(idJeu: Long, support: String) {
         .setDateAchat(Instant.now())
         .build()
 
-    KafkaProducerManager.send("game-purchases", PlayerCache.getId().toString(), event)
+    KafkaProducerManager.send("achat-jeu", PlayerCache.getId().toString(), event)
 }
 
 /*

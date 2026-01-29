@@ -7,6 +7,7 @@ import com.projet_JVM2_DATA.entity.Jeu;
 import com.projet_JVM2_DATA.producer.InfoJeuProducer;
 import com.projet_JVM2_DATA.service.GenreJeuService;
 import com.projet_JVM2_DATA.service.JeuService;
+import com.projet_JVM2_DATA.service.LicenceService;
 import com.projet_JVM2_DATA.service.UtilisateurService;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class Main {
         UtilisateurService utilisateurService = new UtilisateurService();
         JeuService jeuService = new JeuService();
         GenreJeuService genreJeuService = new GenreJeuService();
+        LicenceService licenceService = new LicenceService();
 
         // 1.bis Il faut lancer le producer permettant d'envoyer la liste des jeux au joueur
         List<Jeu> jeux = jeuService.getAllJeu();
@@ -33,7 +35,8 @@ public class Main {
                             jeu.getVersionActuelle(),
                             genreJeuService.getGenresByIdJeu(jeu.getId()),
                             jeu.getPrixActuel().doubleValue(),
-                            jeu.getIdEditeur().getNom()
+                            jeu.getIdEditeur().getNom(),
+                            licenceService.getNomLicencesByIdJeu(jeu.getId())
                     ));
         }
 

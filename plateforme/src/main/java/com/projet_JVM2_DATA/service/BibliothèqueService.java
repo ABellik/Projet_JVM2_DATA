@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 public class BibliothèqueService {
 
-    public void ajouterJeu(Long idUtilisateur, Long idPlateforme, Long idJeu, LocalDate dateAchat, long prixAchat) {
+    public void ajouterJeu(Long idUtilisateur, Long idPlateforme, Long idJeu, LocalDate dateAchat, double prixAchat) {
         EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
 

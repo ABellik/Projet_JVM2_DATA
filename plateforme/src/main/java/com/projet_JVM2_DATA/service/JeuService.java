@@ -1,7 +1,9 @@
 package com.projet_JVM2_DATA.service;
 
+import com.example.events.InfoJeu;
 import com.projet_JVM2_DATA.config.JpaUtil;
 import com.projet_JVM2_DATA.entity.*;
+import com.projet_JVM2_DATA.producer.InfoJeuProducer;
 import com.projet_JVM2_DATA.repository.GenreJeuRepository;
 import com.projet_JVM2_DATA.repository.JeuRepository;
 import jakarta.persistence.EntityManager;

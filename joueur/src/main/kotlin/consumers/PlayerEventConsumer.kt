@@ -66,12 +66,14 @@ fun consommationInfoJeu() {
             try {
                 GameCatalogCache.addOrUpdateGame(
                     GameCatalogCache.GameInfo(
-                    id = event.id,
-                    name = event.nom,
-                    genres = event.genre.toMutableSet().let { ConcurrentHashMap.newKeySet() },
-                    publisher = event.nomEditeur,
-                    price = event.prix,
-                    version = event.versionActuelle)
+                        id = event.id,
+                        name = event.nom,
+                        genres = event.genre.toMutableSet().let { ConcurrentHashMap.newKeySet() },
+                        publisher = event.nomEditeur,
+                        price = event.prix,
+                        version = event.versionActuelle,
+                        supports = event.supports.toMutableSet().let { ConcurrentHashMap.newKeySet() }
+                    )
                 )
             } catch (e: Exception) {
                 println("Erreur : ${e.message}")

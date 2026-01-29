@@ -38,10 +38,10 @@ public class Bibliothèque {
     private LocalDate dateAchat;
 
     @Column(name = "prix_achat", nullable = false)
-    private Long prixAchat;
+    private Double prixAchat;
 
     public Bibliothèque(){}
-    public Bibliothèque(Utilisateur utilisateur, Plateforme plateforme, Jeu jeu, LocalDate dateAchat, long prixAchat) {
+    public Bibliothèque(Utilisateur utilisateur, Plateforme plateforme, Jeu jeu, LocalDate dateAchat, double prixAchat) {
         this.id = new BibliothèqueId(utilisateur.getId(), plateforme.getId(), jeu.getId());
 
         this.utilisateur = utilisateur;
@@ -119,11 +119,11 @@ public class Bibliothèque {
         this.dateAchat = dateAchat;
     }
 
-    public Long getPrixAchat() {
+    public Double getPrixAchat() {
         return prixAchat;
     }
 
-    public void setPrixAchat(Long prixAchat) {
+    public void setPrixAchat(Double prixAchat) {
         this.prixAchat = prixAchat;
     }
 }
