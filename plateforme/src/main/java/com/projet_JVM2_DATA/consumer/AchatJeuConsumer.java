@@ -38,7 +38,7 @@ public class AchatJeuConsumer implements Runnable {
 
         this.consumer = new KafkaConsumer<>(props);
     }
-    
+
     @Override
     public void run() {
         try {
