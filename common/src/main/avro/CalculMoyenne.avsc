@@ -8,6 +8,16 @@
     { "name": "somme", "type": "long"},
     {"name": "dlcPublie", "type": "boolean", "default": false,
       "doc": "ce champs permet de mettre un flag à vrai pour la publication d'un nouveau jeu ou dlc "
+    },
+    {
+      "name": "ListeTempsTemporaire",
+      "type": {
+        "type": "array",
+        "items": "long"
+      },
+      "doc": "stockage temporaire des temps de jeu pour faire le calcul du ratio à la fin"
     }
+
+
   ]
 }

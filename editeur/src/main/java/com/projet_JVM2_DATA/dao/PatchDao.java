@@ -15,15 +15,13 @@ public class PatchDao {
                     "WHERE idJeu=? AND versionProblematique=? AND versionCible=? AND support=? " +
                     "LIMIT 1";
 
-    // Insertion incluant le type de modification (enum Avro) [cite: 3, 4, 5]
+    // Requete d'insertion du patch
     private static final String INSERT =
             "INSERT INTO patch (idJeu, versionProblematique, versionCible, datePublication, support, raison) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-    /**
-     * Vérifie l'existence pour éviter les doublons avant publication Kafka
-     */
 
+     // Methode de vérification de l'existence pour éviter les doublons avant publication
     public boolean exists(CreationPatch p) throws Exception {
         try (Connection c = DatabaseConnection.getConnection();
              PreparedStatement st = c.prepareStatement(EXISTS)) {
@@ -39,6 +37,7 @@ public class PatchDao {
         }
     }
 
+    //méthode d'insertion des patchs dans la table patch
     public void insert(CreationPatch p) throws Exception {
         try (Connection c = DatabaseConnection.getConnection();
              PreparedStatement st = c.prepareStatement(INSERT)) {

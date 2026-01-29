@@ -22,12 +22,16 @@ public class Editeur {
     @Column(name = "email", nullable = false)
     private String email;
 
+
     public Editeur() {}
-    public Editeur(String type, String nom, String mdp) {
+    public Editeur(String type, String nom, String mdp, String email) {
         this.type = type;
         this.nom = nom;
         this.mdp = mdp;
+        this.email=email;
     }
+
+
 
     public Long getId() {
         return id;
@@ -68,4 +72,5 @@ public class Editeur {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }

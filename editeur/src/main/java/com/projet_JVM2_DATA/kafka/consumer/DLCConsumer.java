@@ -1,6 +1,7 @@
 package com.projet_JVM2_DATA.kafka.consumer;
 
 import com.example.events.PublicationJeuOuDLC;
+//import com.projet_JVM2_DATA.dao.JeuOuDlcDao;
 import com.projet_JVM2_DATA.dao.JeuOuDlcDao;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
@@ -15,11 +16,12 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 
+
 public class DLCConsumer {
     public static void main(String[] args) {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "order-service-group");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "order-dao-group");
 
         // Désérialisation
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -32,6 +34,7 @@ public class DLCConsumer {
         props.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true);
 
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+
 
         //Permet de récupérer les dlc par id de jeu, en établissant une connexion à la base au préalable
         JeuOuDlcDao jeuOuDLCDAO = new JeuOuDlcDao(

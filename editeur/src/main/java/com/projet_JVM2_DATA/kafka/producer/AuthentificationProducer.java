@@ -1,9 +1,11 @@
 package com.projet_JVM2_DATA.kafka.producer;
 
+import com.example.events.PublicationJeuOuDLC;
 import com.example.events.RequeteAuthentificationEditeur;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -11,9 +13,19 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/*
+ *Cette classe permet de produire des évènements contenant les pseudo et mots
+ * de passe d'un editeur pour faire une demande de connexion à la plateforme
+ *
+ * */
+
 public class AuthentificationProducer {
-    public static void main(String[] args) throws SQLException
-    {
+
+    private final Producer<String, RequeteAuthentificationEditeur> producer;
+    private final String topic;
+
+    public AuthentificationProducer(String bootstrapServers, String schemaRegistryUrl, String topic) {
+        this.topic = topic;
         //Configuration pour la Sérialisation + vérification de conformité des données par rapport au schéma avro
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -23,8 +35,10 @@ public class AuthentificationProducer {
         // Configuration pour éviter de perdre des messages en cas de kill brutal
         props.put(ProducerConfig.ACKS_CONFIG, "all");
 
+        producer = new KafkaProducer<>(props);
+    }
 
-        try (KafkaProducer<String, RequeteAuthentificationEditeur> producer = new KafkaProducer<>(props)) {
+    public void envoyer(String []args) {
 
             RequeteAuthentificationEditeur requete = new RequeteAuthentificationEditeur(args[0], args[1]);
 
@@ -45,15 +59,18 @@ public class AuthentificationProducer {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            producer.flush();
-            System.out.println("🏁 Fin de l'envoi des donnéees d'authentification.");
 
         }
 
-
-        }
-
-
-
+    public void close() {
+        producer.flush();
+        producer.close();
     }
+
+
+        }
+
+
+
+
 

@@ -38,7 +38,7 @@ fun test() {
 
     // --- NETTOYAGE ---
     Runtime.getRuntime().addShutdownHook(Thread {
-        println("\n Arrêt du service, fermeture du Producer...")
+        println("\n Arrêt du dao, fermeture du Producer...")
         KafkaProducerManager.close()
     })
 

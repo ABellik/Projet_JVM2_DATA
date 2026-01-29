@@ -4,6 +4,7 @@ CREATE TABLE jeu (
     nom VARCHAR(100) NOT NULL,
     datepublication DATE,
     genre VARCHAR[] NOT NULL,
+    supports VARCHAR[] NOT NULL,
     versionpubliee VARCHAR(100) NOT NULL,
     versioncourante VARCHAR(100) NOT NULL,
     isdlc BOOLEAN,
@@ -46,36 +47,35 @@ CREATE TABLE patch (
 );
 
 -- Inserts dans Jeu
-INSERT INTO Jeu (nom,  datePublication, genre, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
+INSERT INTO Jeu (nom,  datePublication, genre,supports, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
 VALUES
-('Elden Ring',  '2022-02-25', ARRAY['RPG','Action'], '1.0', '1.10', false, 60, true, 0, NULL),
-('The Witcher 3', '2015-05-19', ARRAY['RPG','Open World'], '1.0', '4.04', false, 40, false, 0, NULL),
-('Cyberpunk 2077 - Phantom Liberty', '2023-09-26', ARRAY['RPG'], '2.0', '2.1', true, 30, false, 0, 2);
+('Elden Ring',  '2022-02-25', ARRAY['RPG','Action'],ARRAY['PC','SWITCH'], '1.0', '1.10', false, 60, true, 0, NULL),
+('The Witcher 3', '2015-05-19', ARRAY['RPG','Open World'], ARRAY['PC','SWITCH'],'1.0', '4.04', false, 40, false, 0, NULL),
+('Cyberpunk 2077 - Phantom Liberty', '2023-09-26', ARRAY['RPG'],ARRAY['PC','SWITCH'], '2.0', '2.1', true, 30, false, 0, 2);
 
 -- Jeu pour l'éditeur 1000 (ShadowDev)
-INSERT INTO Jeu (nom,  datePublication, genre, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
-VALUES ('Cyber Quest',  '2026-01-10', ARRAY['RPG', 'Cyberpunk'], '1.0', '1.0.1', false, 45, true, 1000, NULL);
+INSERT INTO Jeu (nom,  datePublication, genre,supports, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
+VALUES ('Cyber Quest',  '2026-01-10', ARRAY['RPG', 'Cyberpunk'],ARRAY['PC','SWITCH'], '1.0', '1.0.1', false, 45, true, 1000, NULL);
 
 -- Jeu pour l'éditeur 1001 (PixelMaster)
-INSERT INTO Jeu (nom,  datePublication, genre, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
-VALUES ('Pixel Odyssey', '2025-11-20', ARRAY['Platformer', 'Adventure'], '1.0', '1.2', false, 20, true, 1001, NULL);
+INSERT INTO Jeu (nom,  datePublication, genre,supports, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
+VALUES ('Pixel Odyssey', '2025-11-20', ARRAY['Platformer', 'Adventure'],ARRAY['PC','SWITCH'], '1.0', '1.2', false, 20, true, 1001, NULL);
 
 -- Jeu pour l'éditeur 1002 (GameMaker99)
-INSERT INTO Jeu (nom,  datePublication, genre, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
-VALUES ('Space Survival', '2026-01-15', ARRAY['Survival', 'Sci-Fi'], '1.0', '1.0', false, 35, true, 1002, NULL);
+INSERT INTO Jeu (nom,  datePublication, genre,supports, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
+VALUES ('Space Survival', '2026-01-15', ARRAY['Survival', 'Sci-Fi'],ARRAY['PC','SWITCH'], '1.0', '1.0', false, 35, true, 1002, NULL);
 
 -- Jeu pour l'éditeur 1003 (IndieHero)
-INSERT INTO Jeu (nom,  datePublication, genre, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
-VALUES ('Forest Spirit',  '2024-05-12', ARRAY['Indie', 'Relaxing'], '1.0', '2.0', false, 15, true, 1003, NULL);
+INSERT INTO Jeu (nom,  datePublication, genre,supports, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
+VALUES ('Forest Spirit',  '2024-05-12', ARRAY['Indie', 'Relaxing'],ARRAY['PC','SWITCH'], '1.0', '2.0', false, 15, true, 1003, NULL);
 
 -- Jeu pour l'éditeur 1004 (BugHunter)
-INSERT INTO Jeu (nom,  datePublication, genre, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
-VALUES ('Medieval Siege',  '2026-01-01', ARRAY['Strategy', 'History'], '1.0', '1.1', false, 55, true, 1004, NULL);
+INSERT INTO Jeu (nom,  datePublication, genre,supports, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
+VALUES ('Medieval Siege',  '2026-01-01', ARRAY['Strategy', 'History'],ARRAY['PC','SWITCH'], '1.0', '1.1', false, 55, true, 1004, NULL);
 
--- Exemple d'un DLC pour le jeu 'Pixel Odyssey' (idParent supposé être l'ID généré pour Pixel Odyssey)
--- Note: Remplace '2' par l'id réel du jeu parent si nécessaire
-INSERT INTO Jeu (nom, datePublication, genre, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
-VALUES ('Pixel Odyssey: Lost Levels',  '2026-02-01', ARRAY['Platformer'], '1.0', '1.0', true, 10, true, 1001, 2);
+
+INSERT INTO Jeu (nom, datePublication, genre,supports, versionPubliee, versionCourante, isDLC, prix, enPublication, idEditeur, idParent)
+VALUES ('Pixel Odyssey: Lost Levels',  '2026-02-01', ARRAY['Platformer'],ARRAY['PC','SWITCH'], '1.0', '1.0', true, 10, true, 1001, 2);
 
 -- Inserts dans Evaluation
 INSERT INTO Evaluation (idJeu, versionJeuEvaluee, estDLC, note, commentaire, dateEval)

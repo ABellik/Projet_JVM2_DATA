@@ -19,7 +19,7 @@ public class PublicationJeuConsumer implements Runnable{
     private final JeuService jeuService;
 
     public PublicationJeuConsumer(JeuService service){
-        this.jeuService = service; // On injecte le service ici
+        this.jeuService = service; // On injecte le dao ici
 
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");

@@ -1,10 +1,12 @@
 package com.projet_JVM2_DATA.kafka.producer;
 
+import com.example.events.CreationPatch;
 import com.example.events.PublicationJeuOuDLC;
 import com.projet_JVM2_DATA.dao.JeuOuDlcDao;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -13,24 +15,37 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
+/*
+ *Cette classe permet de produire des évènements contenant des jeux
+ * à la suite de méthodes de calculs permettant de déterminer les
+ * jeu à produire
+ *
+ * */
+
 public class JeuProducer {
 
+    private final Producer<String, PublicationJeuOuDLC> producer;
+    private final String topic;
 
+    public JeuProducer(String bootstrapServers, String schemaRegistryUrl, String topic) {
+        //Configuration pour la Sérialisation + vérification de conformité des données par rapport au schéma avro
 
-        public static void main() throws SQLException
-        {
-            //Configuration pour la Sérialisation + vérification de conformité des données par rapport au schéma avro
-            Properties props = new Properties();
-            props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-            props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-            props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
-            props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
-            // Configuration pour éviter de perdre des messages en cas de kill brutal
-            props.put(ProducerConfig.ACKS_CONFIG, "all");
+        this.topic =topic;
 
+        Properties props = new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
+        props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
+        // Configuration pour éviter de perdre des messages en cas de kill brutal
+        props.put(ProducerConfig.ACKS_CONFIG, "all");
 
-            try (KafkaProducer<String, PublicationJeuOuDLC> producer = new KafkaProducer<>(props)) {
+        this.producer= new KafkaProducer<>(props);
 
+    }
+
+    public void envoyer()
+    {
                 String url = System.getenv("DB_URL");
                 String username = System.getenv("DB_USER");
                 String password = System.getenv("DB_PASSWORD");
@@ -68,18 +83,17 @@ public class JeuProducer {
                 }
 
 
-                //5) Envoie de tous les messages en attente dans le buffer
-                //Vide l'ensemble des messages vers Kafka, mais garde le Producer ouvert pour d'autres messages alors qu'avec close il aurait été fermé
-                producer.flush();
-                System.out.println("🏁 Fin de l'envoi des jeux publiés.");
+
             }
 
 
-
-        }
+    public void close() {
+        producer.flush();
+        producer.close();
     }
 
 
+    }
 
 
 

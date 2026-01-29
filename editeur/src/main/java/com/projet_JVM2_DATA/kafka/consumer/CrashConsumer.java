@@ -11,12 +11,16 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 
+/*
+* Consomme les evenements de types crashs envoyés depuis la plateforme et les stocke dans la base de données
+* Il permet globalement à l'editeur de conserver un historique de crashs par jeu.
+* */
+
 public class CrashConsumer {
 
     private final Consumer<String, Session> consumer;
     private final CrashDao crashDao;
 
-    // CORRECTION : Le constructeur doit avoir le même nom que la classe (SessionCrashConsumer)
     public CrashConsumer(String bootstrapServers, String schemaRegistryUrl) {
         this.crashDao = new CrashDao();
 
@@ -33,10 +37,10 @@ public class CrashConsumer {
         this.consumer = new KafkaConsumer<>(props);
     }
 
-    // CORRECTION : Ajout de 'throws Exception' car crashDao.insert(crash) peut lever une exception
+   // methode aui lance la boucle de consommation des crashs
     public void start(String topic) {
         consumer.subscribe(Collections.singletonList(topic));
-        System.out.println("Editeur prêt à recevoir les crashs filtrés...");
+        System.out.println("Editeur prêt à recevoir les crashs ...");
 
         try {
             while (true) {
@@ -47,7 +51,7 @@ public class CrashConsumer {
                         System.out.println("Crash reçu key=" + record.key() + " idJeu=" + crash.getIdJeu());
                         crashDao.insert(crash);
                     } catch (Exception e) {
-                        // On log et on continue pour ne pas tuer le consumer
+
                         e.printStackTrace();
                     }
                 }

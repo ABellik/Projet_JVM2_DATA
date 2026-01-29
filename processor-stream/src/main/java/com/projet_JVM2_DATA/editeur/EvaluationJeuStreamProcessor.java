@@ -2,7 +2,7 @@ package com.projet_JVM2_DATA.editeur;
 
 import com.example.events.CalculateurMoyenne;
 import com.example.events.EvaluationJeu;
-import com.projet_JVM2_DATA.editeur.service.JeuOuDLCDAO;
+import com.projet_JVM2_DATA.editeur.dao.JeuOuDLCDAO;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
@@ -21,6 +21,10 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.Properties;
 
+/*
+Dans cette classe, on calule la moyenne des notes sur 300 évaluations par jeu
+et on décide de publier un dlc sur ce jeu si la moyenne est supérieure ou égale à 3
+*/
 public class EvaluationJeuStreamProcessor {
 
     public static void main(String[] args)
