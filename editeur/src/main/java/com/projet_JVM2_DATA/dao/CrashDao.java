@@ -24,7 +24,7 @@ public class CrashDao {
 
 // Methode d'insertion des crashs
     public void insert(Session s) throws Exception {
-        // idSession n’existe pas dans Avro -> on le fabrique
+        // Fabrication du code avro car n'existe pas dans le schéma avro
         String idSession = s.getIdJoueur() + "-" + s.getIdJeu() + "-" + s.getHeureDeDebut();
 
         // codeErreur peut être null
