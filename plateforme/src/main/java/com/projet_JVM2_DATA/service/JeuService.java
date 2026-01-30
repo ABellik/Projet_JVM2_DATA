@@ -24,6 +24,12 @@ public class JeuService {
             List<String> genres
     ){
         // TODO : Création des Licences
+
+        // Vérification prix éditeur
+        if (prixEditeur<0){
+            prixEditeur = 0L;
+        }
+
         EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -50,7 +56,7 @@ public class JeuService {
 
             // Création Historique des prix
             HistoriquePrixService historiquePrixService = new HistoriquePrixService();
-            historiquePrixService.creer(jeu, prixEditeur, prixEditeur, "Nouveau jeu !");
+            historiquePrixService.creer(jeu, prixEditeur, prixEditeur, "Soit la première personne à essayer le jeu !");
 
             tx.commit();
 
