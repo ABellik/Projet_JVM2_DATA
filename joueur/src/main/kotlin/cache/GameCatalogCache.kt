@@ -11,7 +11,8 @@ object GameCatalogCache {
         val genres : Set<String>,
         val publisher: String,
         val price: Double,
-        val version: String
+        val version: String,
+        val supports : Set<String>
     )
 
     fun addOrUpdateGame(game: GameInfo) {

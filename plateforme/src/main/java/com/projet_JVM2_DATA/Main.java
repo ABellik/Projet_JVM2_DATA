@@ -1,17 +1,11 @@
 package com.projet_JVM2_DATA;
 
 import com.example.events.RequeteAuthentificationEditeur;
-import com.projet_JVM2_DATA.consumer.InscriptionEditeurConsumer;
+import com.projet_JVM2_DATA.consumer.*;
 import com.example.events.InfoJeu;
-import com.projet_JVM2_DATA.consumer.InscriptionJoueurConsumer;
-import com.projet_JVM2_DATA.consumer.RequeteAuthEditeurConsumer;
-import com.projet_JVM2_DATA.consumer.RequeteAuthentificationJoueurConsumer;
-import com.projet_JVM2_DATA.service.EditeurService;
+import com.projet_JVM2_DATA.service.*;
 import com.projet_JVM2_DATA.entity.Jeu;
 import com.projet_JVM2_DATA.producer.InfoJeuProducer;
-import com.projet_JVM2_DATA.service.GenreJeuService;
-import com.projet_JVM2_DATA.service.JeuService;
-import com.projet_JVM2_DATA.service.UtilisateurService;
 
 import java.util.List;
 
@@ -25,6 +19,8 @@ public class Main {
         UtilisateurService utilisateurService = new UtilisateurService();
         JeuService jeuService = new JeuService();
         GenreJeuService genreJeuService = new GenreJeuService();
+        LicenceService licenceService = new LicenceService();
+        SessionService sessionService = new SessionService();
 
         // 1.bis Il faut lancer le producer permettant d'envoyer la liste des jeux au joueur
         List<Jeu> jeux = jeuService.getAllJeu();
@@ -37,7 +33,8 @@ public class Main {
                             jeu.getVersionActuelle(),
                             genreJeuService.getGenresByIdJeu(jeu.getId()),
                             jeu.getPrixActuel().doubleValue(),
-                            jeu.getIdEditeur().getNom()
+                            jeu.getIdEditeur().getNom(),
+                            licenceService.getNomLicencesByIdJeu(jeu.getId())
                     ));
         }
 
@@ -47,6 +44,13 @@ public class Main {
         InscriptionJoueurConsumer consumerTask = new InscriptionJoueurConsumer(utilisateurService);
         RequeteAuthentificationJoueurConsumer consumerRequest = new RequeteAuthentificationJoueurConsumer(utilisateurService);
 
+        InscriptionEditeurConsumer consumerEd= new InscriptionEditeurConsumer(editeurService);
+        RequeteAuthEditeurConsumer consumer= new RequeteAuthEditeurConsumer(editeurService);
+
+        AchatJeuConsumer consumerAchatJeu= new AchatJeuConsumer(utilisateurService);
+
+        SessionConsumer consumerSession = new SessionConsumer(sessionService);
+
 
         // 3. Lancer le consumer dans un thread dédié pour ne pas bloquer le Main
         Thread kafkaThreadInscriptionJoueur = new Thread(consumerTask);
@@ -54,7 +58,19 @@ public class Main {
         Thread kafkaThreadRequeteAuthentificationJoueur = new Thread(consumerRequest);
         kafkaThreadRequeteAuthentificationJoueur.start();
 
+        Thread kafkaThreadAchatJeu = new Thread(consumerAchatJeu);
+        kafkaThreadAchatJeu.start();
 
+        Thread kafkaThreadSession = new Thread(consumerSession);
+        kafkaThreadSession.start();
+
+
+        /*
+        Thread kafkaThreadInscriptionEditeur= new Thread(consumer);
+        kafkaThreadInscriptionEditeur.start();
+        Thread kafkaThreadRequeteAuthEditeur = new Thread(consumer);
+        kafkaThreadRequeteAuthEditeur.start();
+*/
 
         System.out.println("Plateforme démarrée. En attente d'inscriptions via Kafka...");
 

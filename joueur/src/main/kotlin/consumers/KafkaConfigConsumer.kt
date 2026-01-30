@@ -33,7 +33,7 @@ object KafkaConsumerManager {
         val consumer = KafkaConsumer<String, T>(props)
 
         consumer.subscribe(listOf(topic))
-        println("Consumer démarré sur le topic : $topic (Groupe: $groupId)")
+        //println("Consumer démarré sur le topic : $topic (Groupe: $groupId)")
 
         try {
             while (true) {

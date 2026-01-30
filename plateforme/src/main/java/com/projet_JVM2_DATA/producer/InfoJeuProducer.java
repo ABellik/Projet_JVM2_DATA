@@ -19,10 +19,8 @@ public class InfoJeuProducer {
 
     public InfoJeuProducer() {
         Properties props = new Properties();
-        // On utilise tes ports Docker (localhost:9092)
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        // C'est ici qu'on utilise le Serializer Avro
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
         props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
 

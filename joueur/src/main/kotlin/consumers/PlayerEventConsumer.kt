@@ -10,6 +10,7 @@ import com.projet_JVM2_DATA.ReviewSync
 import com.projet_JVM2_DATA.cache.GameCatalogCache
 import com.projet_JVM2_DATA.cache.PlayerCache
 import java.util.concurrent.ConcurrentHashMap
+import java.util.UUID
 
 fun startBackgroundConsumers() {
     consommationInfoJoueur()
@@ -44,7 +45,7 @@ fun consommationReponseAuthentificationJoueur() {
     Thread {
         KafkaConsumerManager.listen<ReponseAuthentificationJoueur>(
             topic = "reponse-authentification-joueur",
-            groupId = "auth-group-console"
+            groupId = "auth-group-console"+ UUID.randomUUID().toString()
         ) { key, response ->
 
             println("[DEBUG] Réponse reçue pour : ${response.pseudo}")
@@ -60,18 +61,26 @@ fun consommationInfoJeu() {
     Thread {
         KafkaConsumerManager.listen<InfoJeu>(
             topic = "info-jeu",
-            groupId = "module-joueur-cache-populator"
+            groupId = "game-catalog-loader-" + UUID.randomUUID().toString()
         ) { key, event ->
 
             try {
+
+                // 1. On crée le set concurrent vide
+                val supportsConcurrent = ConcurrentHashMap.newKeySet<String>()
+                // 2. On y ajoute le contenu de l'événement (en convertissant en String pour être sûr avec Avro)
+                supportsConcurrent.addAll(event.supports.map { it.toString() })
+
                 GameCatalogCache.addOrUpdateGame(
                     GameCatalogCache.GameInfo(
-                    id = event.id,
-                    name = event.nom,
-                    genres = event.genre.toMutableSet().let { ConcurrentHashMap.newKeySet() },
-                    publisher = event.nomEditeur,
-                    price = event.prix,
-                    version = event.versionActuelle)
+                        id = event.id,
+                        name = event.nom,
+                        genres = ConcurrentHashMap.newKeySet<String>().apply { addAll(event.genre.map { it.toString() }) },
+                        publisher = event.nomEditeur,
+                        price = event.prix,
+                        version = event.versionActuelle,
+                        supports = supportsConcurrent
+                    )
                 )
             } catch (e: Exception) {
                 println("Erreur : ${e.message}")

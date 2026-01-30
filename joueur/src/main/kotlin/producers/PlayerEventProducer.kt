@@ -75,7 +75,7 @@ fun productionAchatJeu(idJeu: Long, support: String) {
         .setDateAchat(Instant.now())
         .build()
 
-    KafkaProducerManager.send("game-purchases", PlayerCache.getId().toString(), event)
+    KafkaProducerManager.send("achat-jeu", PlayerCache.getId().toString(), event)
 }
 
 /*
@@ -97,7 +97,7 @@ fun productionAchatDLC(idJoueur: Long, idJeu: Long, idDlc: Long, prixPaye: Doubl
     KafkaProducerManager.send("dlc-purchases", idJoueur.toString(), event)
 }*/
 
-fun productionSession(idJeu: Long) {
+fun productionSession(idJeu: Long, support : String) {
     if ((!(PlayerCache.isConnected())) || (!(PlayerCache.hasGame(idJeu)))) {
         println("Session refusée : Le joueur n'est pas connecté ou ne possède pas ce jeu")
         return
@@ -123,6 +123,7 @@ fun productionSession(idJeu: Long) {
                 else -> CauseFermetureSession.FORCED_EXIT
             }
         )
+        .setSupport(support)
         .build()
 
     KafkaProducerManager.send("session-launched", PlayerCache.getId().toString(), event)

@@ -223,7 +223,7 @@ fun main() {
                     }
                 } while (!(PlayerCache.getGames().contains(numJeuchoisi.toLongOrNull())))
 
-                productionSession(numJeuchoisi.toLong())
+                productionSession(numJeuchoisi.toLong(), "test")
                 println("Session lancée !")
                 println("Simulation du temps de jeu")
                 Thread.sleep(2000)
