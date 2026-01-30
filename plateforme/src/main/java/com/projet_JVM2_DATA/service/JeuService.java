@@ -47,6 +47,10 @@ public class JeuService {
                 genreJeuRepository.save(genrejeu);
             }
 
+            // Création Historique des prix
+            HistoriquePrixService historiquePrixService = new HistoriquePrixService();
+            historiquePrixService.creer(jeu, prixEditeur, prixEditeur, "Nouveau jeu !");
+
             tx.commit();
 
             return jeu.getId();
