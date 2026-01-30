@@ -3,13 +3,9 @@ package com.projet_JVM2_DATA;
 import com.example.events.RequeteAuthentificationEditeur;
 import com.projet_JVM2_DATA.consumer.*;
 import com.example.events.InfoJeu;
-import com.projet_JVM2_DATA.service.EditeurService;
+import com.projet_JVM2_DATA.service.*;
 import com.projet_JVM2_DATA.entity.Jeu;
 import com.projet_JVM2_DATA.producer.InfoJeuProducer;
-import com.projet_JVM2_DATA.service.GenreJeuService;
-import com.projet_JVM2_DATA.service.JeuService;
-import com.projet_JVM2_DATA.service.LicenceService;
-import com.projet_JVM2_DATA.service.UtilisateurService;
 
 import java.util.List;
 
@@ -24,6 +20,7 @@ public class Main {
         JeuService jeuService = new JeuService();
         GenreJeuService genreJeuService = new GenreJeuService();
         LicenceService licenceService = new LicenceService();
+        SessionService sessionService = new SessionService();
 
         // 1.bis Il faut lancer le producer permettant d'envoyer la liste des jeux au joueur
         List<Jeu> jeux = jeuService.getAllJeu();
@@ -52,6 +49,8 @@ public class Main {
 
         AchatJeuConsumer consumerAchatJeu= new AchatJeuConsumer(utilisateurService);
 
+        SessionConsumer consumerSession = new SessionConsumer(sessionService);
+
 
         // 3. Lancer le consumer dans un thread dédié pour ne pas bloquer le Main
         Thread kafkaThreadInscriptionJoueur = new Thread(consumerTask);
@@ -61,6 +60,9 @@ public class Main {
 
         Thread kafkaThreadAchatJeu = new Thread(consumerAchatJeu);
         kafkaThreadAchatJeu.start();
+
+        Thread kafkaThreadSession = new Thread(consumerSession);
+        kafkaThreadSession.start();
 
 
         /*

@@ -61,7 +61,7 @@ fun consommationInfoJeu() {
     Thread {
         KafkaConsumerManager.listen<InfoJeu>(
             topic = "info-jeu",
-            groupId = "module-joueur-cache-populator"
+            groupId = "game-catalog-loader-" + UUID.randomUUID().toString()
         ) { key, event ->
 
             try {

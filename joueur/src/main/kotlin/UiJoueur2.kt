@@ -410,11 +410,40 @@ fun featureJouer() {
     if (idInput == 0L) return
 
     if (idInput in myGames) {
-        productionSession(idInput)
-        ConsoleUI.loader("Lancement du jeu...", 1000)
+        val jeu = GameCatalogCache.getGame(idInput)
+
+        // --- DEBUT AJOUT : SÉLECTION DU SUPPORT ---
+        if (jeu == null) {
+            ConsoleUI.error("Erreur: infos jeu introuvables.")
+            return
+        }
+
+        val supports = jeu.supports.toList()
+        var supportChoisi = "Inconnu"
+
+        if (supports.isNotEmpty()) {
+            ConsoleUI.info("Sur quelle plateforme voulez-vous jouer ?")
+            // On demande de choisir le support
+            val choixSupport = ConsoleUI.menu(supports, allowBack = true)
+            if (choixSupport == 0) return // Annulation
+
+            supportChoisi = supports[choixSupport - 1]
+        } else {
+            // Cas de secours si aucun support n'est défini (peu probable avec ta correction précédente)
+            ConsoleUI.error("Aucun support détecté pour ce jeu.")
+            return
+        }
+        // --- FIN AJOUT ---
+
+        // On passe maintenant l'ID ET le support
+        productionSession(idInput, supportChoisi)
+
+        ConsoleUI.loader("Lancement du jeu sur $supportChoisi...", 1000)
         ConsoleUI.header("SESSION EN COURS")
-        ConsoleUI.info("Vous jouez à ${GameCatalogCache.getGame(idInput)?.name}...")
+        ConsoleUI.info("Vous jouez à ${jeu.name}...")
+
         ConsoleUI.loader("Gameplay en cours", 3000)
+
         ConsoleUI.success("Fin de session. Sauvegarde...")
         Thread.sleep(1500)
     } else {
