@@ -23,6 +23,7 @@ public class JeuService {
             TypeJeu type,
             List<String> genres
     ){
+        // TODO : Création des Licences
         EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
