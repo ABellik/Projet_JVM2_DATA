@@ -17,7 +17,7 @@ object GameCatalogCache {
 
     fun addOrUpdateGame(game: GameInfo) {
         games[game.id] = game
-        println("Cache : Jeu ${game.name} ajouté/mis à jour")
+        //println("Cache : Jeu ${game.name} ajouté/mis à jour")
     }
 
     fun getAllGames(): List<GameInfo> {

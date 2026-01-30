@@ -1,7 +1,6 @@
 package com.projet_JVM2_DATA.consumer;
 
 import com.example.events.PublicationJeuOuDLC;
-import com.projet_JVM2_DATA.entity.Plateforme;
 import com.projet_JVM2_DATA.entity.TypeJeu;
 import com.projet_JVM2_DATA.service.JeuService;
 import com.projet_JVM2_DATA.service.LicenceService;

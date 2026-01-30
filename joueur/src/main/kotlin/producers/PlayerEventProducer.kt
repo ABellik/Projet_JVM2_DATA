@@ -141,7 +141,7 @@ fun productionEvaluationJeu(idJeu: Long, note: Int, commentaire: String?) {
     }
 
     val event = EvaluationJeu.newBuilder()
-        //.setIdJoueur(PlayerCache.getId())
+        .setIdJoueur(PlayerCache.getId())
         .setIdJeu(idJeu)
         .setNote(note)
         .setVersionJeu(GameCatalogCache.getGame(idJeu)!!.version)
@@ -168,7 +168,6 @@ fun productionReactionEvaluation(idEvaluation: Long, estUtile: Boolean) {
         .build()
 
     KafkaProducerManager.send("evaluation-notee", PlayerCache.getId().toString(), event)
-    println("Réaction envoyée !")
 }
 
 fun productionAjoutWishlist(idJeu: Long) {
@@ -178,5 +177,4 @@ fun productionAjoutWishlist(idJeu: Long) {
         .build()
 
     KafkaProducerManager.send("ajout-wishlist", PlayerCache.getId().toString(), event)
-    println("Ajout Wishlist envoyé !")
 }

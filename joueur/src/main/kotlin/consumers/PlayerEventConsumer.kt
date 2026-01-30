@@ -24,7 +24,7 @@ fun consommationInfoJoueur() {
     Thread {
         KafkaConsumerManager.listen<InfoJoueur>(
             topic = "info-joueur",
-            groupId = "module-joueur-cache-populator"
+            groupId = "module-joueur-cache-populator" + UUID.randomUUID().toString()
         ) { key, event ->
 
             try {
@@ -48,7 +48,7 @@ fun consommationReponseAuthentificationJoueur() {
             groupId = "auth-group-console"+ UUID.randomUUID().toString()
         ) { key, response ->
 
-            println("[DEBUG] Réponse reçue pour : ${response.pseudo}")
+            //println("[DEBUG] Réponse reçue pour : ${response.pseudo}")
 
             if (AuthSync.futureReponse != null && !AuthSync.futureReponse!!.isDone) {
                 AuthSync.futureReponse!!.complete(response)

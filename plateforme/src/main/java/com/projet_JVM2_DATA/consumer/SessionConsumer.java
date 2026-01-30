@@ -81,6 +81,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.UUID;
 
 public class SessionConsumer implements Runnable {
     private final KafkaConsumer<String, Session> consumer;
@@ -92,15 +93,13 @@ public class SessionConsumer implements Runnable {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 
-        // CORRECTION 1 : Changer le Group ID pour éviter les conflits
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "session-group");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "session-group"+ UUID.randomUUID().toString());
 
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
         props.put("schema.registry.url", "http://localhost:8081");
         props.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true);
 
-        // CONSEIL : Lire depuis le début pour ne pas rater les tests précédents
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         this.consumer = new KafkaConsumer<>(props);
@@ -109,7 +108,6 @@ public class SessionConsumer implements Runnable {
     @Override
     public void run() {
         try {
-            // VÉRIFICATION : Assure-toi que c'est bien ce nom de topic dans le Producer côté Joueur
             consumer.subscribe(Collections.singletonList("session-launched"));
 
             System.out.println("SessionConsumer démarré et en écoute...");
@@ -118,22 +116,17 @@ public class SessionConsumer implements Runnable {
                 ConsumerRecords<String, Session> records = consumer.poll(Duration.ofMillis(1000));
 
                 for (ConsumerRecord<String, Session> record : records) {
-                    // CORRECTION 2 : Try-Catch INTÉRIEUR pour ne pas tuer le consumer sur un message erroné
                     try {
                         System.out.println("Message de session reçu ! Traitement...");
 
                         Session event = record.value();
 
-                        // ATTENTION AUX DATES :
-                        // Si Avro génère des Long, il faut convertir : Instant.ofEpochMilli(event.getHeureDeDebut())
-                        // Si ton code compile tel quel, c'est que l'Avro génère bien des Instant via LogicalTypes.
                         Instant debut = event.getHeureDeDebut();
                         Instant fin = event.getHeureDeFin();
 
                         Duration ecart = Duration.between(debut, fin);
                         long minutes = ecart.toMinutes();
 
-                        // Mapping Enum
                         com.projet_JVM2_DATA.entity.TypeSession typeSession;
                         try {
                             typeSession = com.projet_JVM2_DATA.entity.TypeSession.valueOf(event.getCauseFermeture().name());
@@ -142,10 +135,9 @@ public class SessionConsumer implements Runnable {
                             continue; // On passe au suivant
                         }
 
-                        // APPEL SERVICE
                         sessionService.enregistrementSession(
                                 event.getIdJoueur(),
-                                event.getSupport(), // ex: "PC" -> Doit exister dans la table Plateforme !
+                                event.getSupport(),
                                 event.getIdJeu(),
                                 minutes,
                                 typeSession

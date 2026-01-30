@@ -162,7 +162,8 @@ fun menuJoueurConnecte() {
         "Jouer à un jeu",              // 3
         "Notifications",               // 4
         "Acheter un jeu",              // 5
-        "Se déconnecter"               // 6
+        "Rechercher un joueur",        // 6 <--- NOUVELLE OPTION
+        "Se déconnecter"               // 7
         // 0 est ajouté auto pour "Quitter"
     ))
 
@@ -172,7 +173,8 @@ fun menuJoueurConnecte() {
         3 -> featureJouer()
         4 -> featureNotifications()
         5 -> featureAchat()
-        6 -> {
+        6 -> featureRechercheJoueur() // <--- Appel de la nouvelle fonction
+        7 -> {
             PlayerCache.logout()
             ConsoleUI.success("Déconnexion réussie.")
             Thread.sleep(1000)
@@ -193,22 +195,25 @@ fun featureConnexion() {
     ConsoleUI.header("CONNEXION")
 
     val pseudo = ConsoleUI.prompt("Pseudo (ou 0 pour retour)")
-    if (pseudo == "0") return // Retour menu précédent
+    if (pseudo == "0") return
 
     AuthSync.initExpectation()
     productionRequeteAuthentificationJoueur(pseudo)
     ConsoleUI.loader("Vérification...")
 
     try {
-        val reponse = AuthSync.futureReponse!!.get(10, TimeUnit.SECONDS)
+        // On réduit le timeout à 2 ou 3 secondes pour ne pas attendre trop longtemps
+        val reponse = AuthSync.futureReponse!!.get(3, TimeUnit.SECONDS)
 
         if (reponse.idJoueur != null) {
             val motDePasseSaisi = ConsoleUI.prompt("Mot de passe")
-            if (reponse.motDePasse.toString() == motDePasseSaisi) {
+            if (reponse.motDePasse?.toString() == motDePasseSaisi) {
                 PlayerCache.login(
-                    reponse.idJoueur, reponse.pseudo, reponse.nom, reponse.prenom,
-                    reponse.email, reponse.dateDeNaissance, reponse.dateDeCreationDuCompte,
-                    reponse.motDePasse, reponse.games
+                    reponse.idJoueur, reponse.pseudo.toString(), // .toString() important pour Avro
+                    reponse.nom?.toString() ?:"", reponse.prenom?.toString() ?:"",
+                    reponse.email?.toString()?:"", reponse.dateDeNaissance?.toString() ?:"",
+                    reponse.dateDeCreationDuCompte,
+                    reponse.motDePasse?.toString() ?:"", reponse.games
                 )
                 ConsoleUI.success("Connexion réussie !")
                 Thread.sleep(1000)
@@ -217,12 +222,18 @@ fun featureConnexion() {
                 Thread.sleep(1500)
             }
         } else {
-            ConsoleUI.error("Compte introuvable.")
+            ConsoleUI.error("Ce compte n'existe pas.")
             Thread.sleep(1500)
         }
+
+    } catch (e: TimeoutException) {
+        // C'est ici qu'on gère le cas "Pas de réponse / Compte inconnu" proprement
+        ConsoleUI.error("Aucun compte trouvé pour ce pseudo (ou serveur indisponible).")
+        Thread.sleep(2000)
     } catch (e: Exception) {
-        ConsoleUI.error("Erreur ou Timeout: ${e.message}")
-        Thread.sleep(1500)
+        // Gestion générique avec message par défaut si null
+        ConsoleUI.error("Erreur technique : ${e.message ?: "Erreur inconnue"}")
+        Thread.sleep(2000)
     }
 }
 
@@ -483,7 +494,6 @@ fun featureAchat() {
     }
 
     // Gestion des supports
-    println("TESSSSSSST : "+jeu.supports.toList())
     val supports = jeu.supports.toList()
     if (supports.isEmpty()) {
         ConsoleUI.error("Erreur technique: Aucun support dispo pour ce jeu.")
@@ -505,4 +515,68 @@ fun featureAchat() {
     PlayerCache.addGame(numJeu) // Simulation ajout local immédiat (optimiste)
     ConsoleUI.success("Achat validé ! Jeu ajouté à la bibliothèque.")
     Thread.sleep(2000)
+}
+
+fun featureRechercheJoueur() {
+    while (true) {
+        ConsoleUI.clear()
+        ConsoleUI.header("COMMUNAUTÉ")
+
+        // 1. Récupérer tous les joueurs du cache
+        val allPlayers = PlayerCache.getAllPlayers()
+
+        // 2. Filtrer pour ne pas s'afficher soi-même
+        val otherPlayers = allPlayers.filter { !PlayerCache.isCurrentPlayer(it.id) }
+
+        if (otherPlayers.isEmpty()) {
+            ConsoleUI.info("Aucun autre joueur trouvé dans l'annuaire pour le moment.")
+            ConsoleUI.prompt("Appuyez sur Entrée pour retourner au menu...")
+            return
+        }
+
+        // 3. Affichage de la liste
+        println("Joueurs inscrits sur la plateforme :")
+        println(String.format("%-5s | %-20s", "ID", "PSEUDO"))
+        println("-".repeat(30))
+
+        otherPlayers.forEach { p ->
+            println(String.format(ConsoleUI.WHITE_BOLD + "%-5d" + ConsoleUI.RESET + " | %-20s", p.id, p.pseudo))
+        }
+        println()
+
+        // 4. Sélection
+        val input = ConsoleUI.prompt("Entrez l'ID du joueur à consulter (0 pour retour)")
+        val targetId = input.toLongOrNull() ?: 0L
+
+        if (targetId == 0L) return // Retour au menu principal
+
+        // 5. Recherche et Affichage du profil
+        val targetPlayer = PlayerCache.getPlayerById(targetId)
+
+        if (targetPlayer != null) {
+            ConsoleUI.clear()
+            ConsoleUI.header("PROFIL DE ${targetPlayer.pseudo.uppercase()}")
+
+            println("🆔 ID Joueur       : ${targetPlayer.id}")
+            println("📅 Membre depuis   : ${targetPlayer.dateDeCreationDuCompte}")
+            println("🎮 Jeux possédés   : ${targetPlayer.games.size}")
+
+            if (targetPlayer.games.isNotEmpty()) {
+                println("\n--- Bibliothèque de jeux ---")
+                targetPlayer.games.forEach { gameId ->
+                    // On essaie de résoudre le nom du jeu via le catalogue
+                    val gameName = GameCatalogCache.getGame(gameId)?.name ?: "Jeu Inconnu (ID: $gameId)"
+                    println(" • $gameName")
+                }
+            } else {
+                println("\nCe joueur ne possède aucun jeu.")
+            }
+
+            println()
+            ConsoleUI.prompt("Appuyez sur Entrée pour revenir à la liste...")
+        } else {
+            ConsoleUI.error("Joueur introuvable avec l'ID $targetId.")
+            Thread.sleep(1500)
+        }
+    }
 }

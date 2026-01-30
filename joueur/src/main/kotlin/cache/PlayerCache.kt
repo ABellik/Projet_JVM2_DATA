@@ -63,6 +63,7 @@ object PlayerCache {
             throw IllegalStateException("Un joueur est déjà connecté : ${currentPlayer?.pseudo}")
         }
 
+
         currentPlayer = Player(
             id = id,
             pseudo = pseudo,
