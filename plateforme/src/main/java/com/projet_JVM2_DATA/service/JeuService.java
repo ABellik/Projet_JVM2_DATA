@@ -23,8 +23,6 @@ public class JeuService {
             TypeJeu type,
             List<String> genres
     ){
-        // TODO : Création des Licences
-
         // Vérification prix éditeur
         if (prixEditeur<0){
             prixEditeur = 0L;
@@ -134,7 +132,6 @@ public class JeuService {
 
             // TODO : Suppression en cascade
             /*
-             * Patch (+modification)
              * Licence
              * Bibliothèque (+Session)
              * Wishlist
