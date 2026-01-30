@@ -2,8 +2,10 @@ package com.projet_JVM2_DATA.service;
 
 import com.projet_JVM2_DATA.entity.HistoriquePrix;
 import com.projet_JVM2_DATA.entity.Jeu;
+import com.projet_JVM2_DATA.repository.BibliothequeRepository;
 import com.projet_JVM2_DATA.repository.HistoriquePrixRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class HistoriquePrixService extends MainService {
@@ -55,14 +57,17 @@ public class HistoriquePrixService extends MainService {
         return commentaire.toString();
     }
 
-    private double demandeJeuSemaine(Jeu jeu) {
-        // TODO : get le nombre de demande
+    private double qualiteJeuPercue(Jeu jeu) {
+        // TODO : retourner la moyenne des notes
         return 0;
     }
 
-    private double qualiteJeuPercue(Jeu jeu) {
-        // TODO : get moyenne entre -1 et 1
-        return 0;
+    private double demandeJeuSemaine(Jeu jeu, LocalDate dateAuj) {
+        return executeAndReturn(em -> {
+            BibliothequeRepository repository = new BibliothequeRepository(em);
+            long nbAchats = repository.countAllJeuSemaine(jeu, dateAuj);
+            return (double) nbAchats;
+        });
     }
 
     public void majPrix(Jeu jeu){
@@ -73,7 +78,7 @@ public class HistoriquePrixService extends MainService {
 
         // Coefficients d'évolution
         double qualitePercue = qualiteJeuPercue(jeu);
-        double demandeSemaine = demandeJeuSemaine(jeu);
+        double demandeSemaine = demandeJeuSemaine(jeu, LocalDate.now());
 
         double coeffQualite = 0.2  * qualitePercue;  // entre +20% et -20%
         double coeffDemande = 0.05 * demandeSemaine; // +5% à chaque demande
@@ -96,7 +101,7 @@ public class HistoriquePrixService extends MainService {
         executeInTransaction(em -> {
             HistoriquePrixRepository repository = new HistoriquePrixRepository(em);
 
-            // TODO : à voir selon la réponse si on crée un nouveau ou si on en fait un autre
+            // TODO : à si on crée un nouveau ou si on écrase l'ancien historique des prix
             HistoriquePrix historique = new HistoriquePrix(
                     jeu,
                     prixActuel,
