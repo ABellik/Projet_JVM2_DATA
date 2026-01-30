@@ -1,13 +1,12 @@
+
 package com.projet_JVM2_DATA;
-
-
 import com.example.events.PublicationJeuOuDLC;
+import com.projet_JVM2_DATA.editeur.CrashAggregationStream;
+import com.projet_JVM2_DATA.kafka.consumer.CrashConsumer;
+import com.projet_JVM2_DATA.kafka.consumer.PatchTriggerConsumer;
 import com.projet_JVM2_DATA.kafka.consumer.ReponseAuthentificationConsumer;
 import com.projet_JVM2_DATA.kafka.producer.*;
 import com.projet_JVM2_DATA.dao.*;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
@@ -25,7 +24,16 @@ public class Main {
         String username = getenv("DB_USER");
         String password = getenv("DB_PASSWORD");
 
+        //Parametres de connexion
+        String bootstrap = "localhost:9092";
+        String schemaRegistry = "http://localhost:8081";
+        String topicCrash = "detected-crashs";
+        String topicTriggers = "potential-patches";
+        String topicPatches = "published-patches";
 
+
+        // Demarrage des services
+        startBackgroundServices(bootstrap, schemaRegistry,topicCrash,topicTriggers,topicPatches);
 
         JeuOuDlcDao jeuOuDLCDAO = new JeuOuDlcDao(url, username, password);
 
@@ -318,5 +326,39 @@ public class Main {
     }
 
 
-}
+    private static void startBackgroundServices(String bootstrap, String schemaRegistry,String topicCrash, String topicTriggers, String topicPatches) {
+        // Thread pour Kafka Streams
+        Thread streamsThread = new Thread(() -> {
+            CrashAggregationStream.main(new String[]{});
+        }, "streams-thread");
 
+        // Thread pour l'historisation des crashs en DB
+        Thread crashConsumerThread = new Thread(() -> {
+            try {
+                CrashConsumer crashConsumer = new CrashConsumer(bootstrap, schemaRegistry);
+                crashConsumer.start(topicCrash);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "crash-consumer-thread");
+        // Thread pour la génération automatique de patchs
+
+        Thread patchTriggerThread = new Thread(() -> {
+            PatchTriggerConsumer ptc =
+                    new PatchTriggerConsumer(bootstrap, schemaRegistry, topicPatches);
+            ptc.start(topicTriggers);
+        }, "patch-trigger-thread");
+
+        // Lancement en mode Daemon pour que les threads s'arrêtent si on ferme le menu
+        streamsThread.setDaemon(true);
+        crashConsumerThread.setDaemon(true);
+        patchTriggerThread.setDaemon(true);
+
+        streamsThread.start();
+        crashConsumerThread.start();
+        patchTriggerThread.start();
+
+        System.out.println("Services de monitoring (Streams & Consumers) démarrés en arrière-plan.");
+    }
+
+}

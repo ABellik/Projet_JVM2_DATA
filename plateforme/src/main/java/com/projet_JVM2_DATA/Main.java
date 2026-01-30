@@ -47,9 +47,6 @@ public class Main {
         InscriptionJoueurConsumer consumerTask = new InscriptionJoueurConsumer(utilisateurService);
         RequeteAuthentificationJoueurConsumer consumerRequest = new RequeteAuthentificationJoueurConsumer(utilisateurService);
 
-        InscriptionEditeurConsumer consumerEd= new InscriptionEditeurConsumer(editeurService);
-        RequeteAuthEditeurConsumer consumer= new RequeteAuthEditeurConsumer(editeurService);
-
 
         // 3. Lancer le consumer dans un thread dédié pour ne pas bloquer le Main
         Thread kafkaThreadInscriptionJoueur = new Thread(consumerTask);
@@ -57,10 +54,6 @@ public class Main {
         Thread kafkaThreadRequeteAuthentificationJoueur = new Thread(consumerRequest);
         kafkaThreadRequeteAuthentificationJoueur.start();
 
-        Thread kafkaThreadInscriptionEditeur= new Thread(consumer);
-        kafkaThreadInscriptionJoueur.start();
-        Thread kafkaThreadRequeteAuthEditeur = new Thread(consumer);
-        kafkaThreadRequeteAuthentificationJoueur.start();
 
 
         System.out.println("Plateforme démarrée. En attente d'inscriptions via Kafka...");
