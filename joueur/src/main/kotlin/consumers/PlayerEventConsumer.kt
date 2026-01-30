@@ -10,6 +10,7 @@ import com.projet_JVM2_DATA.ReviewSync
 import com.projet_JVM2_DATA.cache.GameCatalogCache
 import com.projet_JVM2_DATA.cache.PlayerCache
 import java.util.concurrent.ConcurrentHashMap
+import java.util.UUID
 
 fun startBackgroundConsumers() {
     consommationInfoJoueur()
@@ -44,7 +45,7 @@ fun consommationReponseAuthentificationJoueur() {
     Thread {
         KafkaConsumerManager.listen<ReponseAuthentificationJoueur>(
             topic = "reponse-authentification-joueur",
-            groupId = "auth-group-console"
+            groupId = "auth-group-console"+ UUID.randomUUID().toString()
         ) { key, response ->
 
             println("[DEBUG] Réponse reçue pour : ${response.pseudo}")
