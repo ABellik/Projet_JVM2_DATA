@@ -1,44 +1,64 @@
 package com.projet_JVM2_DATA;
-
-
 import com.example.events.PublicationJeuOuDLC;
+import com.projet_JVM2_DATA.editeur.CrashAggregationStream;
+import com.projet_JVM2_DATA.kafka.consumer.CrashConsumer;
+import com.projet_JVM2_DATA.kafka.consumer.PatchTriggerConsumer;
 import com.projet_JVM2_DATA.kafka.consumer.ReponseAuthentificationConsumer;
 import com.projet_JVM2_DATA.kafka.producer.*;
 import com.projet_JVM2_DATA.dao.*;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
+import static java.lang.System.getenv;
+
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException {
+    public static final String VIOLET= "\u001B[35m";
+    public static final String RESET = "\u001B[0m";
+    public static final String CYAN  = "\u001B[36m";
+    public static final String ROUGE = "\u001B[31m";
+    public static final String VERT  = "\u001B[32m";
+    public static final String BLEU  = "\u001B[34m";
+
+    public static void main(String[] args) throws SQLException, InterruptedException {
 
         //Ce qui permet de faire des requêtes à la base de données
 
-        String url = System.getenv("DB_URL");
-        String username = System.getenv("DB_USER");
-        String password = System.getenv("DB_PASSWORD");
+        String url = getenv("DB_URL");
+        String username = getenv("DB_USER");
+        String password = getenv("DB_PASSWORD");
+
+        //Parametres de connexion
+        String bootstrap = "localhost:9092";
+        String schemaRegistry = "http://localhost:8081";
+        String topicCrash = "detected-crashs";
+        String topicTriggers = "potential-patches";
+        String topicPatches = "published-patches";
 
 
+        // Demarrage des services
+        startBackgroundServices(bootstrap, schemaRegistry,topicCrash,topicTriggers,topicPatches);
 
         JeuOuDlcDao jeuOuDLCDAO = new JeuOuDlcDao(url, username, password);
 
         //Tous les producers nécessaires pour la suite
-        AuthentificationProducer auth = new AuthentificationProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"nouvelle-connexion-editeur");
-        JeuProducer jeuProducer = new JeuProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"),   System.getenv("SCHEMA_REGISTRY_URL"), "nouveau-jeu");
-        NouveauCompteProducer nouveauCompteProducer = new NouveauCompteProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"nouveau-compte-editeur");
-        ModificationCompteProducer modificationCompteProducer = new ModificationCompteProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"modification-compte-editeur");
-        SuppressionCompteProducer suppressionCompteProducer = new SuppressionCompteProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"suppression-compte-editeur");
-        SuppressionJeuOuDLCProducer suppressionJeuProducer = new SuppressionJeuOuDLCProducer(System.getenv("KAFKA_BOOTSTRAP_SERVERS"), System.getenv("SCHEMA_REGISTRY_URL"),"suppression-jeu");
+        AuthentificationProducer auth = new AuthentificationProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"nouvelle-connexion-editeur");
+        JeuProducer jeuProducer = new JeuProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"),   getenv("SCHEMA_REGISTRY_URL"), "nouveau-jeu");
+        NouveauCompteProducer nouveauCompteProducer = new NouveauCompteProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"nouveau-compte-editeur");
+        ModificationCompteProducer modificationCompteProducer = new ModificationCompteProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"modification-compte-editeur");
+        SuppressionCompteProducer suppressionCompteProducer = new SuppressionCompteProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"suppression-compte-editeur");
+        SuppressionJeuOuDLCProducer suppressionJeuProducer = new SuppressionJeuOuDLCProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"suppression-jeu");
 
 
         //Tous les consumers necessaires pour la suite
-        ReponseAuthentificationConsumer authCons = new ReponseAuthentificationConsumer();
+        ReponseAuthentificationConsumer authCons = new ReponseAuthentificationConsumer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"));
 
+        //Thread qui sera actif sur toute la durée de l'application
+        Thread authThread = new Thread(authCons::demarrerEcoute);
+        authThread.setDaemon(true);//fait en sorte de couper le thread quand le principal est coupé
+        authThread.start();
 
 
         //Ce qui permettra une entrée en console
@@ -47,17 +67,23 @@ public class Main {
 
         boolean sessionActive = true;
         int valeurChoisie = -1;
+        //permet de savoir si l'editeur vient d'une entreprise ou non
+        int entOuNon;
 
         while (sessionActive) {
             if (valeurChoisie == -1) {
-                System.out.println("Entrez 0 pour créer un nouveau compte et 1 pour se connecter");
-                valeurChoisie = Integer.parseInt(scanner.next());
+                System.out.println("\n Entrez 0 :" +BLEU+ "  Créer un compte "+ RESET+"\n Entrez 1 :"+ BLEU +" Se connecter "+RESET+"\n Autre :"+BLEU+" (Quitter)"+RESET);
+                String input = scanner.next();
+                if (input.equals("0")) valeurChoisie = 0;
+                else if (input.equals("1")) valeurChoisie = 1;
+                else sessionActive = false;
             }
 
             if (valeurChoisie == 0) {
 
                 System.out.println("Editeur INDEPENDANT : Saisir 1 \n Editeur en entreprise : Saisir 2");
                 int val = scanner.nextInt();
+                entOuNon=val;
 
                 if(val==1) {
 
@@ -68,8 +94,11 @@ public class Main {
                     System.out.println("Entrez votre prenom");
                     String prenom = scanner.next();
 
-                    System.out.println("Entrez votre email");
-                    String email = scanner.next();
+                    String email;
+                    do {
+                        System.out.println("Entrez votre email");
+                        email = scanner.next();
+                    }while(!email.contains("@"));
 
                     System.out.println("Entrez un pseudo");
                     String pseudo = scanner.next();
@@ -79,6 +108,26 @@ public class Main {
 
                     System.out.println("Entrez votre date de naissance sous ce format : XX/XX/XXXX");
                     String dateNaissance = scanner.next();
+
+                   /* auth.envoyer(new String[]{pseudo, mdp});
+
+                    //Attente de la réponse
+                    long idEditeur = -1;
+                    int tentatives = 0;
+                    while (idEditeur <= 0 && tentatives < 5) {
+                        Thread.sleep(2000);
+                        idEditeur = authCons.getIdEditeur();
+                        System.out.print("ID Editeur consommé ! : " + idEditeur);
+                        tentatives++;
+                    }
+
+                    if (idEditeur < 0) {
+                        System.out.println("problème avec id editeur");
+                        System.out.println("ID EDITEUR"+ idEditeur);
+                        valeurChoisie = -1;
+                        continue;
+                    }*/
+
 
                     String[] producerArgs = new String[8];
 
@@ -100,14 +149,18 @@ public class Main {
                 }
                 else if(val==2)
                 {
+
                     System.out.println("Entrez le nom de l'entreprise");
                     String nom = scanner.next();
+
+                    System.out.println("Entrez un mot de passe ");
+                    String mdp = scanner.next();
 
                     String[] producerArgs = new String[8];
 
                     producerArgs[0] = String.valueOf(jeuOuDLCDAO.getMaxIDEditeur() + 1);
                     producerArgs[1] = nom;
-                    producerArgs[2] = "";
+                    producerArgs[2] = mdp;
                     producerArgs[3] = "";
                     producerArgs[4] = "";
                     producerArgs[5] = "";
@@ -124,46 +177,46 @@ public class Main {
 
             } else if (valeurChoisie == 1) {
 
-                System.out.print("Pseudo : ");
+                System.out.println("Pseudo ou Nom d'entreprise : ");
                 String pseudo = scanner.next();
-                System.out.print("Mot de passe : ");
+                System.out.println("Mot de passe : ");
                 String mdp = scanner.next();
 
 
-                // On le lance dans un thread car le main() du consumer contient une boucle infinie (poll)
-                Thread authThread = new Thread(() -> {
-                    try {
-                        // On passe les args nécessaires à ton Consumer
-                        authCons.main(new String[]{pseudo, mdp});
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-                authThread.setDaemon(true);
-                authThread.start();
+                long idEditeur = -1;
+
+                //réinitialise l'id par rapport au précédenttt
+                authCons.resetId();
 
                 //envoie un évènement à la plateforme pour demander la connexion
                 auth.envoyer(new String[]{pseudo, mdp});
 
-                //produit les jeux en grâce aux calculs faits dans le stream
+                int tentatives = 0;
+                while (idEditeur <= 0 && tentatives < 5) {
+                    Thread.sleep(1000);
+                    idEditeur = authCons.getIdEditeur(); // Mise à jour de l'id editeur
+                    System.out.println("id editeur reçu : " +idEditeur);
+                    tentatives++;
+                }
+
+                //produit les jeux  grace aux calculs faits dans le stream
                 jeuProducer.envoyer();
 
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {
                 }
-
-                long idEditeur = 1;
+                catch (InterruptedException e) {
+                }
 
 
                 if (idEditeur <= 0)
                 {
-                    System.out.println("\n Connexion impossible !  Pseudo ou mot de passe incorrect.");
+                    System.out.println(ROUGE + "\n Connexion impossible !  Pseudo ou mot de passe incorrect." +RESET);
                     valeurChoisie = -1; // Retour au menu principal dans ce cas
                     continue;
                 }
 
-                System.out.println(" Vous êtes connecté ! Voici votre id editeur : " + idEditeur);
+                System.out.println(VERT +" \n Vous êtes connecté ! \n Voici votre id editeur : " + idEditeur + RESET);
 
                 // Affichage des jeux de l'editeur connecté
                 System.out.println("Vos jeux en base :");
@@ -172,107 +225,130 @@ public class Main {
                 if (jeux.isEmpty()) {
                     System.out.println("Vous n'avez aucun jeu enregistré.");
                 }
-                System.out.println("->>>Liste de tous vos jeux en base<<<-");
-
+                System.out.println(CYAN + "\n->>>  Liste de tous vos jeux en base  <<<-" + RESET);
+                int largeur = 45;
                 for (PublicationJeuOuDLC jeu : jeux)
                 {
-                    System.out.println(jeu.toString());
+                    System.out.println("=".repeat(largeur));
+                    System.out.printf("| %-50s |%n", CYAN +"ID : "+RESET+  jeu.getId());
+                    System.out.printf("| %-50s |%n",CYAN + "Nom : " +RESET+ jeu.getNom());
+                    System.out.printf("| %-50s |%n",CYAN + "Genre(s) : " +RESET+ jeu.getGenre());
+                    System.out.printf("| %-50s |%n",CYAN + "Support(s) : " +RESET+ jeu.getSupport());
+                    System.out.printf("| %-50s |%n",CYAN + "Prix : " +RESET+ jeu.getPrixEditeur());
+                    System.out.printf("| %-50s |%n",CYAN + "Type : " +RESET+jeu.getType());
+                    System.out.printf("| %-50s |%n",CYAN + "Date publication : " +RESET+ jeu.getDate());
+                    System.out.println( "=".repeat(largeur));
                 }
 
+                //permet de tout le temps rester dans le menu
+                boolean bool = true;
+                while (bool) {
+                    //On ne propose pas de publier de jeu car nous avons décidé la publication selon certains
+                    //critères pour maximiser les ventes donc elle se fait automatiquement. De même pour les DLC
+                    System.out.println("\n 1: Supprimer Jeu \n 2: Modifier Compte \n 3: Supprimer Compte \n 4: Déconnexion \n 5: Ajouter un jeu");
+                    int valeur = Integer.parseInt(scanner.next());
 
-                //On ne propose pas de publier de jeu car nous avons décidé la publication selon certains
-                //critères pour maximiser les ventes donc elle se fait automatiquement. De même pour les DLC
-                System.out.println("\n1: Supprimer Jeu \n 2: Modifier Compte \n 3: Supprimer Compte \n 4: Déconnexion \n 5: Ajouter un jeu");
-                int valeur = Integer.parseInt(scanner.next());
+                    switch (valeur) {
+                        case 1:
+                            System.out.println("Entrez l'id du jeu à supprimer :");
+                            long idJeu = Long.parseLong(scanner.next());
+                            suppressionJeuProducer.envoyer(new String[]{String.valueOf(idJeu), String.valueOf(idEditeur)});
+                            break;
 
-                switch (valeur) {
-                    case 1:
-                        System.out.println("Entrez l'id du jeu à supprimer :");
-                        long idJeu = Long.parseLong(scanner.next());
-                        suppressionJeuProducer.envoyer(new String[]{String.valueOf(idJeu), String.valueOf(idEditeur)});
-                        break;
+                        case 2:
+                            System.out.println(VIOLET +"================================" +RESET);
+                            System.out.println("  1. Mot de passe \n  2. Nom \n  3. Prénom\n  4. Pseudo \n  5. Email ");
+                            System.out.println(VIOLET +"================================" +RESET);
+                            int choix = scanner.nextInt();
+                            scanner.nextLine();
 
-                    case 2:
-                        System.out.println("1. Mot de passe \n 2. Nom \n 3. Prénom\n 4. Pseudo \n 5. Email");
-                        int choix = scanner.nextInt();
-                        scanner.nextLine();
+                            String nomChamp = switch (choix) {
+                                case 1 -> "mot_de_passe";
+                                case 2 -> "nom";
+                                case 3 -> "prenom";
+                                case 4 -> "pseudo";
+                                case 5 -> "email";
+                                default -> null;
+                            };
 
-                        String nomChamp = switch (choix) {
-                            case 1 -> "mot_de_passe";
-                            case 2 -> "nom";
-                            case 3 -> "prenom";
-                            case 4 -> "pseudo";
-                            case 5 -> "email";
-                            default -> null;
-                        };
+                            if (nomChamp != null) {
+                                System.out.print("Nouvelle valeur : ");
+                                String nouvelleValeur = scanner.nextLine();
+                                modificationCompteProducer.envoyer(new String[]{nomChamp, nouvelleValeur, String.valueOf(idEditeur)});
+                            }
+                            break;
 
-                        if (nomChamp != null) {
-                            System.out.print("Nouvelle valeur : ");
-                            String nouvelleValeur = scanner.nextLine();
-                            modificationCompteProducer.envoyer(new String[]{nomChamp, nouvelleValeur, String.valueOf(idEditeur)});
-                        }
-                        break;
+                        case 3:
+                            System.out.println("Voulez-vous vraiment supprimer votre compte ? (oui/non)");
+                            if (scanner.next().equalsIgnoreCase("oui")) {
+                                jeuOuDLCDAO.supprimerJeuxEditeur(idEditeur);
+                                suppressionCompteProducer.envoyer(new String[]{String.valueOf(idEditeur)});
+                                valeurChoisie = -1; // Déconnexion forcée après suppression
+                                bool=false;
+                            }
+                            break;
 
-                    case 3:
-                        System.out.println("Voulez-vous vraiment supprimer votre compte ? (oui/non)");
-                        if (scanner.next().equalsIgnoreCase("oui")) {
-                            jeuOuDLCDAO.supprimerJeuxEditeur(idEditeur);
-                            suppressionCompteProducer.envoyer(new String[]{String.valueOf(idEditeur)});
-                            valeurChoisie = -1; // Déconnexion forcée après suppression
-                        }
-                        break;
+                        case 4:
+                            valeurChoisie = -1;
+                            bool =false;
+                            break;
 
-                    case 4:
-                        valeurChoisie = -1;
-                        break;
+                        case 5:
 
-                    case 5:
+                            System.out.println("Entrez le nom du jeu");
+                            String nom = scanner.next();
 
-                        System.out.println("Entrez le nom du jeu");
-                        String nom = scanner.next();
-
-                        System.out.println("Entrez le nombre de genres que vous voulez entrer");
-                        int nbGenres = scanner.nextInt();
-                        //Collection des genres
-                        ArrayList<String> genres = new ArrayList<>();
-                        for (int i=0; i<nbGenres; i++)
-                        {
-                            System.out.println("Entrez le nom de genre");
-                            genres.add( scanner.next());
-                        }
-
-
-                        System.out.println("Entrez le nombre de supports que vous voulez entrer");
-                        int nbSupports = scanner.nextInt();
-                        //Collection des supports
-                        ArrayList<String> supports = new ArrayList<>();
-                        for (int i=0; i<nbGenres; i++)
-                        {
-                            System.out.println("Entrez le nom du support");
-                            supports.add( scanner.next());
-                        }
-
-                        System.out.println("Entrez le prix");
-                        int prix = scanner.nextInt();
-
-                        System.out.println("Entrez le type de cette façon : DLC ou Jeu");
-                        String type = scanner.next();
-
-                        Long idParent;
-                        if (!type.equals("DLC"))
-                        {
-                            idParent = idEditeur;
-                        }
-                        else{
-                            idParent=Long.parseLong("-1");
-                        }
+                            System.out.println("Entrez le nombre de genres que vous voulez entrer");
+                            int nbGenres = scanner.nextInt();
+                            //Collection des genres
+                            ArrayList<String> genres = new ArrayList<>();
+                            for (int i=0; i<nbGenres; i++)
+                            {
+                                System.out.println("Entrez le nom de genre");
+                                genres.add( scanner.next());
+                            }
 
 
-                        PublicationJeuOuDLC jeuOuDLC= new PublicationJeuOuDLC(
-                                jeuOuDLCDAO.getMaxIDJeu(), nom, "", genres,supports, prix, type, idEditeur, LocalDate.now(), idParent
-                        );
-                        jeuOuDLCDAO.insertionNouveauJeuOuDLC(jeuOuDLC);
-                        break;
+                            System.out.println("Entrez le nombre de supports que vous voulez entrer");
+                            int nbSupports = scanner.nextInt();
+                            //Collection des supports
+                            ArrayList<String> supports = new ArrayList<>();
+                            for (int i=0; i<nbGenres; i++)
+                            {
+                                System.out.println("Entrez le nom du support");
+                                supports.add( scanner.next());
+                            }
+
+                            System.out.println("Entrez le prix");
+                            int prix = scanner.nextInt();
+
+                            System.out.println("Entrez le type de cette façon : DLC ou Jeu");
+                            String type = scanner.next();
+
+                            Long idParent;
+                            if (!type.equals("DLC"))
+                            {
+                                idParent=Long.parseLong("-1");
+                            }
+                            else{
+                                String nomJeu;
+                                do {
+                                    System.out.print("Entrez un nom existant : ");
+                                    nomJeu = scanner.nextLine();
+                                } while (!jeuOuDLCDAO.existeParNom(nomJeu));
+
+                                System.out.println("Nom valide : " + nomJeu);
+                                idParent=jeuOuDLCDAO.getIDParent(nomJeu);
+
+                            }
+
+
+                            PublicationJeuOuDLC jeuOuDLC= new PublicationJeuOuDLC(
+                                    jeuOuDLCDAO.getMaxIDJeu(), nom, "", genres,supports, prix, type, idEditeur, LocalDate.now(), idParent
+                            );
+                            jeuOuDLCDAO.insertionNouveauJeuOuDLC(jeuOuDLC);
+                            break;
+                    }
                 }
             }
             else{
@@ -286,5 +362,39 @@ public class Main {
     }
 
 
-}
+    private static void startBackgroundServices(String bootstrap, String schemaRegistry,String topicCrash, String topicTriggers, String topicPatches) {
+        // Thread pour Kafka Streams
+        Thread streamsThread = new Thread(() -> {
+            CrashAggregationStream.main(new String[]{});
+        }, "streams-thread");
 
+        // Thread pour l'historisation des crashs en DB
+        Thread crashConsumerThread = new Thread(() -> {
+            try {
+                CrashConsumer crashConsumer = new CrashConsumer(bootstrap, schemaRegistry);
+                crashConsumer.start(topicCrash);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, "crash-consumer-thread");
+        // Thread pour la génération automatique de patchs
+
+        Thread patchTriggerThread = new Thread(() -> {
+            PatchTriggerConsumer ptc =
+                    new PatchTriggerConsumer(bootstrap, schemaRegistry, topicPatches);
+            ptc.start(topicTriggers);
+        }, "patch-trigger-thread");
+
+        // Lancement en mode Daemon pour que les threads s'arrêtent si on ferme le menu
+        streamsThread.setDaemon(true);
+        crashConsumerThread.setDaemon(true);
+        patchTriggerThread.setDaemon(true);
+
+        streamsThread.start();
+        crashConsumerThread.start();
+        patchTriggerThread.start();
+
+        System.out.println("Services de monitoring (Streams & Consumers) démarrés en arrière-plan.");
+    }
+
+}
