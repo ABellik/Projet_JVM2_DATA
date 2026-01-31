@@ -23,6 +23,12 @@ public class ModificationRepository {
         return em.createQuery("select m from Modification m", Modification.class).getResultList();
     }
 
+    public List<Modification> findByPatch(long idPatch) {
+        return em.createQuery("select m from Modification m where m.idpatch=:idPatch", Modification.class)
+                .setParameter("idPatch", idPatch)
+                .getResultList();
+    }
+
     public void delete(Modification modification) {
         em.remove(modification);
     }

@@ -1,7 +1,9 @@
 package com.projet_JVM2_DATA.service;
 
+import com.example.events.InfoJeu;
 import com.projet_JVM2_DATA.config.JpaUtil;
 import com.projet_JVM2_DATA.entity.*;
+import com.projet_JVM2_DATA.producer.InfoJeuProducer;
 import com.projet_JVM2_DATA.repository.GenreJeuRepository;
 import com.projet_JVM2_DATA.repository.JeuRepository;
 import jakarta.persistence.EntityManager;
@@ -12,7 +14,7 @@ import java.util.List;
 
 public class JeuService {
 
-    public void publier(
+    public Long publier(
             Long idEditeur,
             String nomJeu,
             String versionActuelle,
@@ -21,6 +23,11 @@ public class JeuService {
             TypeJeu type,
             List<String> genres
     ){
+        // Vérification prix éditeur
+        if (prixEditeur<0){
+            prixEditeur = 0L;
+        }
+
         EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -45,13 +52,20 @@ public class JeuService {
                 genreJeuRepository.save(genrejeu);
             }
 
+            // Création Historique des prix
+            HistoriquePrixService historiquePrixService = new HistoriquePrixService();
+            historiquePrixService.creer(jeu, prixEditeur, prixEditeur, "Soit la première personne à essayer le jeu !");
+
             tx.commit();
+
+            return jeu.getId();
         }
         catch (Exception e) {
             if (tx.isActive()) {
                 tx.rollback();
             }
             e.printStackTrace();
+            return null;
         }
         finally {
             em.close();
@@ -118,7 +132,6 @@ public class JeuService {
 
             // TODO : Suppression en cascade
             /*
-             * Patch (+modification)
              * Licence
              * Bibliothèque (+Session)
              * Wishlist

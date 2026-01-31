@@ -1,8 +1,11 @@
 package com.projet_JVM2_DATA.repository;
 
 import com.projet_JVM2_DATA.entity.BibliothèqueId;
+import com.projet_JVM2_DATA.entity.Jeu;
 import jakarta.persistence.EntityManager;
 import com.projet_JVM2_DATA.entity.Bibliothèque;
+
+import java.time.LocalDate;
 import java.util.List;
 
 public class BibliothequeRepository {
@@ -27,6 +30,23 @@ public class BibliothequeRepository {
 
     public List<Bibliothèque> findAll() {
         return em.createQuery("SELECT b FROM Bibliothèque b", Bibliothèque.class).getResultList();
+    }
+
+    public long countAllJeuSemaine(Jeu jeu, LocalDate dateAuj) {
+
+        LocalDate dateDebut = dateAuj.minusDays(7);
+
+        return em.createQuery(
+                        "SELECT COUNT(b) " +
+                                "FROM Bibliothèque b " +
+                                "WHERE b.jeu = :jeu " +
+                                "AND b.dateAchat BETWEEN :dateDebut AND :dateFin",
+                        Long.class
+                )
+                .setParameter("jeu", jeu)
+                .setParameter("dateDebut", dateDebut)
+                .setParameter("dateFin", dateAuj)
+                .getSingleResult();
     }
 
     public void delete(Bibliothèque bibliothèque) {

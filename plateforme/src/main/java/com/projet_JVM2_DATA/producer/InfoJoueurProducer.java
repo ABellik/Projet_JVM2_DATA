@@ -1,7 +1,6 @@
 package com.projet_JVM2_DATA.producer;
 
-import com.example.events.CreationCompteJoueur;
-import com.example.events.InfoJeu;
+import com.example.events.InfoJoueur;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -14,10 +13,10 @@ import java.util.Properties;
 /**
  * Producer d'inscription pour tester si le consumer fonctionne
  */
-public class InfoJeuProducer {
-    private final KafkaProducer<String, InfoJeu> producer;
+public class InfoJoueurProducer {
+    private final KafkaProducer<String, InfoJoueur> producer;
 
-    public InfoJeuProducer() {
+    public InfoJoueurProducer() {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -27,9 +26,9 @@ public class InfoJeuProducer {
         this.producer = new KafkaProducer<>(props);
     }
 
-    public void envoyerInfoJeu(InfoJeu event) {
-        ProducerRecord<String, InfoJeu> record =
-                new ProducerRecord<>("info-jeu", event.getNom(), event);
+    public void envoyerInfoJoueur(InfoJoueur event) {
+        ProducerRecord<String, InfoJoueur> record =
+                new ProducerRecord<>("info-joueur", event.getPseudo(), event);
 
         producer.send(record, (metadata, exception) -> {
             if (exception == null) {

@@ -24,8 +24,9 @@ public class PatchService extends MainService{
         executeInTransaction(em -> {
             PatchRepository repository = new PatchRepository(em);
             List<Patch> list = repository.findByJeu(jeu);
+            ModificationService modificationService = new ModificationService();
             for (Patch patch : list) {
-                // TODO : supprimer les modifications
+                modificationService.supprimer(patch.getId());
                 repository.delete(patch);
             }
         });

@@ -4,6 +4,7 @@ import com.example.events.EvaluationJeu;
 import com.example.events.ReponseAuthentificationEditeur;
 import com.projet_JVM2_DATA.entity.Bibliothèque;
 import com.projet_JVM2_DATA.service.BibliothèqueService;
+import com.projet_JVM2_DATA.service.JeuService;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -34,8 +35,8 @@ public class EvaluationProducer {
 
         ProducerRecord<String, EvaluationJeu> record =
                 new ProducerRecord<>("evaluations-jeu", null,
-                        new EvaluationJeu(
-                                Long.parseLong(eval.getId().toString()), Integer.parseInt(eval.getNoteJoueur().toString()), "1.0", eval.getCommentaireJoueur(), Instant.parse(eval.getDateAchat().toString())
+                        new EvaluationJeu(eval.getId().getIdUtilisateur(),eval.getIdJeu().getId(), eval.getNoteJoueur().intValue(), eval.getIdJeu().getVersionActuelle(), eval.getCommentaireJoueur(), Instant.now()
+                                /*Long.parseLong(eval.getId().toString()), Integer.parseInt(eval.getNoteJoueur().toString()), "1.0", eval.getCommentaireJoueur(), Instant.parse(eval.getDateAchat().toString())*/
                         )
                 );
 

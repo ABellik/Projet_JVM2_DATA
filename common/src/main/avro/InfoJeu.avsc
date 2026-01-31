@@ -14,6 +14,12 @@
       }
     },
     {"name": "prix", "type": "double"},
-    {"name": "nomEditeur", "type": "string"}
+    {"name": "nomEditeur", "type": "string"},
+    {"name": "supports", "type":
+    {
+      "type":"array",
+      "items": "string"
+    }
+    }
   ]
 }

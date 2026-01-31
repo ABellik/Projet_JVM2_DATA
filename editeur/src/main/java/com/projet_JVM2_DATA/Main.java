@@ -1,5 +1,9 @@
+
 package com.projet_JVM2_DATA;
 import com.example.events.PublicationJeuOuDLC;
+import com.projet_JVM2_DATA.editeur.CrashAggregationStream;
+import com.projet_JVM2_DATA.kafka.consumer.CrashConsumer;
+import com.projet_JVM2_DATA.kafka.consumer.PatchTriggerConsumer;
 import com.projet_JVM2_DATA.editeur.CrashAggregationStream;
 import com.projet_JVM2_DATA.kafka.consumer.CrashConsumer;
 import com.projet_JVM2_DATA.kafka.consumer.PatchTriggerConsumer;
@@ -12,8 +16,17 @@ import java.util.*;
 
 import static java.lang.System.getenv;
 
+import static java.lang.System.getenv;
+
 
 public class Main {
+    public static final String VIOLET= "\u001B[35m";
+    public static final String RESET = "\u001B[0m";
+    public static final String CYAN  = "\u001B[36m";
+    public static final String ROUGE = "\u001B[31m";
+    public static final String VERT  = "\u001B[32m";
+    public static final String BLEU  = "\u001B[34m";
+
 
     public static final String VIOLET= "\u001B[35m";
     public static final String RESET = "\u001B[0m";
@@ -29,7 +42,20 @@ public class Main {
         String url = getenv("DB_URL");
         String username = getenv("DB_USER");
         String password = getenv("DB_PASSWORD");
+        String url = getenv("DB_URL");
+        String username = getenv("DB_USER");
+        String password = getenv("DB_PASSWORD");
 
+        //Parametres de connexion
+        String bootstrap = "localhost:9092";
+        String schemaRegistry = "http://localhost:8081";
+        String topicCrash = "detected-crashs";
+        String topicTriggers = "potential-patches";
+        String topicPatches = "published-patches";
+
+
+        // Demarrage des services
+        startBackgroundServices(bootstrap, schemaRegistry,topicCrash,topicTriggers,topicPatches);
         //Parametres de connexion
         String bootstrap = "localhost:9092";
         String schemaRegistry = "http://localhost:8081";
@@ -50,11 +76,22 @@ public class Main {
         ModificationCompteProducer modificationCompteProducer = new ModificationCompteProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"modification-compte-editeur");
         SuppressionCompteProducer suppressionCompteProducer = new SuppressionCompteProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"suppression-compte-editeur");
         SuppressionJeuOuDLCProducer suppressionJeuProducer = new SuppressionJeuOuDLCProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"suppression-jeu");
+        AuthentificationProducer auth = new AuthentificationProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"nouvelle-connexion-editeur");
+        JeuProducer jeuProducer = new JeuProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"),   getenv("SCHEMA_REGISTRY_URL"), "nouveau-jeu");
+        NouveauCompteProducer nouveauCompteProducer = new NouveauCompteProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"nouveau-compte-editeur");
+        ModificationCompteProducer modificationCompteProducer = new ModificationCompteProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"modification-compte-editeur");
+        SuppressionCompteProducer suppressionCompteProducer = new SuppressionCompteProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"suppression-compte-editeur");
+        SuppressionJeuOuDLCProducer suppressionJeuProducer = new SuppressionJeuOuDLCProducer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"),"suppression-jeu");
 
 
         //Tous les consumers necessaires pour la suite
         ReponseAuthentificationConsumer authCons = new ReponseAuthentificationConsumer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"));
+        ReponseAuthentificationConsumer authCons = new ReponseAuthentificationConsumer(getenv("KAFKA_BOOTSTRAP_SERVERS"), getenv("SCHEMA_REGISTRY_URL"));
 
+        //Thread qui sera actif sur toute la durée de l'application
+        Thread authThread = new Thread(authCons::demarrerEcoute);
+        authThread.setDaemon(true);//fait en sorte de couper le thread quand le principal est coupé
+        authThread.start();
         //Thread qui sera actif sur toute la durée de l'application
         Thread authThread = new Thread(authCons::demarrerEcoute);
         authThread.setDaemon(true);//fait en sorte de couper le thread quand le principal est coupé
@@ -204,6 +241,8 @@ public class Main {
 
                 try {
                     Thread.sleep(1000);
+                }
+                catch (InterruptedException e) {
                 }
                 catch (InterruptedException e) {
                 }

@@ -318,6 +318,57 @@ public class JeuOuDlcDao {
     }
 
 
+    public boolean existeParNom(String nom)
+    {
+        String requete = "SELECT * FROM Jeu WHERE nom=?";
+        ArrayList<PublicationJeuOuDLC> listeJeux = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement pstmt = connection.prepareStatement(requete)) {
+
+            pstmt.setString(1, nom);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+
+                return true;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL : " + e.getMessage());
+        }
+
+        return false;
+    }
+
+
+
+    public long getIDParent(String nom)
+    {
+        String requete = "SELECT id FROM Jeu WHERE nom=?";
+        ArrayList<PublicationJeuOuDLC> listeJeux = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement pstmt = connection.prepareStatement(requete)) {
+
+            pstmt.setString(1, nom);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+
+                return rs.getLong("id");
+            }
+            if (rs.wasNull()) {
+                return -1;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL : " + e.getMessage());
+        }
+
+        return -1;
+    }
+
 
 
 

@@ -17,8 +17,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.UUID;
 
-public class InscriptionEditeurConsumer {
+public class InscriptionEditeurConsumer implements Runnable{
 
     private final KafkaConsumer<String, CompteEditeur> consumer;
     private final EditeurService editeurService;
@@ -37,10 +38,10 @@ public class InscriptionEditeurConsumer {
         this.consumer = new KafkaConsumer<>(props);
     }
 
-
+    @Override
     public void run() {
         try {
-            consumer.subscribe(Collections.singletonList("creation-compte-joueur"));
+            consumer.subscribe(Collections.singletonList("nouveau-compte-editeur"));
 
             while (true) {
                 ConsumerRecords<String, CompteEditeur> records = consumer.poll(Duration.ofMillis(1000));

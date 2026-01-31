@@ -39,7 +39,7 @@ public class CrashFilterStream {
 
         //Ecoute du flux de session
         KStream<String, Session> sessionStream = builder.stream(
-                "game-sessions",
+                "session-launched",
                 Consumed.with(Serdes.String(), sessionSerde)
         );
 

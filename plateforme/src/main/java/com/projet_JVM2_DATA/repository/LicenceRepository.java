@@ -20,6 +20,14 @@ public class LicenceRepository {
         return em.find(Licence.class, id);
     }
 
+    public List<String> findNomByIdJeu(Long idJeu){
+        return em.createQuery("SELECT l.idPlateforme.nom FROM Licence l WHERE l.idJeu.id = :idJeu", String.class).setParameter("idJeu", idJeu).getResultList();
+    }
+
+    public List<Long> findIdPlateformeByIdJeu(Long idJeu){
+        return em.createQuery("SELECT l.idPlateforme.id FROM Licence l WHERE l.idJeu.id = :idJeu", Long.class).setParameter("idJeu", idJeu).getResultList();
+    }
+
     public List<Licence> findAll() {
         return em.createQuery("select l from Licence l", Licence.class).getResultList();
     }

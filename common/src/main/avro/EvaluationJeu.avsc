@@ -3,6 +3,7 @@
   "name": "EvaluationJeu",
   "namespace": "com.example.events",
   "fields": [
+    {"name": "idJoueur", "type":  "long"},
     { "name": "idJeu", "type": "long" },
     { "name": "Note", "type": "int" },
     {"name": "versionJeu","type": "string"},
