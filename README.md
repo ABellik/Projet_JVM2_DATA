@@ -163,3 +163,45 @@ INSERT INTO "Licence" VALUES (1243,1), (1243,3);
 - Voir le profil d'un autre joueur
 - Se déconnecter ou quitter l'interface de Joueur
 
+
+## 🧪 Procédure de test du module Editeur
+
+### 1) Effacer les modules (si créés auparavant)
+```bash
+docker-compose down -v
+```
+
+### 2) Relancer le conteneur
+```bash
+docker-compose up -d
+```
+### 3) Exemple de création de topic
+```bash
+docker exec -it kafka kafka-topics \
+--bootstrap-server kafka:29092 \
+--create --topic game-sessions --partitions 1 --replication-factor 1
+```
+### 4) Vérification de la création des topics
+- sur Kafka UI : http://localhost:8080
+
+### 5) Lancer le fichier Main.java présent dans le module *Editeur*
+#### Cela devrait créer les tables de la base de données de *Editeur*
+
+### 6) Tester l'interface du module *Editeur*
+
+#### Gestion du compte éditeur
+•	créer un compte éditeur
+•	modifier les informations du compte
+•	supprimer le compte
+
+#### Publication de jeux et DLC
+•	publier un jeu
+•	publier un DLC après consommation et filtrage des commentaires
+
+#### Crashs et patchs
+•	consommer les sessions de jeu
+•	détecter automatiquement les crashs
+•	déclencher et publier un patch selon un filtre
+
+PS : La plateforme n'étant pas fini, pour tester les comptes eiditeurs notamment les operations de modifications ou de suppressions, on utilise un idEditeur déjà existant depuis la table Jeu du module Editeur
+
