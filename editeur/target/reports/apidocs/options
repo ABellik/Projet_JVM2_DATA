@@ -1,0 +1,25 @@
+--no-fonts
+-classpath
+'C:/Users/sirad/.m2/repository/com/projet_JVM2_DATA/common/1.0-SNAPSHOT/common-1.0-SNAPSHOT.jar;C:/Users/sirad/.m2/repository/org/apache/kafka/kafka-clients/3.6.0/kafka-clients-3.6.0.jar;C:/Users/sirad/.m2/repository/io/confluent/kafka-avro-serializer/7.5.0/kafka-avro-serializer-7.5.0.jar;C:/Users/sirad/.m2/repository/org/apache/commons/commons-compress/1.21/commons-compress-1.21.jar;C:/Users/sirad/.m2/repository/io/confluent/kafka-schema-serializer/7.5.0/kafka-schema-serializer-7.5.0.jar;C:/Users/sirad/.m2/repository/io/confluent/kafka-schema-registry-client/7.5.0/kafka-schema-registry-client-7.5.0.jar;C:/Users/sirad/.m2/repository/org/yaml/snakeyaml/2.0/snakeyaml-2.0.jar;C:/Users/sirad/.m2/repository/io/swagger/core/v3/swagger-annotations/2.1.10/swagger-annotations-2.1.10.jar;C:/Users/sirad/.m2/repository/com/google/guava/guava/32.0.1-jre/guava-32.0.1-jre.jar;C:/Users/sirad/.m2/repository/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar;C:/Users/sirad/.m2/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar;C:/Users/sirad/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar;C:/Users/sirad/.m2/repository/com/google/errorprone/error_prone_annotations/2.18.0/error_prone_annotations-2.18.0.jar;C:/Users/sirad/.m2/repository/com/google/j2objc/j2objc-annotations/2.8/j2objc-annotations-2.8.jar;C:/Users/sirad/.m2/repository/io/confluent/logredactor/1.0.12/logredactor-1.0.12.jar;C:/Users/sirad/.m2/repository/com/google/re2j/re2j/1.6/re2j-1.6.jar;C:/Users/sirad/.m2/repository/io/confluent/logredactor-metrics/1.0.12/logredactor-metrics-1.0.12.jar;C:/Users/sirad/.m2/repository/com/eclipsesource/minimal-json/minimal-json/0.9.5/minimal-json-0.9.5.jar;C:/Users/sirad/.m2/repository/io/confluent/common-utils/7.5.0/common-utils-7.5.0.jar;C:/Users/sirad/.m2/repository/org/apache/avro/avro/1.11.3/avro-1.11.3.jar;C:/Users/sirad/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.14.2/jackson-core-2.14.2.jar;C:/Users/sirad/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.14.2/jackson-databind-2.14.2.jar;C:/Users/sirad/.m2/repository/org/postgresql/postgresql/42.7.0/postgresql-42.7.0.jar;C:/Users/sirad/.m2/repository/org/checkerframework/checker-qual/3.31.0/checker-qual-3.31.0.jar;C:/Users/sirad/.m2/repository/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar;C:/Users/sirad/.m2/repository/ch/qos/logback/logback-classic/1.4.11/logback-classic-1.4.11.jar;C:/Users/sirad/.m2/repository/ch/qos/logback/logback-core/1.4.11/logback-core-1.4.11.jar;C:/Users/sirad/.m2/repository/com/opencsv/opencsv/5.9/opencsv-5.9.jar;C:/Users/sirad/.m2/repository/org/apache/commons/commons-lang3/3.13.0/commons-lang3-3.13.0.jar;C:/Users/sirad/.m2/repository/org/apache/commons/commons-text/1.11.0/commons-text-1.11.0.jar;C:/Users/sirad/.m2/repository/commons-beanutils/commons-beanutils/1.9.4/commons-beanutils-1.9.4.jar;C:/Users/sirad/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar;C:/Users/sirad/.m2/repository/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar;C:/Users/sirad/.m2/repository/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar;C:/Users/sirad/.m2/repository/org/apache/kafka/kafka-streams/3.6.0/kafka-streams-3.6.0.jar;C:/Users/sirad/.m2/repository/org/rocksdb/rocksdbjni/7.9.2/rocksdbjni-7.9.2.jar;C:/Users/sirad/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.13.5/jackson-annotations-2.13.5.jar;C:/Users/sirad/.m2/repository/com/projet_JVM2_DATA/processor-stream/1.0-SNAPSHOT/processor-stream-1.0-SNAPSHOT.jar;C:/Users/sirad/.m2/repository/io/confluent/kafka-streams-avro-serde/7.5.1/kafka-streams-avro-serde-7.5.1.jar;C:/Users/sirad/.m2/repository/org/slf4j/slf4j-simple/1.7.36/slf4j-simple-1.7.36.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'17'
+-sourcepath
+'C:/Projets/Projet_JVM2_DATA/editeur/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2026. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Projets/Projet_JVM2_DATA/editeur/target/reports/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'Editeur 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'Editeur 1.0-SNAPSHOT API'
