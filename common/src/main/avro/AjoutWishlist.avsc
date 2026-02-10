@@ -1,0 +1,9 @@
+{
+  "type": "record",
+  "name": "AjoutWishlist",
+  "namespace": "com.example.events",
+  "fields": [
+    { "name": "idJoueur", "type": "long" },
+    { "name": "idJeu", "type": "long" }
+  ]
+}

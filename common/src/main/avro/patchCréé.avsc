@@ -1,0 +1,43 @@
+{
+    "type":"record",
+    "name":"CreationPatch",
+    "namespace": "com.example.events",
+    "doc" : "Évènement émis lorsqu'un patch est créé par l'éditeur",
+    "fields":
+    [
+        {
+            "name": "id", 
+            "type": "long"
+        },
+
+        {
+            "name": "idJeu", 
+            "type": "long"
+        },
+
+        {
+            "name": "versionProblematique",
+            "type": "string"
+        },
+
+        {
+            "name": "NouvelleVersion",
+            "type": "string"
+        },
+        {
+            "name": "commentaireEditeur", 
+            "type": "string"
+        },
+
+        {
+            "name": "modification", 
+            "type": {"type": "enum","name": "typeModification","symbols": ["AJOUT", "CORRECTION","OPTIMISATION"]}
+        },
+
+        {"name": "support","type": "string","doc" : "Support de jeu sur lequel le crash ou autre s'est produit"},
+
+        { "name": "DatePublication",
+              "type": { "type": "long", "logicalType": "timestamp-millis" }
+        }
+    ]
+}

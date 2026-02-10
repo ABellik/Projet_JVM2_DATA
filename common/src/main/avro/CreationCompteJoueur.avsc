@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "name": "CreationCompteJoueur",
+  "namespace": "com.example.events",
+  "fields": [
+    { "name": "nom", "type": "string" },
+    { "name": "prenom", "type": "string" },
+    { "name": "email", "type": "string" },
+    { "name": "pseudo", "type": "string" },
+    { "name": "motDePasse", "type": "string" },
+    { "name": "DateDeNaissance", "type": "string" },
+    { "name": "DateDeCreationDuCompte", 
+      "type": { "type": "long", "logicalType": "timestamp-millis" } 
+    }
+  ]
+}
+
+

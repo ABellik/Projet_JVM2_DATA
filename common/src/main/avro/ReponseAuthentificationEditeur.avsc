@@ -1,0 +1,17 @@
+{
+  "type": "record",
+  "name": "ReponseAuthentificationEditeur",
+  "namespace": "com.example.events",
+  "fields": [
+    { "name": "idEditeur", "type": ["long", "null"] },
+    { "name": "nom", "type": ["string", "null"] },
+    { "name": "prenom", "type": ["string", "null"] },
+    { "name": "email", "type": ["string", "null"] },
+    { "name": "pseudo", "type": ["string", "null"] },
+    { "name": "motDePasse", "type": ["string", "null"] },
+    { "name": "DateDeNaissance", "type": ["string", "null"] },
+    { "name": "DateDeCreationDuCompte",
+      "type": [{ "type": "long", "logicalType": "timestamp-millis" }, "null"]
+    }
+  ]
+}

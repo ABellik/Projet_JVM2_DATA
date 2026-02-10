@@ -1,0 +1,6 @@
+{
+  "type": "record",
+  "name": "RequeteListeEvaluations",
+  "namespace": "com.example.events",
+  "fields": [ { "name": "idJeu", "type": "long" } ]
+}

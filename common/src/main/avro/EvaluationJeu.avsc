@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "name": "EvaluationJeu",
+  "namespace": "com.example.events",
+  "fields": [
+    {"name": "idJoueur", "type":  "long"},
+    { "name": "idJeu", "type": "long" },
+    { "name": "Note", "type": "int" },
+    {"name": "versionJeu","type": "string"},
+    {
+      "name": "Commentaire",
+      "type": ["null", "string"],
+      "default": null
+    },
+    { "name": "DateEvaluationJeu",
+      "type": { "type": "long", "logicalType": "timestamp-millis" }
+    }
+  ]
+}

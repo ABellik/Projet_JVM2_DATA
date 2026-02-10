@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "name": "ModificationProfilJoueur",
+  "namespace": "com.example.events",
+  "fields": [
+    { "name": "idJoueur", "type": "long" },
+    {
+      "name": "ChampsModifies",
+      "type": {
+        "type": "array",
+        "items": "string"
+      }
+    },
+    { "name": "DateDeModificationProfil", 
+      "type": { "type": "long", "logicalType": "timestamp-millis" } 
+    }
+  ]
+}

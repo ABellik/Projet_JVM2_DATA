@@ -1,0 +1,34 @@
+{
+  "type": "record",
+  "namespace": "com.example.events",
+  "name" : "EvolutionPrixJeu",
+  "doc" : "Évènement émis lorsqu'une évolution de prix d'un jeu est effectuée",
+  "fields" : [
+    {
+      "name" : "idJeu",
+      "type" : "long",
+      "doc": "L'identifiant unique du jeu concerné"
+    },
+    {
+      "name" : "nouveauPrix",
+      "type" : "float",
+      "doc": "Le nouveau prix du jeu"
+    },
+    {
+      "name" : "ancienPrix",
+      "type" : "float",
+      "doc": "L'ancien prix du jeu"
+    },
+    {
+      "name" : "commentaire",
+      "type" : ["null", "string"],
+      "doc": "Commentaire décrivant l'évolution"
+    },
+    {
+      "name" : "date",
+      "type": "int",
+      "logicalType": "date",
+      "doc": "Date du changement de prix"
+    }
+  ]
+}

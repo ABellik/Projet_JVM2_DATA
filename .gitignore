@@ -14,3 +14,9 @@ out/
 # Classes Java générées par Avro
 **/generated-sources/
 **/generated-test-sources/
+
+
+target/
+*.class
+.idea/
+.settings/

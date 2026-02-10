@@ -1,0 +1,23 @@
+{
+    "type":"record",
+    "name":"SuppressionJeuOuDLC",
+    "namespace":"com.example.events",
+    "doc" : "Évènement émis lorsqu'un jeu ou un DLC est supprimé par l'éditeur",
+    "fields":
+    [
+        {
+            "name": "id", 
+            "type": "long"
+        },
+
+        {
+            "name": "idEditeur", 
+            "type": "long"
+        },
+        {
+            "name": "date", 
+            "type": {"type":"int", "logicalType": "date"}
+        }
+        
+    ]
+}
